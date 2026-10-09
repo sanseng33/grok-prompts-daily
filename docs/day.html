@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Grok 每日提示词</title>
+  <style>:root {
+  --bg: #0f1115;
+  --panel: #171a21;
+  --panel2: #1e2330;
+  --border: #2a3142;
+  --text: #e8eaed;
+  --muted: #9aa3b2;
+  --accent: #7aa2ff;
+  --warn: #f0b429;
+  --danger: #ff6b6b;
+  --chip: #2a3348;
+  --row-hover: #222836;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background: var(--bg); color: var(--text);
+  font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.wrap { max-width: 1400px; margin: 0 auto; padding: 20px 16px 48px; }
+.banner {
+  background: #3a1d1d; border: 1px solid #6b2e2e; color: #ffc9c9;
+  padding: 10px 14px; border-radius: 8px; margin-bottom: 16px; font-size: 13px;
+}
+h1 { font-size: 22px; margin: 0 0 4px; font-weight: 650; }
+.sub { color: var(--muted); margin-bottom: 16px; font-size: 13px; }
+.toolbar {
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 10px; padding: 12px; margin-bottom: 14px;
+}
+.toolbar label { color: var(--muted); font-size: 12px; margin-right: 4px; }
+.toolbar select, .toolbar input {
+  background: var(--panel2); color: var(--text); border: 1px solid var(--border);
+  border-radius: 6px; padding: 6px 10px; font-size: 13px;
+}
+.stat { color: var(--muted); margin-left: auto; font-size: 12px; }
+.table-wrap {
+  overflow: auto; border: 1px solid var(--border); border-radius: 10px;
+  background: var(--panel);
+}
+table { border-collapse: collapse; width: 100%; min-width: 1100px; }
+th, td {
+  border-bottom: 1px solid var(--border); padding: 10px 12px;
+  vertical-align: top; text-align: left;
+}
+th {
+  position: sticky; top: 0; background: var(--panel2);
+  color: var(--muted); font-weight: 600; font-size: 12px;
+  white-space: nowrap; z-index: 1;
+}
+tr:hover td { background: var(--row-hover); }
+.chip {
+  display: inline-block; background: var(--chip); color: var(--text);
+  border-radius: 999px; padding: 2px 8px; font-size: 12px; margin: 1px 2px 1px 0;
+}
+.chip.source-关注, .chip.source-已关注 { background: #1e3a2f; color: #8dffc1; }
+.chip.source-新发现 { background: #2a2f4a; color: #a9b8ff; }
+.chip.type-生图 { background: #2a3a1e; color: #b8e986; }
+.chip.type-生视频 { background: #3a2a1e; color: #ffc98a; }
+.handle { font-weight: 600; white-space: nowrap; }
+.meta { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.prompt-cell { min-width: 280px; max-width: 420px; }
+.prompt-block { margin-bottom: 8px; }
+.prompt-block:last-child { margin-bottom: 0; }
+.prompt-label {
+  font-size: 11px; color: var(--muted); margin-bottom: 2px;
+  display: flex; gap: 6px; align-items: center;
+}
+.prompt-text {
+  white-space: pre-wrap; word-break: break-word;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 6px; padding: 8px 10px; font-size: 12.5px;
+  max-height: 4.8em; overflow: hidden; position: relative;
+}
+.prompt-text.expanded { max-height: none; }
+.prompt-text.collapsed::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1.6em;
+  background: linear-gradient(transparent, var(--bg));
+}
+.toggle {
+  background: none; border: none; color: var(--accent);
+  cursor: pointer; font-size: 12px; padding: 4px 0 0; display: inline-block;
+}
+.tags { max-width: 180px; }
+.empty {
+  text-align: center; color: var(--muted); padding: 40px 16px;
+}
+.date-list { list-style: none; padding: 0; margin: 0; }
+.date-list li {
+  border: 1px solid var(--border); background: var(--panel);
+  border-radius: 10px; margin-bottom: 8px;
+}
+.date-list a {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 16px; color: var(--text); text-decoration: none;
+}
+.date-list a:hover { background: var(--row-hover); border-radius: 10px; }
+.nav { margin-bottom: 12px; font-size: 13px; }
+.nav a { margin-right: 12px; }
+</style>
+</head>
+<body>
+  <div class="wrap" id="app">
+    <div class="banner">⚠️ 成人内容（NSFW）· 仅供私人收藏与研究 · 请勿外传或开启 GitHub Pages</div>
+    <div class="nav"><a href="index.html">← 日期列表</a></div>
+    <h1>Grok 提示词 · <span id="date-label">…</span></h1>
+    <p class="sub">从 <code>../data/YYYY-MM-DD.json</code> 拉取。若失败（私有 raw 需鉴权），请改用 <code>docs/embedded/</code> 内联页。</p>
+    <div class="toolbar">
+      <div><label>来源</label><select id="filter-source"></select></div>
+      <div><label>类型</label><select id="filter-type"></select></div>
+      <div class="stat" id="stat"></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>来源</th><th>博主</th><th>链接</th><th>时间</th><th>类型</th>
+            <th>步骤数</th><th>题材</th><th>各步骤提示词 + 中文翻译</th><th>位置</th><th>点赞</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"><tr><td colspan="10" class="empty">加载中…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+  <script>(function () {
+  const COLS = {
+    source: '来源',
+    handle: '博主',
+    link: '帖子链接',
+    time: '发布时间(UTC+8)',
+    type: '类型',
+    steps: '步骤数',
+    tags: '题材标签',
+    loc: '提示词位置',
+    likes: '点赞数'
+  };
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function stepFields(row) {
+    const out = [];
+    for (let i = 1; i <= 8; i++) {
+      const t = row[`步骤${i}类型`];
+      const p = row[`步骤${i}提示词`];
+      const z = row[`步骤${i}中文翻译`];
+      if (p == null && z == null && t == null) continue;
+      if (p === '' && z === '' && (t == null || t === '')) continue;
+      out.push({ i, type: t || '', prompt: p || '', zh: z || '' });
+    }
+    return out;
+  }
+
+  function unique(arr) {
+    return [...new Set(arr.filter(Boolean))].sort();
+  }
+
+  function fillSelect(sel, values, allLabel) {
+    sel.innerHTML = '';
+    const o0 = document.createElement('option');
+    o0.value = ''; o0.textContent = allLabel;
+    sel.appendChild(o0);
+    values.forEach(v => {
+      const o = document.createElement('option');
+      o.value = v; o.textContent = v;
+      sel.appendChild(o);
+    });
+  }
+
+  function promptHtml(label, text) {
+    if (!text) return '';
+    const collapsed = text.length > 120 || text.split('\n').length > 3;
+    return `<div class="prompt-block">
+      <div class="prompt-label">${esc(label)}</div>
+      <div class="prompt-text${collapsed ? ' collapsed' : ''}">${esc(text)}</div>
+      ${collapsed ? '<button type="button" class="toggle">展开 / 收起</button>' : ''}
+    </div>`;
+  }
+
+  function renderRow(row) {
+    const steps = stepFields(row);
+    const source = row[COLS.source] || '';
+    const typ = row[COLS.type] || '';
+    const tags = (row[COLS.tags] || '').split(/[、,，]/).map(s => s.trim()).filter(Boolean);
+    const link = row[COLS.link] || '#';
+    const handle = row[COLS.handle] || '';
+    const prompts = steps.map(s => {
+      const head = `步骤${s.i}${s.type ? ' · ' + s.type : ''}`;
+      return promptHtml(head + ' · 原文', s.prompt) + promptHtml(head + ' · 中文', s.zh);
+    }).join('');
+
+    return `<tr data-source="${esc(source)}" data-type="${esc(typ)}">
+      <td><span class="chip source-${esc(source)}">${esc(source)}</span></td>
+      <td class="handle">${esc(handle)}</td>
+      <td><a href="${esc(link)}" target="_blank" rel="noopener">打开</a></td>
+      <td class="meta">${esc(row[COLS.time] || '')}</td>
+      <td><span class="chip type-${esc(typ)}">${esc(typ)}</span></td>
+      <td class="meta">${esc(row[COLS.steps] ?? steps.length)}</td>
+      <td class="tags">${tags.map(t => `<span class="chip">${esc(t)}</span>`).join('')}</td>
+      <td class="prompt-cell">${prompts || '<span class="meta">—</span>'}</td>
+      <td class="meta">${esc(row[COLS.loc] || '')}</td>
+      <td class="meta">${esc(row[COLS.likes] ?? '')}</td>
+    </tr>`;
+  }
+
+  function applyFilters(root) {
+    const src = root.querySelector('#filter-source').value;
+    const typ = root.querySelector('#filter-type').value;
+    let shown = 0, total = 0;
+    root.querySelectorAll('tbody tr').forEach(tr => {
+      total++;
+      const ok =
+        (!src || tr.getAttribute('data-source') === src) &&
+        (!typ || tr.getAttribute('data-type') === typ);
+      tr.style.display = ok ? '' : 'none';
+      if (ok) shown++;
+    });
+    root.querySelector('#stat').textContent = `显示 ${shown} / ${total} 条`;
+  }
+
+  function mount(root, rows, dateLabel) {
+    if (dateLabel) {
+      const el = root.querySelector('#date-label');
+      if (el) el.textContent = dateLabel;
+    }
+    fillSelect(root.querySelector('#filter-source'), unique(rows.map(r => r[COLS.source])), '全部来源');
+    fillSelect(root.querySelector('#filter-type'), unique(rows.map(r => r[COLS.type])), '全部类型');
+    const tbody = root.querySelector('#tbody');
+    tbody.innerHTML = rows.length
+      ? rows.map(renderRow).join('')
+      : '<tr><td colspan="10" class="empty">当日无数据</td></tr>';
+    root.querySelector('#filter-source').onchange = () => applyFilters(root);
+    root.querySelector('#filter-type').onchange = () => applyFilters(root);
+    tbody.addEventListener('click', (e) => {
+      const btn = e.target.closest('.toggle');
+      if (!btn) return;
+      const box = btn.previousElementSibling;
+      if (!box) return;
+      box.classList.toggle('expanded');
+      box.classList.toggle('collapsed');
+    });
+    applyFilters(root);
+  }
+
+  async function loadRows() {
+    if (Array.isArray(window.DAY_DATA)) return window.DAY_DATA;
+    const params = new URLSearchParams(location.search);
+    const date = params.get('date') || window.DAY_DATE;
+    if (!date) throw new Error('缺少 date 参数');
+    const res = await fetch(`../data/${date}.json`);
+    if (!res.ok) throw new Error(`无法加载 ${date}.json（${res.status}）。私有仓库 raw 需登录；请改用 docs/embedded/${date}.html`);
+    return res.json();
+  }
+
+  window.GrokPromptViewer = { mount, loadRows, COLS };
+})();
+</script>
+  <script>
+    (async function () {
+      const params = new URLSearchParams(location.search);
+      const date = params.get('date');
+      const app = document.getElementById('app');
+      if (!date) {
+        document.getElementById('tbody').innerHTML = '<tr><td colspan="10" class="empty">请带上 ?date=YYYY-MM-DD</td></tr>';
+        return;
+      }
+      document.title = 'Grok 提示词 · ' + date;
+      try {
+        const rows = await GrokPromptViewer.loadRows();
+        GrokPromptViewer.mount(app, rows, date);
+      } catch (e) {
+        document.getElementById('date-label').textContent = date;
+        document.getElementById('tbody').innerHTML =
+          '<tr><td colspan="10" class="empty">' + String(e.message || e) +
+          '<br/><br/>请打开 <a href="embedded/' + encodeURIComponent(date) + '.html">embedded/' + date + '.html</a></td></tr>';
+      }
+    })();
+  </script>
+</body>
+</html>

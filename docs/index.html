@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Grok 每日提示词 · 日期列表</title>
+  <style>:root {
+  --bg: #0f1115;
+  --panel: #171a21;
+  --panel2: #1e2330;
+  --border: #2a3142;
+  --text: #e8eaed;
+  --muted: #9aa3b2;
+  --accent: #7aa2ff;
+  --warn: #f0b429;
+  --danger: #ff6b6b;
+  --chip: #2a3348;
+  --row-hover: #222836;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background: var(--bg); color: var(--text);
+  font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.wrap { max-width: 1400px; margin: 0 auto; padding: 20px 16px 48px; }
+.banner {
+  background: #3a1d1d; border: 1px solid #6b2e2e; color: #ffc9c9;
+  padding: 10px 14px; border-radius: 8px; margin-bottom: 16px; font-size: 13px;
+}
+h1 { font-size: 22px; margin: 0 0 4px; font-weight: 650; }
+.sub { color: var(--muted); margin-bottom: 16px; font-size: 13px; }
+.toolbar {
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 10px; padding: 12px; margin-bottom: 14px;
+}
+.toolbar label { color: var(--muted); font-size: 12px; margin-right: 4px; }
+.toolbar select, .toolbar input {
+  background: var(--panel2); color: var(--text); border: 1px solid var(--border);
+  border-radius: 6px; padding: 6px 10px; font-size: 13px;
+}
+.stat { color: var(--muted); margin-left: auto; font-size: 12px; }
+.table-wrap {
+  overflow: auto; border: 1px solid var(--border); border-radius: 10px;
+  background: var(--panel);
+}
+table { border-collapse: collapse; width: 100%; min-width: 1100px; }
+th, td {
+  border-bottom: 1px solid var(--border); padding: 10px 12px;
+  vertical-align: top; text-align: left;
+}
+th {
+  position: sticky; top: 0; background: var(--panel2);
+  color: var(--muted); font-weight: 600; font-size: 12px;
+  white-space: nowrap; z-index: 1;
+}
+tr:hover td { background: var(--row-hover); }
+.chip {
+  display: inline-block; background: var(--chip); color: var(--text);
+  border-radius: 999px; padding: 2px 8px; font-size: 12px; margin: 1px 2px 1px 0;
+}
+.chip.source-关注, .chip.source-已关注 { background: #1e3a2f; color: #8dffc1; }
+.chip.source-新发现 { background: #2a2f4a; color: #a9b8ff; }
+.chip.type-生图 { background: #2a3a1e; color: #b8e986; }
+.chip.type-生视频 { background: #3a2a1e; color: #ffc98a; }
+.handle { font-weight: 600; white-space: nowrap; }
+.meta { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.prompt-cell { min-width: 280px; max-width: 420px; }
+.prompt-block { margin-bottom: 8px; }
+.prompt-block:last-child { margin-bottom: 0; }
+.prompt-label {
+  font-size: 11px; color: var(--muted); margin-bottom: 2px;
+  display: flex; gap: 6px; align-items: center;
+}
+.prompt-text {
+  white-space: pre-wrap; word-break: break-word;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 6px; padding: 8px 10px; font-size: 12.5px;
+  max-height: 4.8em; overflow: hidden; position: relative;
+}
+.prompt-text.expanded { max-height: none; }
+.prompt-text.collapsed::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1.6em;
+  background: linear-gradient(transparent, var(--bg));
+}
+.toggle {
+  background: none; border: none; color: var(--accent);
+  cursor: pointer; font-size: 12px; padding: 4px 0 0; display: inline-block;
+}
+.tags { max-width: 180px; }
+.empty {
+  text-align: center; color: var(--muted); padding: 40px 16px;
+}
+.date-list { list-style: none; padding: 0; margin: 0; }
+.date-list li {
+  border: 1px solid var(--border); background: var(--panel);
+  border-radius: 10px; margin-bottom: 8px;
+}
+.date-list a {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 16px; color: var(--text); text-decoration: none;
+}
+.date-list a:hover { background: var(--row-hover); border-radius: 10px; }
+.nav { margin-bottom: 12px; font-size: 13px; }
+.nav a { margin-right: 12px; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="banner">⚠️ 成人内容（NSFW）· 仅供私人收藏与研究 · 请勿外传或公开部署（勿开启 GitHub Pages：Pages 即便来自私有仓库也是公开的）</div>
+    <h1>Grok Imagine 每日提示词</h1>
+    <p class="sub">私有仓库。推荐下载 <code>docs/embedded/YYYY-MM-DD.html</code> 本地用浏览器打开（数据已内联）。登录 GitHub 后也可在仓库内浏览。</p>
+    <ul class="date-list" id="dates"><li class="empty">加载中…</li></ul>
+  </div>
+  <script>
+    async function main() {
+      const ul = document.getElementById('dates');
+      let dates = [];
+      try {
+        const res = await fetch('../data/index.json');
+        if (!res.ok) throw new Error(String(res.status));
+        const idx = await res.json();
+        dates = idx.dates || [];
+      } catch (e) {
+        ul.innerHTML = '<li class="empty">无法读取 data/index.json（' + e.message + '）。请改用 docs/embedded/ 下的离线 HTML，或 clone 后本地打开本页。</li>';
+        return;
+      }
+      if (!dates.length) {
+        ul.innerHTML = '<li class="empty">暂无日期</li>';
+        return;
+      }
+      ul.innerHTML = dates.map(d => `
+        <li>
+          <a href="day.html?date=${encodeURIComponent(d)}">
+            <span>${d} · 在线拉取 JSON</span>
+            <span style="color:var(--muted);font-size:12px">day.html →</span>
+          </a>
+        </li>
+        <li>
+          <a href="embedded/${encodeURIComponent(d)}.html">
+            <span>${d} · 离线内联版（推荐）</span>
+            <span style="color:var(--muted);font-size:12px">下载打开 ↓</span>
+          </a>
+        </li>
+      `).join('');
+    }
+    main();
+  </script>
+</body>
+</html>
