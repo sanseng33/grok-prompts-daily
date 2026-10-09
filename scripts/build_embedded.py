@@ -16,6 +16,7 @@ def build(date: str, data_path: Path | None = None) -> Path:
     rows = json.loads(data_path.read_text(encoding="utf-8"))
     css = (TEMPLATES / "viewer.css").read_text(encoding="utf-8")
     js = (TEMPLATES / "viewer.js").read_text(encoding="utf-8")
+    gate = (TEMPLATES / "gate.js").read_text(encoding="utf-8")
     payload = json.dumps(rows, ensure_ascii=False)
     html = f"""<!DOCTYPE html>
 <html lang="zh-CN">
@@ -26,8 +27,8 @@ def build(date: str, data_path: Path | None = None) -> Path:
   <style>{css}</style>
 </head>
 <body>
-  <div class="wrap" id="app">
-    <div class="banner">⚠️ 成人内容（NSFW）· 仅供私人收藏与研究 · 本页数据已内联，可下载后离线打开 · 请勿公开分享</div>
+  <div class="wrap gated" id="app">
+    <div class="banner">⚠️ 成人内容（NSFW）· 仅供私人收藏与研究 · 本页数据已内联 · 客户端密码仅为软锁（源码可查）</div>
     <div class="nav"><a href="../index.html">← 日期列表</a></div>
     <h1>Grok 提示词 · <span id="date-label">{date}</span></h1>
     <p class="sub">离线内联版 · {len(rows)} 条 · 生成自 data/{date}.json</p>
@@ -53,6 +54,7 @@ def build(date: str, data_path: Path | None = None) -> Path:
   <script>
     GrokPromptViewer.mount(document.getElementById('app'), window.DAY_DATA, window.DAY_DATE);
   </script>
+  <script>{gate}</script>
 </body>
 </html>
 """

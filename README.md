@@ -1,34 +1,35 @@
 # Grok Imagine 每日提示词（私有）
 
-成人向（NSFW）Grok 生图 / 生视频提示词日表，仅供 Soke 私人查阅。**请勿公开、勿开启 GitHub Pages。**
+成人向（NSFW）Grok 生图 / 生视频提示词日表，仅供 Soke 私人查阅。
 
-> GitHub Pages 即便仓库是 private，站点本身也是公开的。本仓库含成人内容，**禁止启用 Pages**。
+## GitHub Pages（软锁）
+
+站点从仓库 `docs/` 目录发布（`main` / `/docs`）。
+
+- **密码**：`soke2026`（硬编码客户端门；本标签页 `sessionStorage` 解锁一次后保持）
+- **注意**：这是**纯前端软锁**，密码哈希与页面源码均可被查看/绕过，**不是真正的访问控制**。GitHub Pages 即便仓库是 private，**站点 URL 本身仍是公开的**（任意知道链接的人都能打开 HTML；私有仓库 Pages 通常还需 GitHub Pro）。
+- 推荐入口：Pages 上的 `index.html` → `embedded/YYYY-MM-DD.html`（数据已内联）
 
 ## 今天怎么看
 
-推荐（离线、无需鉴权）：
-
-1. 打开仓库里的 `docs/embedded/2026-10-09.html`（或对应日期）
-2. 点 **Download / Raw → 另存**，用本机浏览器直接打开该 HTML  
-   - 数据已内联为 `window.DAY_DATA`，不依赖 GitHub raw
+1. Pages（若已启用）：打开站点首页，输入密码后选日期
+2. 或下载 `docs/embedded/YYYY-MM-DD.html`，本机浏览器打开（同样有密码门）
 3. 页面顶部可按 **来源**、**类型** 筛选；提示词单元格可点「展开 / 收起」
 
-备选（需登录 GitHub）：
-
-- 在 GitHub 网页打开 `docs/index.html` / `docs/day.html?date=YYYY-MM-DD`  
-  - 私有仓库的 raw JSON 拉取常因未鉴权失败；失败时请改用上面的 embedded 页
-- 或 `git clone` 本仓库后，本地用任意静态服务器 / 直接打开 `docs/embedded/*.html`
+备选：`git clone` 后本地打开 `docs/embedded/*.html`。
 
 ## 目录结构
 
 ```
-data/YYYY-MM-DD.json          # 当日表格（行对象数组，含全部列）
+data/YYYY-MM-DD.json          # 当日表格（行对象数组）
 data/index.json               # 可用日期列表
+docs/data/                    # 同上副本，供 GitHub Pages（只发布 docs/）使用
 daily/grok_prompts_*.xlsx     # 原始 Excel 备份
-docs/index.html               # 日期列表
-docs/day.html?date=...        # 拉取 ../data/*.json 的在线表
-docs/embedded/YYYY-MM-DD.html # 内联数据的离线单页（推荐）
+docs/index.html               # 日期列表（带密码门）
+docs/day.html?date=...        # 拉取 JSON 的在线表（带密码门）
+docs/embedded/YYYY-MM-DD.html # 内联数据的离线单页（推荐，带密码门）
 templates/viewer.{css,js}     # 共用样式与逻辑
+templates/gate.js             # 客户端密码门（SHA-256 + sessionStorage）
 scripts/xlsx_to_json.py
 scripts/build_embedded.py
 scripts/update_index.py
@@ -47,22 +48,25 @@ scripts/update_index.py
 脚本会（幂等）：
 
 1. 取 `xprompts/daily/` 下最新 `grok_prompts_YYYY-MM-DD.xlsx`
-2. 复制到本仓库 `daily/`，写成 `data/YYYY-MM-DD.json`
-3. 生成 / 覆盖 `docs/embedded/YYYY-MM-DD.html`
-4. 刷新 `data/index.json`
+2. 复制到本仓库 `daily/`，写成 `data/YYYY-MM-DD.json`（并同步到 `docs/data/`）
+3. 生成 / 覆盖 `docs/embedded/YYYY-MM-DD.html`（含密码门）
+4. 刷新 `data/index.json` + `docs/data/index.json`
 5. `git add` → `commit` → `push`（无变更则跳过 commit）
 
 也可手动：
 
 ```bash
 python3 scripts/xlsx_to_json.py daily/grok_prompts_YYYY-MM-DD.xlsx
+cp -f data/*.json docs/data/
 python3 scripts/build_embedded.py YYYY-MM-DD
 python3 scripts/update_index.py
+cp -f data/index.json docs/data/
 git add -A && git commit -m "daily: YYYY-MM-DD ..." && git push
 ```
 
 ## 安全提醒
 
 - 仓库保持 **private**
-- **不要** 开 GitHub Pages / 不要做成公开 gist / 不要发到公开 CDN
-- 分享给自己其他设备时，优先传 embedded HTML 文件，而不是把仓库改成 public
+- 客户端密码门**可被绕过**（查看源码 / 哈希 / DevTools）；仅防随手点开
+- Pages 站点 URL 是公开的；不要把链接发到公开场合
+- 真正保密请勿依赖 Pages，改用 clone / 传 embedded 文件

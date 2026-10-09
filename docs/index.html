@@ -106,26 +106,64 @@ tr:hover td { background: var(--row-hover); }
 .date-list a:hover { background: var(--row-hover); border-radius: 10px; }
 .nav { margin-bottom: 12px; font-size: 13px; }
 .nav a { margin-right: 12px; }
+
+/* --- client-side password gate (soft lock) --- */
+html:not(.unlocked) .gated { display: none !important; }
+#pw-gate {
+  position: fixed; inset: 0; z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(15, 17, 21, 0.96);
+  padding: 24px;
+}
+#pw-gate .pw-card {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 12px; padding: 28px 24px; width: 100%; max-width: 360px;
+  text-align: center;
+}
+#pw-gate h2 { margin: 0 0 8px; font-size: 18px; }
+#pw-gate p { color: var(--muted); font-size: 13px; margin: 0 0 16px; }
+#pw-gate form { display: flex; gap: 8px; }
+#pw-gate input[type="password"] {
+  flex: 1; background: var(--panel2); color: var(--text);
+  border: 1px solid var(--border); border-radius: 6px;
+  padding: 10px 12px; font-size: 14px;
+}
+#pw-gate button {
+  background: var(--accent); color: #0f1115; border: none;
+  border-radius: 6px; padding: 10px 16px; font-weight: 600; cursor: pointer;
+}
+#pw-gate button:hover { filter: brightness(1.08); }
+#pw-gate .pw-err { color: var(--danger); margin: 12px 0 0; font-size: 13px; }
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="banner">⚠️ 成人内容（NSFW）· 仅供私人收藏与研究 · 请勿外传或公开部署（勿开启 GitHub Pages：Pages 即便来自私有仓库也是公开的）</div>
+  <div class="wrap gated">
+    <div class="banner">⚠️ 成人内容（NSFW）· 仅供私人收藏与研究 · 客户端密码仅为软锁（源码/哈希可查，不是真安全）· Pages 站点本身公开</div>
     <h1>Grok Imagine 每日提示词</h1>
-    <p class="sub">私有仓库。推荐下载 <code>docs/embedded/YYYY-MM-DD.html</code> 本地用浏览器打开（数据已内联）。登录 GitHub 后也可在仓库内浏览。</p>
+    <p class="sub">私有仓库 + 客户端密码门。推荐打开 <code>embedded/YYYY-MM-DD.html</code>（数据已内联）。本标签页解锁一次后保持到关闭。</p>
     <ul class="date-list" id="dates"><li class="empty">加载中…</li></ul>
   </div>
   <script>
     async function main() {
       const ul = document.getElementById('dates');
       let dates = [];
-      try {
-        const res = await fetch('../data/index.json');
-        if (!res.ok) throw new Error(String(res.status));
-        const idx = await res.json();
-        dates = idx.dates || [];
-      } catch (e) {
-        ul.innerHTML = '<li class="empty">无法读取 data/index.json（' + e.message + '）。请改用 docs/embedded/ 下的离线 HTML，或 clone 后本地打开本页。</li>';
+      const candidates = ['../data/index.json', 'data/index.json'];
+      let lastErr = null;
+      for (const url of candidates) {
+        try {
+          const res = await fetch(url);
+          if (!res.ok) throw new Error(String(res.status));
+          const idx = await res.json();
+          dates = idx.dates || [];
+          lastErr = null;
+          break;
+        } catch (e) {
+          lastErr = e;
+        }
+      }
+      if (lastErr && !dates.length) {
+        // Pages (/docs) may not have ../data; fall back to listing embedded links from known pattern
+        ul.innerHTML = '<li class="empty">无法读取 index.json（' + lastErr.message + '）。请直接打开 <a href="embedded/2026-10-09.html">embedded/2026-10-09.html</a>，或 clone 后本地打开。</li>';
         return;
       }
       if (!dates.length) {
@@ -142,12 +180,86 @@ tr:hover td { background: var(--row-hover); }
         <li>
           <a href="embedded/${encodeURIComponent(d)}.html">
             <span>${d} · 离线内联版（推荐）</span>
-            <span style="color:var(--muted);font-size:12px">下载打开 ↓</span>
+            <span style="color:var(--muted);font-size:12px">打开 ↓</span>
           </a>
         </li>
       `).join('');
     }
     main();
   </script>
+  <script>(function () {
+  var STORAGE_KEY = 'grok-prompts-gate-ok';
+  // SHA-256("soke2026") — soft client-side lock only; hash is visible in source.
+  var PASS_HASH = 'c343c00a5ef5753909541010ef9e44ac11d1c42140053c0b93ef2b6c1e3822c1';
+
+  function unlock() {
+    document.documentElement.classList.add('unlocked');
+    try { sessionStorage.setItem(STORAGE_KEY, '1'); } catch (e) {}
+  }
+
+  function alreadyOk() {
+    try { return sessionStorage.getItem(STORAGE_KEY) === '1'; } catch (e) { return false; }
+  }
+
+  async function sha256Hex(text) {
+    var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+    return Array.from(new Uint8Array(buf)).map(function (b) {
+      return b.toString(16).padStart(2, '0');
+    }).join('');
+  }
+
+  function buildOverlay() {
+    var el = document.createElement('div');
+    el.id = 'pw-gate';
+    el.innerHTML =
+      '<div class="pw-card">' +
+        '<h2>需要密码</h2>' +
+        '<p>私人收藏页 · 输入密码后本标签页内保持解锁</p>' +
+        '<form id="pw-form" autocomplete="current-password">' +
+          '<input type="password" id="pw-input" placeholder="密码" autofocus />' +
+          '<button type="submit">解锁</button>' +
+        '</form>' +
+        '<p class="pw-err" id="pw-err" hidden>密码不对，请重试</p>' +
+      '</div>';
+    document.body.appendChild(el);
+    return el;
+  }
+
+  function init() {
+    if (alreadyOk()) {
+      unlock();
+      return;
+    }
+    var overlay = buildOverlay();
+    var form = document.getElementById('pw-form');
+    var input = document.getElementById('pw-input');
+    var err = document.getElementById('pw-err');
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      err.hidden = true;
+      var ok = false;
+      try {
+        ok = (await sha256Hex(input.value)) === PASS_HASH;
+      } catch (ex) {
+        // Fallback if SubtleCrypto unavailable (e.g. file:// in some browsers)
+        ok = input.value === 'soke2026';
+      }
+      if (ok) {
+        unlock();
+        overlay.remove();
+      } else {
+        err.hidden = false;
+        input.select();
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
 </body>
 </html>
