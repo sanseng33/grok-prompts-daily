@@ -3,7 +3,7 @@
   const C = {
     source: '来源', part: '分区', handle: '博主', link: '帖子链接', time: '发布时间(UTC+8)', iso: '发布时间ISO(UTC)',
     tcat: '类型分组', type: '类型', steps: '步骤数', tags: '题材标签', nsfw: 'NSFW程度', ref: '参考图兼容',
-    reason: '判断理由', loc: '提示词位置', likes: '点赞数'
+    reason: '判断理由', loc: '提示词位置', likes: '点赞数', refimg: '参考图'
   };
   const SECTIONS = [['已关注', '已关注博主'], ['新发现', '新发现博主']];
   const TYPES = ['生图', '生视频', '多步'];
@@ -72,7 +72,7 @@
       <td class="meta"><span class="reltime" data-iso="${esc(iso || '')}" title="${esc(iso ? abs8(iso) : '')}">${esc(iso ? rel(iso) : '')}</span></td>
       <td><span class="chip">${esc(r[C.type] || '')}</span></td>
       <td><span class="chip nsfw ${isNaN(n) ? '' : nsfwClass(n)}">${isNaN(n) ? '—' : n}</span></td>
-      <td><span class="chip ${ref === '仅无图生成' ? 'noref' : 'okref'}">${esc(ref || '—')}</span><div class="meta">${esc(r[C.reason] || '')}</div></td>
+      <td><span class="chip ${ref === '仅无图生成' ? 'noref' : 'okref'}">${esc(ref || '—')}</span><div class="meta">${esc(r[C.reason] || '')}</div>${String(r[C.refimg] || '').split('\n').filter(Boolean).map(p => { const u = (window.DAY_DATA ? '../' : '') + p; return `<a href="${esc(u)}" target="_blank" rel="noopener"><img class="refthumb" src="${esc(u)}" alt="参考图" loading="lazy"/></a>`; }).join('')}</td>
       <td class="tags">${tagsOf(r).map(t => `<span class="chip">${esc(t)}</span>`).join('')}</td>
       <td class="prompt-cell">${prompts || '<span class="meta">—</span>'}</td>
       <td class="meta">${esc(r[C.loc] || '')}</td>
