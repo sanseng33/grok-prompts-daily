@@ -3,77 +3,69 @@
     {
       "group": "可用参考图",
       "type": "生图→生视频",
-      "nsfw": 58,
-      "prompt": "Photorealistic candid photo, vertical 9:16, shot on iPhone. An adult Japanese woman in her mid-20s with long soft caramel-brown waves and a sleek damp finish, slim athletic figure with a narrow waist and rounded hips. She wears a cream ribbed triangle bikini top and matching low-rise tie-side bottoms. She straddles an adult man reclining on a white resort daybed, leaning forward with both palms on his chest, her knees on either side of his waist; his hand rests on the small of her back. Her face is close to the lens, lips slightly parted, eyes half-closed, a playful restrained smile. Golden-hour backlight through palm leaves, warm rim light on her shoulders and hair, soft peach skin tones, real skin texture with tiny water droplets. Low camera angle from the foot of the daybed, shallow depth of field, cinematic warm grade, no text, no logo.\nVideo (apply to the image above): handheld camera sways gently; heavy slow breathing; she rocks her hips slowly forward and back, hair swaying, then looks straight into the lens and bites her lower lip; the camera slowly pushes in to a close-up of her face.",
-      "zh": "写实抓拍照片，竖版9:16，iPhone拍摄。一位20多岁中段的成年日本女性，柔软焦糖棕色长波浪发、光滑湿发质感，纤细运动型身材，细腰圆臀。她穿奶油色罗纹三角比基尼上衣和同款低腰侧系带泳裤。她跨坐在一名斜躺在度假村白色躺床（daybed）上的成年男性身上，身体前倾，双掌按在他胸口，双膝分在他腰两侧；他的手搭在她的后腰。她的脸贴近镜头，嘴唇微张，双眼半闭，俏皮而克制的微笑。黄金时刻的逆光穿过棕榈叶，暖色轮廓光勾勒她的肩膀和头发，柔和蜜桃肤色，真实皮肤纹理带细小水珠。从躺床脚边低机位拍摄，浅景深，电影感暖调，无文字、无Logo。\n视频（对上图使用）：手持镜头轻微晃动；缓慢而沉重的呼吸；她缓慢地前后摆动臀部，头发随之摇曳，然后直视镜头咬住下唇；镜头缓缓推近到她的面部特写。",
+      "nsfw": 62,
+      "prompt": "Photorealistic candid iPhone photo, vertical 9:16. An adult Japanese couple in their mid-20s in a softly lit hotel suite at night. She is clearly 25, with a mature face, long dark-brown waves with a damp sleek finish, glossy nude-pink lips and a curvy hourglass figure; she wears a matching baby-pink lace balconette bra and high-cut lace briefs with thin side straps, fully covered. He is tall and muscular, short black hair, wearing fitted black swim briefs. He stands behind her and lifts her playfully off the floor, his forearms hooked under the backs of her knees so her bent legs open into a wide M shape, toes pointing down; she leans her back against his chest, both hands reaching up and back around his neck, laughing and looking straight into the lens with a teasing, flushed smile. He leans slightly back to carry her weight. Warm amber bedside lamps, floor-to-ceiling window with blurred city lights, rumpled white bed behind them. Eye-level camera about two meters away, slight smartphone wide-angle, real skin texture with faint pores, no text, no logo.\nVideo (apply to the image above): handheld camera sways gently; he bounces her slowly up and down twice, she squeals and laughs, tightens her arms around his neck, then turns her face to kiss his jaw while looking back at the camera; slow push-in to a waist-up shot; soft breathing and laughter, room ambience.",
+      "zh": "写实iPhone抓拍照片，竖版9:16。一对20多岁中段的成年日本情侣，夜晚在柔和灯光的酒店套房里。她明确是25岁，面容成熟，深棕色长波浪发带光滑湿发质感，光泽裸粉色唇，沙漏型曲线身材；她穿一套配套的婴儿粉蕾丝半杯胸罩和细侧带高叉蕾丝内裤，完整覆盖。他高大健壮，黑色短发，穿合身黑色泳裤。他站在她身后，俏皮地把她从地上抱起来，前臂勾在她的膝窝下，使她弯曲的双腿张开成宽大的M字，脚尖朝下；她背靠在他胸前，双手向上向后环住他的脖子，笑着直视镜头，带着挑逗、泛红的微笑。他身体稍向后仰以承受她的重量。暖琥珀色床头灯，落地窗外城市灯光虚化，身后是凌乱的白色大床。平视机位，距离约两米，轻微手机广角，真实皮肤纹理带细微毛孔，无文字、无Logo。\n视频（对上图使用）：手持镜头轻微晃动；他把她缓慢地上下颠了两下，她尖叫着笑起来，收紧环住他脖子的双臂，然后转脸亲吻他的下颌，同时回看镜头；镜头缓慢推近到腰部以上；轻柔的呼吸声和笑声，房间环境音。",
       "sources": [
         {
-          "post": "aiceke120/2108137283987853711",
-          "element": "跨坐躺床的比基尼情侣体位+呼吸/晃动视频"
+          "post": "kissfetisubro/2108816074754175265",
+          "element": "M字抱起（逆駅弁）体位、男方从身后托膝窝、女方双手环颈、iPhone拍摄"
         },
         {
           "post": "VIBEQUIRKLABS/2108735838733631894",
-          "element": "焦糖棕湿发波浪、俏皮克制微笑、身材描写"
+          "element": "湿发波浪、俏皮挑逗微笑"
         },
         {
-          "post": "sdjn_wgc/2108721091741139194",
-          "element": "巴厘岛日落逆光、暖调、低机位"
+          "post": "storage_img/2108512807163449751",
+          "element": "夜间暖色灯光、现场抓拍质感"
         },
         {
-          "post": "AaronAILab/2108679776689111401",
-          "element": "皮肤水珠质感"
+          "post": "aiceke120/2108137283987853711",
+          "element": "手持晃动+推近运镜"
         }
       ],
       "test_result": "额度不足未测"
     },
     {
       "group": "可用参考图",
-      "type": "生图",
-      "nsfw": 48,
-      "prompt": "Photorealistic swimwear editorial, vertical 4:5. An adult East Asian woman, clearly in her 20s, glamorous hourglass figure, wet shoulder-length black hair swept to one side, nude-pink glossy lips, fine water droplets on her skin. She wears a tiny black micro string bikini: small triangle cups on thin strings tied behind the neck and back, ultra-low-rise string bottoms with long ties resting on her hips. She lies on her stomach along the edge of an infinity pool, forearms folded under her chin, back arched into a deep curve, hips raised, one knee bent with her foot lifted in the air, turning her head to look straight into the camera with a teasing half-smile. Cliffside Bali resort at sunset, pink-violet water, warm orange backlight glowing through her hair, crisp sparkle on the water surface. 35mm lens, low camera just above the waterline, slightly behind and to the side to emphasize the curve of her back and hips, blurred splash in the foreground, cinematic warm grade, real skin pores, no text, no watermark.",
-      "zh": "写实泳装大片，竖版4:5。一位明确20多岁的成年东亚女性，性感沙漏型身材，湿漉漉的齐肩黑发拨向一侧，裸粉色水光唇，皮肤上有细小水珠。她穿一套极小的黑色微型系带比基尼：细绳上的小三角杯，在颈后和背后系结，超低腰系带泳裤，长系带落在胯部。她趴在无边泳池边沿，前臂交叠垫在下巴下，背部下塌成深深的弧线，臀部抬起，一条腿屈膝、脚抬在空中，转头直视镜头，带着挑逗的半笑。巴厘岛悬崖度假酒店日落时分，池水泛粉紫色，暖橙色逆光透过发丝发光，水面闪着清晰的碎光。35mm镜头，低机位贴近水面，位于斜后侧以强调背部与臀部曲线，前景虚化水花，电影感暖调，真实皮肤毛孔，无文字、无水印。",
+      "type": "生图→生视频",
+      "nsfw": 58,
+      "prompt": "Photorealistic boudoir film still, vertical 9:16. An adult Korean woman, clearly in her late 20s, with long black hair in loose glossy waves, rosy glossy lips and a slim hourglass figure with rounded hips. She wears a black satin plunge bra, a matching high-waisted black satin thong with thin garter straps, and sheer black thigh-high stockings, everything fully on. She kneels on top of a polished dark-wood dining table in a dim loft apartment, her back to the camera, knees apart on the tabletop, arching her lower back deeply and glancing over her right shoulder with half-closed eyes and a slow, knowing smile. Her adult partner, a broad-shouldered man in an open white dress shirt, stands behind the table, his hands resting on her hips. Single warm pendant lamp overhead, deep shadows, rain-streaked window with neon reflections, candle on the table. Low camera at table height, slightly to the side, 50mm, shallow depth of field, cinematic teal-and-amber grade, real skin texture, no text.\nVideo (apply to the image above): slow sensual hip sway left and right as she twists her waist; his hands slide from her hips up to her waist; she tilts her head back and bites her lip, then looks straight into the lens; camera slowly orbits from behind her to her profile; soft breathing, rain ambience, no music.",
+      "zh": "写实闺房电影剧照，竖版9:16。一位明确20多岁后半的成年韩国女性，黑色长发呈蓬松光泽的波浪，玫瑰色水光唇，纤细沙漏型身材、臀部圆润。她穿黑色缎面深V胸罩、配套的黑色缎面高腰丁字裤加细吊袜带，以及黑色透明长筒丝袜，全部穿着整齐。她跪在昏暗Loft公寓里一张抛光深色木质餐桌上，背对镜头，双膝在桌面上分开，下腰深深下塌，眯着眼从右肩回头瞥向镜头，带着缓慢、心照不宣的微笑。她的成年伴侣是一位宽肩男性，穿着敞开的白色衬衫，站在桌后，双手搭在她的胯上。头顶一盏暖色吊灯，阴影深重，窗上有雨痕和霓虹倒影，桌上一支蜡烛。低机位与桌面同高，略偏侧面，50mm，浅景深，电影感青橙调色，真实皮肤纹理，无文字。\n视频（对上图使用）：她扭动腰身，臀部缓慢性感地左右摇摆；他的双手从她的胯部滑到腰间；她仰头咬唇，然后直视镜头；镜头从她身后缓慢环绕到侧面；轻柔呼吸声、雨声环境音，无音乐。",
       "sources": [
         {
-          "post": "sdjn_wgc/2108721091741139194",
-          "element": "趴在无边泳池边、托下巴、塌腰、巴厘岛日落、35mm低机位"
-        },
-        {
-          "post": "sdjn_wgc/2108692489620132271",
-          "element": "湿发拨向一侧、裸粉唇、水珠"
-        },
-        {
-          "post": "kissfetisubro/2108463478990369260",
-          "element": "细绳泳裤元素"
+          "post": "yngfipng1/2108610940346474963",
+          "element": "背对镜头跪在桌上扭动臀部、男方爱抚（视频动作）"
         },
         {
           "post": "chichipuijaian/2108392506962432200",
-          "element": "斜后方机位强调臀部"
+          "element": "斜后方低机位强调臀部曲线"
+        },
+        {
+          "post": "MCreatorClub/2108718655907492205",
+          "element": "单镜头环绕+呼吸音效的视频结构"
         }
       ],
       "test_result": "额度不足未测"
     },
     {
       "group": "仅无图生成",
-      "type": "生视频",
-      "nsfw": 78,
-      "prompt": "Photorealistic R-rated romantic film still that becomes a 6-second video, vertical 9:16. An adult couple in their late 20s in a dim hotel bedroom at night: she has long platinum-blonde waves, a glossy nude lip and a slim curvy figure; he is broad-shouldered with short dark hair. Both are nude under a loosely draped white sheet that covers them from the waist down. She sits astride him, her bare back and shoulders lit by warm amber bedside lamplight, his hands gripping her hips; she leans back with her eyes closed and mouth open in pleasure, hair falling down her spine. City lights blur through the window behind them, soft film grain, shallow depth of field, real skin texture with a light sheen of sweat. Camera at bed height, slightly behind her shoulder.\nVideo: one continuous shot; slow rhythmic rocking motion; the sheet slides and gathers with each movement; heavy breathing and soft moans; she leans down to kiss him, then arches back again; the camera slowly orbits from behind her shoulder to her profile; ambient city hum, no music.",
-      "zh": "写实R级爱情电影剧照，并延展成6秒视频，竖版9:16。夜晚昏暗酒店卧室里的一对20多岁后半的成年情侣：她留着铂金色长波浪发，光泽裸色唇，纤细而有曲线的身材；他肩膀宽阔，深色短发。两人赤裸，一条松松搭着的白床单从腰部以下盖住他们。她跨坐在他身上，裸露的后背和肩膀被暖琥珀色床头灯照亮，他的双手握着她的臀部；她向后仰，闭眼张嘴沉浸在快感中，头发沿脊背垂落。身后窗外城市灯光虚化，柔和胶片颗粒，浅景深，真实皮肤纹理带一层薄汗光泽。机位与床同高，略在她肩后。\n视频：单一连续镜头；缓慢而有节奏的摇动；床单随每次动作滑动、堆叠；沉重的喘息和轻柔的呻吟；她俯身亲吻他，然后再次后仰；镜头从她肩后缓慢环绕到她的侧脸；环境中城市低鸣，无音乐。",
+      "type": "生图→生视频",
+      "nsfw": 88,
+      "prompt": "Photorealistic R18 erotic film still that becomes an 8-second video, vertical 9:16. A consenting adult couple in their late 20s inside a rustic mountain cabin at night, lit only by a crackling stone fireplace. She has long black hair in a loose side braid, a mature face, flushed cheeks and a curvy figure with full breasts; he is bearded and muscular. Both are fully nude on thick fur rugs in front of the fire. She lies on her back with her legs wrapped around his waist, her hands gripping his shoulders, while he is on top of her making love to her, their bodies pressed together, glistening with sweat; her head is tilted back, eyes closed, mouth open in pleasure. Warm orange firelight flickers across their skin, deep shadows, soft film grain, real skin texture. Camera at floor level, three-quarter angle from the side, shallow depth of field.\nVideo: one continuous shot; slow, deep, rhythmic thrusting; her breasts sway with each movement and the fur rug bunches under her; she pulls him down into a kiss, then arches her back and moans; the fire crackles; the camera slowly dollies along the rug toward their faces; heavy breathing, soft moans, no music.",
+      "zh": "写实R18情色电影剧照，并延展为8秒视频，竖版9:16。一对两厢情愿的20多岁后半成年情侣，夜晚在质朴的山间小木屋里，只有噼啪作响的石砌壁炉照明。她黑色长发编成松散的侧辫，面容成熟，脸颊泛红，曲线身材、胸部丰满；他留着胡子、肌肉结实。两人全裸躺在壁炉前厚厚的毛皮毯上。她仰躺，双腿缠住他的腰，双手抓着他的肩膀，他在她上方与她做爱，两人身体紧贴、汗水闪亮；她头向后仰，双眼紧闭，张嘴沉浸在快感中。温暖的橙色火光在他们皮肤上跳动，阴影深重，柔和胶片颗粒，真实皮肤纹理。机位贴近地面，从侧面四分之三角度拍摄，浅景深。\n视频：单一连续镜头；缓慢、深入而有节奏的抽送；她的胸部随每次动作摇晃，身下的毛皮毯堆叠起来；她把他拉下来接吻，然后弓起背呻吟；壁炉噼啪作响；镜头沿着毛皮毯缓慢向他们的脸部推移；沉重的喘息、轻柔的呻吟，无音乐。",
       "sources": [
         {
+          "post": "MCreatorClub/2108764206183207023",
+          "element": "毛皮/火光原始场景、侧辫发型、分镜式连续镜头与喘息音效（已改为两厢情愿、无参考图）"
+        },
+        {
           "post": "MCreatorClub/2108354758272782600",
-          "element": "跨坐体位、卧室、成人情侣设定"
-        },
-        {
-          "post": "MCreatorClub/2108718655907492205",
-          "element": "分镜式时间轴、呼吸/呻吟音效、单镜头不剪切"
-        },
-        {
-          "post": "MCreatorClub/2108400308535574549",
-          "element": "铂金色波浪发、光泽妆容"
+          "element": "成人情侣性爱体位与时间轴写法"
         },
         {
           "post": "aiceke120/2108137283987853711",
-          "element": "手持/环绕运镜"
+          "element": "缓慢推镜运镜"
         }
       ],
       "test_result": "额度不足未测"
@@ -81,25 +73,21 @@
     {
       "group": "仅无图生成",
       "type": "生图",
-      "nsfw": 76,
-      "prompt": "Photorealistic iPhone photo, vertical 9:16. An adult Japanese woman, clearly 25 years old, with a mature face, long dark-brown hair spread across the pillow and a soft sleepy smile, lies on her back on her own bed in a cozy bedroom at night. Her upper body wears an unbuttoned oversized pastel satin pajama shirt slipping off one shoulder; below the waist she wears nothing except a single short vertical bandage placed over her crotch. Her knees are bent and spread in an M-shape, feet flat on the sheets, one hand resting on her stomach, the other playing with her hair as she looks into the lens. Warm bedside lamp light, rumpled white sheets, natural skin texture with faint pores. Low angle from the foot of the bed, close-up framing on her hips and thighs with her face still visible at the top of the frame, slight smartphone wide-angle distortion, no text.",
-      "zh": "写实iPhone照片，竖版9:16。一位明确25岁的成年日本女性，面容成熟，深棕色长发铺散在枕头上，带着慵懒的柔和微笑，夜晚在温馨卧室里仰躺在自己的床上。上半身穿一件解开扣子、从一侧肩膀滑落的宽松粉彩缎面睡衣衬衫；腰部以下除了胯部竖贴的一条短创可贴外什么都没穿。她双膝弯曲呈M字张开，双脚平踩在床单上，一只手放在小腹上，另一只手拨弄头发，看向镜头。暖色床头灯光，凌乱的白床单，自然皮肤纹理带细微毛孔。从床脚低角度拍摄，特写构图聚焦臀部和大腿，画面顶部仍可见她的脸，轻微的手机广角畸变，无文字。",
+      "nsfw": 85,
+      "prompt": "Photorealistic explicit iPhone photo, vertical 9:16. A consenting adult Japanese couple in their mid-20s in a dim bedroom at night. She is clearly 25 with a mature face, long dark-brown hair and a curvy figure; he is tall and muscular with short black hair. Both are completely nude. He stands behind her and holds her up against his chest in a reverse \"ekiben\" carry, his forearms hooked under the backs of her knees so her legs are spread wide in an M shape, while they are having sex in this position; her arms reach back around his neck, her head rests on his shoulder, eyes half-closed and mouth open in pleasure, her body flushed and glistening with sweat. He leans back slightly to support her weight. Warm amber bedside lamp, rumpled white sheets and a full-length mirror behind them. Eye-level camera from the front, about two meters away, slight smartphone wide-angle distortion, real skin texture, no text.",
+      "zh": "写实露骨iPhone照片，竖版9:16。一对两厢情愿的20多岁中段成年日本情侣，夜晚在昏暗的卧室里。她明确25岁，面容成熟，深棕色长发，曲线身材；他高大健壮，黑色短发。两人全裸。他站在她身后，以逆“火车便当”（reverse ekiben）姿势把她抱起贴在自己胸前，前臂勾在她的膝窝下，使她双腿大大张开成M字，两人正以这个体位做爱；她双臂向后环住他的脖子，头靠在他肩上，眼睛半闭、张嘴沉浸在快感中，身体泛红、汗水闪亮。他身体稍向后仰以支撑她的重量。暖琥珀色床头灯，身后是凌乱的白床单和一面全身镜。正面平视机位，距离约两米，轻微手机广角畸变，真实皮肤纹理，无文字。",
       "sources": [
         {
-          "post": "kissfetisubro/2108421657815859347",
-          "element": "床上仰躺M字开腿、胯部竖贴创可贴、脚边低角度特写"
+          "post": "kissfetisubro/2108816074754175265",
+          "element": "M字抱起（逆駅弁）体位与托膝窝动作、iPhone拍摄"
         },
         {
-          "post": "kissfetisubro/2108444314988859899",
-          "element": "上身睡衣、iPhone拍摄"
+          "post": "kissfetisubro/2108523352113705248",
+          "element": "露骨程度与日式写实手机质感"
         },
         {
-          "post": "C6AIFP/2108511304898244825",
-          "element": "家居服半脱状态"
-        },
-        {
-          "post": "chichipuijaian/2108029615843237954",
-          "element": "缎面宽松上衣"
+          "post": "MCreatorClub/2108354758272782600",
+          "element": "成人情侣性爱设定"
         }
       ],
       "test_result": "额度不足未测"
@@ -112,7 +100,7 @@
       "帖子链接": "https://x.com/kissfetisubro/status/2108523352113705248",
       "发布时间(UTC+8)": "2026-10-09 19:41",
       "发布时间ISO(UTC)": "2026-10-09T11:41:56Z",
-      "距今": "18小时前",
+      "距今": "23小时前",
       "类型分组": "生图",
       "类型": "生图",
       "步骤数": 1,
@@ -134,7 +122,7 @@
       "帖子链接": "https://x.com/storage_img/status/2108512807163449751",
       "发布时间(UTC+8)": "2026-10-09 19:00",
       "发布时间ISO(UTC)": "2026-10-09T11:00:02Z",
-      "距今": "19小时前",
+      "距今": "1天前",
       "类型分组": "生图",
       "类型": "生图",
       "步骤数": 1,
@@ -151,12 +139,78 @@
       "分区": "已关注博主"
     },
     {
+      "来源": "已关注",
+      "博主": "@kissfetisubro",
+      "帖子链接": "https://x.com/kissfetisubro/status/2108816074754175265",
+      "发布时间(UTC+8)": "2026-10-10 15:05",
+      "发布时间ISO(UTC)": "2026-10-10T07:05:06Z",
+      "距今": "4小时前",
+      "类型分组": "生图",
+      "类型": "生图",
+      "步骤数": 1,
+      "题材标签": "真人风、内衣、情侣互动、姿势",
+      "NSFW程度": 68,
+      "参考图兼容": "可用参考图",
+      "判断理由": "M字抱起性体位暗示，内衣无裸露（可能被拦）",
+      "步骤1类型": "生图",
+      "步骤1提示词": "男と女の2人。男はマッチョ、男は股間がもっこりしたビキニの水着。女は20代前半の日本人女性、ピンクのセクシーな下着。\n女の後ろに立っている男がM字開脚の女を後ろから膝の裏を掴んで抱えている。女は膝を折り曲げつま先は自然に下へ、両手は男の首に添えている。\n男は少し後ろにのけ反り、女の体を高い位置で自分の体にもたれかけさせて支えている。iPhoneで撮影\n（作者注：必要最小限的提示词，角色与情境请自行定义；作品名「M字抱っこ（逆駅弁）」）",
+      "步骤1中文翻译": "一男一女两人。男人肌肉发达，穿着胯部鼓起的比基尼泳裤。女人是20岁出头的日本女性，穿粉色性感内衣。\n站在女人身后的男人从后方抓住呈M字开腿的女人的膝窝，把她抱起来。女人屈膝，脚尖自然朝下，双手搭在男人的脖子上。\n男人身体稍向后仰，让女人的身体在高处靠在自己身上并支撑着她。用iPhone拍摄\n（作者注：这是最低限度的提示词，角色和情境请各自定义；作品名「M字抱（逆火车便当）」）",
+      "提示词位置": "alt",
+      "点赞数": 140,
+      "参考图": null,
+      "分区": "已关注博主"
+    },
+    {
+      "来源": "已关注",
+      "博主": "@chichipuijaian",
+      "帖子链接": "https://x.com/chichipuijaian/status/2108754894714810705",
+      "发布时间(UTC+8)": "2026-10-10 11:02",
+      "发布时间ISO(UTC)": "2026-10-10T03:02:00Z",
+      "距今": "8小时前",
+      "类型分组": "生图",
+      "类型": "生图",
+      "步骤数": 1,
+      "题材标签": "写真、居家便装、姿势",
+      "NSFW程度": 45,
+      "参考图兼容": "可用参考图",
+      "判断理由": "浴衣敞开露脐，声明非裸露",
+      "步骤1类型": "生图",
+      "步骤1提示词": "暑くて乱れてはだけた浴衣。妖艶。片足を内側に曲げてる。へそ。女性らしいラインが出てる。全身。寝転んでる。NSFWじゃない。ヌードじゃない。\n（作者注：无初手图直接生成已接近极限，有人能过有人过不了）",
+      "步骤1中文翻译": "因为太热而凌乱、敞开的浴衣。妖艳。一条腿向内弯曲。肚脐。显出女性的身体曲线。全身。躺着。不是NSFW。不是裸体。\n（作者注：不用初手图直接生成已快到极限，有人能通过有人通不过）",
+      "提示词位置": "alt",
+      "点赞数": 138,
+      "参考图": null,
+      "分区": "已关注博主"
+    },
+    {
+      "来源": "已关注",
+      "博主": "@storage_img",
+      "帖子链接": "https://x.com/storage_img/status/2108875189950029964",
+      "发布时间(UTC+8)": "2026-10-10 19:00",
+      "发布时间ISO(UTC)": "2026-10-10T11:00:00Z",
+      "距今": "20分钟前",
+      "类型分组": "生图",
+      "类型": "生图",
+      "步骤数": 1,
+      "题材标签": "真人风、泳装比基尼、泳池、湿身",
+      "NSFW程度": 32,
+      "参考图兼容": "可用参考图",
+      "判断理由": "比基尼写真",
+      "步骤1类型": "生图",
+      "步骤1提示词": "成人女性が夜の屋外リゾートやプールサイドで、濡れた髪のままリクライニングチェアに座り、缶飲料を飲んでいるリアル写真風ポートレート。カメラはやや近距離の縦長構図で、顔から上半身、腰まわりまでを中心に写す。女性は黒髪のショート〜ミディアムヘアで、濡れた前髪や細い髪束が顔や首元に自然に張りついている。肌には水辺らしい自然なツヤがあり、夜間フラッシュ撮影のようにハイライトが強く出ている。\n\n服装は白黒のアニマル柄ビキニで、蛍光グリーンの細いストラップがアクセントになっている。トップスはバンドゥ風で、中央にグリーンのラインが入り、ボトムも同系の柄とグリーンのストラップで統一されている。片手で白い缶飲料を口元に当てて飲み、もう片方の手はリラックスして椅子の近くに置いている。視線は横に外れており、自然で少し無防備な夜のリゾートスナップの雰囲気。\n\n背景は暗い屋外で、黒いリクライニングチェア、木製デッキ、植物や木々、点々と光る暖色のライトがぼんやり見える。左側には強いライトのフレアがあり、背景は浅くぼけている。夜間のスマートフォン撮影らしいリアルな質感、濡れた髪の束感、肌の水滴とツヤ、缶の金属感、水着の柄とストラップの細部を丁寧に描写する。超写実的、SNS投稿風、夜のプールサイド、湿度のある空気感、自然な肌質、過度な加工のないリアルフォト。\n（原帖未标注工具）",
+      "步骤1中文翻译": "一张写实照片风格的人像：成年女性在夜晚的户外度假村或泳池边，湿着头发坐在躺椅上，正在喝罐装饮料。镜头距离稍近，竖构图，以脸部到上半身、腰部周围为中心。女性留着黑色短发到中长发，湿漉漉的刘海和细发束自然地贴在脸上和颈部。皮肤带有水边特有的自然光泽，像夜间闪光灯拍摄那样高光强烈。\n\n服装是黑白动物纹比基尼，以荧光绿色细肩带作为点缀。上衣是抹胸（bandeau）风格，中间有一条绿色线条，下装也统一为同系花纹和绿色系带。她一只手把白色罐装饮料贴在嘴边喝，另一只手放松地放在椅子附近。视线偏向侧面，营造自然、略带不设防感的夜晚度假抓拍氛围。\n\n背景是昏暗的户外，隐约可见黑色躺椅、木质平台、植物和树木、点点暖色灯光。左侧有强烈的灯光眩光，背景浅浅虚化。细致描绘夜间智能手机拍摄般的真实质感、湿发的束感、皮肤上的水珠与光泽、罐子的金属感、泳衣花纹和系带细节。超写实，SNS发帖风格，夜晚泳池边，湿润的空气感，自然肤质，无过度修图的真实照片。\n（原帖未标注工具）",
+      "提示词位置": "alt",
+      "点赞数": 1,
+      "参考图": null,
+      "分区": "已关注博主"
+    },
+    {
       "来源": "新发现",
       "博主": "@sdjn_wgc",
       "帖子链接": "https://x.com/sdjn_wgc/status/2108575442265575580",
       "发布时间(UTC+8)": "2026-10-09 23:08",
       "发布时间ISO(UTC)": "2026-10-09T15:08:55Z",
-      "距今": "15小时前",
+      "距今": "20小时前",
       "类型分组": "生图",
       "类型": "生图",
       "步骤数": 1,
@@ -178,7 +232,7 @@
       "帖子链接": "https://x.com/sdjn_wgc/status/2108530747053355500",
       "发布时间(UTC+8)": "2026-10-09 20:11",
       "发布时间ISO(UTC)": "2026-10-09T12:11:19Z",
-      "距今": "18小时前",
+      "距今": "23小时前",
       "类型分组": "生图",
       "类型": "生图",
       "步骤数": 1,
@@ -200,7 +254,7 @@
       "帖子链接": "https://x.com/sdjn_wgc/status/2108578310636896749",
       "发布时间(UTC+8)": "2026-10-09 23:20",
       "发布时间ISO(UTC)": "2026-10-09T15:20:19Z",
-      "距今": "14小时前",
+      "距今": "19小时前",
       "类型分组": "生图",
       "类型": "生图",
       "步骤数": 1,
@@ -219,10 +273,54 @@
     {
       "来源": "新发现",
       "博主": "@sdjn_wgc",
+      "帖子链接": "https://x.com/sdjn_wgc/status/2108756876083220879",
+      "发布时间(UTC+8)": "2026-10-10 11:09",
+      "发布时间ISO(UTC)": "2026-10-10T03:09:52Z",
+      "距今": "8小时前",
+      "类型分组": "生图",
+      "类型": "生图",
+      "步骤数": 1,
+      "题材标签": "真人风、泳装比基尼、写真、户外",
+      "NSFW程度": 38,
+      "参考图兼容": "可用参考图",
+      "判断理由": "比基尼写真",
+      "步骤1类型": "生图",
+      "步骤1提示词": "人设：绝美23岁东亚美女，身材匀称丰满，胸部明显自然丰满，视觉约E杯，具有自然重量感与柔和圆润轮廓，胸腰差明显但自然，纤细腰部与丰满胸部形成清晰比例；气质：明艳热烈。\n服装：正红色光面三角杯比基尼，背后细绳交叉系带，下装侧边双结系带，搭一件半透明白色罩衫滑落至手肘\n妆发：高马尾，红唇，小麦色健康光泽肌\n瞬间：坐在游艇甲板边缘，双腿交叠，上身后仰单手撑地，下巴微抬看向镜头\n光影环境：地中海蓝色海面，午后硬光，甲板白色反光作天然补光，肤色饱满\n镜头：50mm，全身略俯拍，色彩高饱和，奢牌度假广告风\n负面提示词：\n低质量，模糊，变形，多余手指，肢体畸形，塑料感皮肤，过曝，卡通，动漫，文字，水印，夸张美颜，畸形解剖，品牌LOGO字\n（原帖未标注生图工具）",
+      "步骤1中文翻译": "人设：绝美23岁东亚美女，身材匀称丰满，胸部明显自然丰满，视觉约E杯，具有自然重量感与柔和圆润轮廓，胸腰差明显但自然，纤细腰部与丰满胸部形成清晰比例；气质：明艳热烈。\n服装：正红色光面三角杯比基尼，背后细绳交叉系带，下装侧边双结系带，搭一件半透明白色罩衫滑落至手肘\n妆发：高马尾，红唇，小麦色健康光泽肌\n瞬间：坐在游艇甲板边缘，双腿交叠，上身后仰单手撑地，下巴微抬看向镜头\n光影环境：地中海蓝色海面，午后硬光，甲板白色反光作天然补光，肤色饱满\n镜头：50mm，全身略俯拍，色彩高饱和，奢牌度假广告风\n负面提示词：\n低质量，模糊，变形，多余手指，肢体畸形，塑料感皮肤，过曝，卡通，动漫，文字，水印，夸张美颜，畸形解剖，品牌LOGO字\n（原帖未标注生图工具）",
+      "提示词位置": "正文",
+      "点赞数": 66,
+      "参考图": null,
+      "分区": "新发现博主"
+    },
+    {
+      "来源": "新发现",
+      "博主": "@VIBEQUIRKLABS",
+      "帖子链接": "https://x.com/VIBEQUIRKLABS/status/2108820136778256764",
+      "发布时间(UTC+8)": "2026-10-10 15:21",
+      "发布时间ISO(UTC)": "2026-10-10T07:21:15Z",
+      "距今": "3小时前",
+      "类型分组": "生图",
+      "类型": "生图",
+      "步骤数": 1,
+      "题材标签": "真人风、泳装比基尼、写真、户外",
+      "NSFW程度": 45,
+      "参考图兼容": "可用参考图",
+      "判断理由": "极端镂空连体泳衣，无裸露",
+      "步骤1类型": "生图",
+      "步骤1提示词": "Grok Imagine 2.0 :\nPhotorealistic editorial portrait.\n\nThe setting is luxury hotel balcony river-view terrace, glass railing, balcony ledge, layered building lights, brighter harbor and city light points, subtle reflections from surrounding artificial lights.\nShe presents a casual, relaxed, and natural sitting pose.\nA close handheld companion snapshot from a boyfriend-or-best-friend point of view, with her leaning naturally toward the nearby camera and keeping her hands relaxed in candid body language.\nUrban night ambience with mixed warm and cool city glow, dark blue-black sky where visible.\nShe is photographed within the scene's ambient light.\nWaist-up portrait, eye-level view.\n\nA 20s seductive stunning Japanese or Korean woman with brown frame, sunglasses with tinted lenses, resting on top of the head, pushed into the hair, eyes unobstructed, small sculptural hoop earring detail, subtle polished metal accent, and delicate collarbone chain detail, subtle metallic neck accent, I–K cup bust, slim arms, narrow waist, wide hips, fuller upper thighs, slim calves, balanced proportions, pronounced hourglass silhouette, curves stretching fitted fabric with soft flesh bulges at snug garment edges; height 163–168 cm, bust–waist–hip 103–60–98 cm, young beautiful Japanese transparent face, soft natural features, clean gentle eyes, airy fresh beauty, medium-to-long hair with subtle natural bends, softly curved ends, clean natural silhouette, sleek wet finish, defined damp sections, neat separated strands, controlled close-to-head shape, rose cocoa-brown hair, soft rosy brunette tone, candid joyful expression, lifted cheeks, eyes gently narrowed by the smile, open genuine smile, visible teeth.\n\nShe wears, separate high-neck chest panel and high-cut bikini bottom connected only by thin side straps at the lower crop edge, black high-neck extreme front cut-out monokini swimsuit, oversized open front torso gap exposing most of the abdomen and navel, smooth stretch swim fabric.\n\nMasumi Ishida-inspired luminous summer film image language.\n\nShot on anamorphic lens, horizontally squeezed widescreen optics, oval bokeh rendering, f/2.8-style shallow depth of field, clear subject plane.\n\nTransparent Japanese portrait color grade, airy low-contrast tonality, milky white highlights, pastel saturation, neutral-clean skin tones.",
+      "步骤1中文翻译": "Grok Imagine 2.0：\n写实编辑风人像。\n\n场景是豪华酒店的阳台江景露台，玻璃栏杆，阳台台沿，层层叠叠的楼宇灯光，更明亮的港口与城市光点，周围人造光源的细微反光。\n她呈现随意、放松、自然的坐姿。\n一张从男友或闺蜜视角拍摄的近距离手持陪伴抓拍，她自然地朝近处的镜头倾身，双手放松，肢体语言随性。\n都市夜景氛围，冷暖混合的城市灯光，可见处为深蓝黑色的天空。\n她在场景的环境光中被拍摄。\n腰部以上人像，平视视角。\n\n一位20多岁、性感迷人的绝美日本或韩国女性，戴着棕色镜框、有色镜片的太阳镜，架在头顶、推进头发里，眼睛不被遮挡；小巧的雕塑感圈形耳环，细微的抛光金属点缀；精致的锁骨链，细微的金属颈部点缀；I–K罩杯胸部，纤细手臂，窄腰，宽胯，较丰满的大腿上部，纤细小腿，比例均衡，明显的沙漏型轮廓，曲线撑紧贴身面料，在紧身衣物边缘形成柔软的肉感隆起；身高163–168厘米，三围103–60–98厘米；年轻美丽的日式通透脸，柔和自然的五官，清澈温柔的眼睛，轻盈清新的美感；中长发带细微自然弯曲，发尾柔和内弯，干净自然的轮廓，光滑湿发质感，分明的湿发束，整齐分离的发丝，贴合头部的受控造型；玫瑰可可棕色头发，柔和的玫瑰棕色调；坦率开心的表情，苹果肌上扬，眼睛因笑而微微眯起，真诚张嘴笑，露出牙齿。\n\n她穿着：分体式高领胸片与高叉比基尼下装，仅在下方裁切边缘由细侧带相连；黑色高领、正面极端镂空的连体泳衣（monokini），躯干正面大面积开口，露出大部分腹部和肚脐，光滑弹力泳衣面料。\n\n受石田真澄（Masumi Ishida）启发的明亮夏日胶片影像语言。\n\n使用变形宽银幕镜头拍摄，水平压缩的宽银幕光学，椭圆形焦外，f/2.8风格的浅景深，清晰的主体焦平面。\n\n通透的日系人像调色，空气感低对比影调，牛奶白高光，粉彩饱和度，中性干净的肤色。",
+      "提示词位置": "正文",
+      "点赞数": 53,
+      "参考图": null,
+      "分区": "新发现博主"
+    },
+    {
+      "来源": "新发现",
+      "博主": "@sdjn_wgc",
       "帖子链接": "https://x.com/sdjn_wgc/status/2108692489620132271",
       "发布时间(UTC+8)": "2026-10-10 06:54",
       "发布时间ISO(UTC)": "2026-10-09T22:54:01Z",
-      "距今": "7小时前",
+      "距今": "12小时前",
       "类型分组": "生图",
       "类型": "生图",
       "步骤数": 1,
@@ -244,7 +342,7 @@
       "帖子链接": "https://x.com/VIBEQUIRKLABS/status/2108564821092569357",
       "发布时间(UTC+8)": "2026-10-09 22:26",
       "发布时间ISO(UTC)": "2026-10-09T14:26:43Z",
-      "距今": "15小时前",
+      "距今": "20小时前",
       "类型分组": "生图",
       "类型": "生图",
       "步骤数": 1,
@@ -266,7 +364,7 @@
       "帖子链接": "https://x.com/AaronAILab/status/2108679776689111401",
       "发布时间(UTC+8)": "2026-10-10 06:03",
       "发布时间ISO(UTC)": "2026-10-09T22:03:30Z",
-      "距今": "8小时前",
+      "距今": "13小时前",
       "类型分组": "生图",
       "类型": "生图",
       "步骤数": 1,
@@ -288,7 +386,7 @@
       "帖子链接": "https://x.com/sdjn_wgc/status/2108586138583904741",
       "发布时间(UTC+8)": "2026-10-09 23:51",
       "发布时间ISO(UTC)": "2026-10-09T15:51:25Z",
-      "距今": "14小时前",
+      "距今": "19小时前",
       "类型分组": "生图",
       "类型": "生图",
       "步骤数": 1,
@@ -307,10 +405,32 @@
     {
       "来源": "新发现",
       "博主": "@sdjn_wgc",
+      "帖子链接": "https://x.com/sdjn_wgc/status/2108852485431427378",
+      "发布时间(UTC+8)": "2026-10-10 17:29",
+      "发布时间ISO(UTC)": "2026-10-10T09:29:47Z",
+      "距今": "1小时前",
+      "类型分组": "生图",
+      "类型": "生图",
+      "步骤数": 1,
+      "题材标签": "真人风、泳装比基尼、写真、户外",
+      "NSFW程度": 38,
+      "参考图兼容": "可用参考图",
+      "判断理由": "比基尼写真",
+      "步骤1类型": "生图",
+      "步骤1提示词": "人设：绝美23岁东亚美女，身材匀称丰满，胸部明显自然丰满，视觉约E杯，具有自然重量感与柔和圆润轮廓，胸腰差明显但自然，纤细腰部与丰满胸部形成清晰比例；气质：含情媚，眼神温柔得像在看心上人。\n服装：雾粉色罗纹三角杯比基尼，肩带和颈后系带都是加长缎带，在锁骨上方打一个大蝴蝶结；下装低腰细绳款，胯侧挂一串小贝壳流苏\n妆发：半扎公主头，鬓边别一朵白色鸡蛋花，眼尾晕一点粉，草莓色水光唇\n眼神与神态：眼含水光，眼波柔软地停在镜头上，嘴角浅浅上扬，脸颊微微泛红\n瞬间：站在及膝的浅海里，一只手指缠着锁骨前的缎带，另一手把被风吹到唇边的发丝拨开，身体微侧扭腰回头\n光影环境：马尔代夫潟湖，日落前的暖粉天空，柔和侧逆光，海面碎光映在锁骨和肩头\n镜头：100mm，中景偏近，浅景深，柔和暖调，日系写真融合杂志封面质感\n负面提示词：\n低质量，模糊，变形，多余手指，肢体畸形，塑料感皮肤，过曝，卡通，动漫，文字，水印，夸张美颜，畸形解剖，品牌LOGO字\n（原帖未标注生图工具）",
+      "步骤1中文翻译": "人设：绝美23岁东亚美女，身材匀称丰满，胸部明显自然丰满，视觉约E杯，具有自然重量感与柔和圆润轮廓，胸腰差明显但自然，纤细腰部与丰满胸部形成清晰比例；气质：含情媚，眼神温柔得像在看心上人。\n服装：雾粉色罗纹三角杯比基尼，肩带和颈后系带都是加长缎带，在锁骨上方打一个大蝴蝶结；下装低腰细绳款，胯侧挂一串小贝壳流苏\n妆发：半扎公主头，鬓边别一朵白色鸡蛋花，眼尾晕一点粉，草莓色水光唇\n眼神与神态：眼含水光，眼波柔软地停在镜头上，嘴角浅浅上扬，脸颊微微泛红\n瞬间：站在及膝的浅海里，一只手指缠着锁骨前的缎带，另一手把被风吹到唇边的发丝拨开，身体微侧扭腰回头\n光影环境：马尔代夫潟湖，日落前的暖粉天空，柔和侧逆光，海面碎光映在锁骨和肩头\n镜头：100mm，中景偏近，浅景深，柔和暖调，日系写真融合杂志封面质感\n负面提示词：\n低质量，模糊，变形，多余手指，肢体畸形，塑料感皮肤，过曝，卡通，动漫，文字，水印，夸张美颜，畸形解剖，品牌LOGO字\n（原帖未标注生图工具）",
+      "提示词位置": "正文",
+      "点赞数": 26,
+      "参考图": null,
+      "分区": "新发现博主"
+    },
+    {
+      "来源": "新发现",
+      "博主": "@sdjn_wgc",
       "帖子链接": "https://x.com/sdjn_wgc/status/2108686412845633787",
       "发布时间(UTC+8)": "2026-10-10 06:29",
       "发布时间ISO(UTC)": "2026-10-09T22:29:52Z",
-      "距今": "7小时前",
+      "距今": "12小时前",
       "类型分组": "生图",
       "类型": "生图",
       "步骤数": 1,
@@ -328,11 +448,33 @@
     },
     {
       "来源": "新发现",
+      "博主": "@dreamydigiarts",
+      "帖子链接": "https://x.com/dreamydigiarts/status/2108854027467518148",
+      "发布时间(UTC+8)": "2026-10-10 17:35",
+      "发布时间ISO(UTC)": "2026-10-10T09:35:55Z",
+      "距今": "1小时前",
+      "类型分组": "生图",
+      "类型": "生图",
+      "步骤数": 1,
+      "题材标签": "真人风、泳装比基尼、写真",
+      "NSFW程度": 33,
+      "参考图兼容": "可用参考图",
+      "判断理由": "比基尼写真",
+      "步骤1类型": "生图",
+      "步骤1提示词": "A medium shot photograph of the woman in the standing in front of floor-to-ceiling white sheer curtains. The same person is wearing a light red bikini set; the top features distinctive star-shaped cups, and the bottom is a classic high-cut bikini style. They are accessorized with a delicate tennis necklace, a gold waist chain, a gold wristwatch on the left wrist, and a bracelet on the right wrist. The same person is posing with their left hand resting on their hip, looking directly toward the camera with a neutral expression. The lighting is soft and diffused, coming from behind the curtains, creating a bright, airy atmosphere with gentle highlights on the skin. The camera is positioned at eye level, capturing the same person from the mid-thigh up. The background consists solely of the draped, translucent white fabric, which is softly blurred by shallow depth of field to emphasize the same person. The image has a clean, professional studio aesthetic with natural color tones and sharp focus on the same person's features and accessories.\n（原帖：Made with Grok imagine 2.0）",
+      "步骤1中文翻译": "一张中景照片：女人站在落地的白色薄纱窗帘前。同一个人穿着浅红色比基尼套装；上衣是独特的星形罩杯，下装是经典高叉比基尼款式。配饰有一条精致的网球手链式项链（tennis necklace）、一条金色腰链、左手腕上一块金色手表、右手腕上一只手镯。同一个人左手叉腰摆姿势，直视镜头，表情平静。光线柔和漫射，从窗帘后方照来，营造明亮、通透的氛围，皮肤上有柔和的高光。相机位于平视高度，拍摄同一个人从大腿中部往上。背景只有垂坠的半透明白色布料，被浅景深柔和虚化，以突出同一个人。画面具有干净、专业的影棚美感，色调自然，同一个人的五官和配饰对焦清晰。\n（原帖：使用 Grok imagine 2.0 制作）",
+      "提示词位置": "正文",
+      "点赞数": 21,
+      "参考图": null,
+      "分区": "新发现博主"
+    },
+    {
+      "来源": "新发现",
       "博主": "@tealdog2",
       "帖子链接": "https://x.com/tealdog2/status/2108586684019564713",
       "发布时间(UTC+8)": "2026-10-09 23:53",
       "发布时间ISO(UTC)": "2026-10-09T15:53:35Z",
-      "距今": "14小时前",
+      "距今": "19小时前",
       "类型分组": "生图",
       "类型": "生图",
       "步骤数": 1,
@@ -354,7 +496,7 @@
       "帖子链接": "https://x.com/sdjn_wgc/status/2108721091741139194",
       "发布时间(UTC+8)": "2026-10-10 08:47",
       "发布时间ISO(UTC)": "2026-10-10T00:47:41Z",
-      "距今": "5小时前",
+      "距今": "10小时前",
       "类型分组": "生图",
       "类型": "生图",
       "步骤数": 1,
@@ -376,7 +518,7 @@
       "帖子链接": "https://x.com/VIBEQUIRKLABS/status/2108735838733631894",
       "发布时间(UTC+8)": "2026-10-10 09:46",
       "发布时间ISO(UTC)": "2026-10-10T01:46:17Z",
-      "距今": "4小时前",
+      "距今": "9小时前",
       "类型分组": "生图",
       "类型": "生图",
       "步骤数": 1,
@@ -394,11 +536,55 @@
     },
     {
       "来源": "新发现",
+      "博主": "@sdjn_wgc",
+      "帖子链接": "https://x.com/sdjn_wgc/status/2108869867919048930",
+      "发布时间(UTC+8)": "2026-10-10 18:38",
+      "发布时间ISO(UTC)": "2026-10-10T10:38:52Z",
+      "距今": "41分钟前",
+      "类型分组": "生图",
+      "类型": "生图",
+      "步骤数": 1,
+      "题材标签": "真人风、泳装比基尼、写真、户外",
+      "NSFW程度": 38,
+      "参考图兼容": "可用参考图",
+      "判断理由": "比基尼写真",
+      "步骤1类型": "生图",
+      "步骤1提示词": "人设：绝美23岁东亚美女，身材匀称丰满，胸部明显自然丰满，视觉约E杯，具有自然重量感与柔和圆润轮廓，胸腰差明显但自然，纤细腰部与丰满胸部形成清晰比例；气质：烈艳媚，明艳张扬，气场全开。\n服装：正红色光面三角杯比基尼，颈后与背后都是长系带，绳尾垂到腰窝；下装两侧细系带；外搭一件红色薄纱长罩衫，从肩头滑到手肘，被风吹开；手腕戴叠搭金镯\n妆发：高颅顶大波浪，正红丝绒唇，眼线上挑\n眼神与神态：直视镜头，眼神笃定带锋芒，双唇微启，一侧嘴角上扬\n瞬间：赤脚走在沙滩上，迎面走来，一手拎着罩衫边角，另一手撩起后颈的头发，肩膀微微向前送\n光影环境：热带沙滩午后，强烈顺光加天空蓝做背景，罩衫被风吹成一片红色剪影，肤色饱满健康\n镜头：70mm，全身正面略仰拍，高饱和色彩，奢牌泳装广告风\n负面提示词：\n低质量，模糊，变形，多余手指，肢体畸形，塑料感皮肤，过曝，卡通，动漫，文字，水印，夸张美颜，畸形解剖，品牌LOGO字\n（原帖未标注生图工具）",
+      "步骤1中文翻译": "人设：绝美23岁东亚美女，身材匀称丰满，胸部明显自然丰满，视觉约E杯，具有自然重量感与柔和圆润轮廓，胸腰差明显但自然，纤细腰部与丰满胸部形成清晰比例；气质：烈艳媚，明艳张扬，气场全开。\n服装：正红色光面三角杯比基尼，颈后与背后都是长系带，绳尾垂到腰窝；下装两侧细系带；外搭一件红色薄纱长罩衫，从肩头滑到手肘，被风吹开；手腕戴叠搭金镯\n妆发：高颅顶大波浪，正红丝绒唇，眼线上挑\n眼神与神态：直视镜头，眼神笃定带锋芒，双唇微启，一侧嘴角上扬\n瞬间：赤脚走在沙滩上，迎面走来，一手拎着罩衫边角，另一手撩起后颈的头发，肩膀微微向前送\n光影环境：热带沙滩午后，强烈顺光加天空蓝做背景，罩衫被风吹成一片红色剪影，肤色饱满健康\n镜头：70mm，全身正面略仰拍，高饱和色彩，奢牌泳装广告风\n负面提示词：\n低质量，模糊，变形，多余手指，肢体畸形，塑料感皮肤，过曝，卡通，动漫，文字，水印，夸张美颜，畸形解剖，品牌LOGO字\n（原帖未标注生图工具）",
+      "提示词位置": "正文",
+      "点赞数": 5,
+      "参考图": null,
+      "分区": "新发现博主"
+    },
+    {
+      "来源": "新发现",
+      "博主": "@aytacaltintepe",
+      "帖子链接": "https://x.com/aytacaltintepe/status/2108789120063737940",
+      "发布时间(UTC+8)": "2026-10-10 13:18",
+      "发布时间ISO(UTC)": "2026-10-10T05:18:00Z",
+      "距今": "6小时前",
+      "类型分组": "生图",
+      "类型": "生图",
+      "步骤数": 1,
+      "题材标签": "真人风、写真、擦边遮挡",
+      "NSFW程度": 55,
+      "参考图兼容": "仅无图生成",
+      "判断理由": "链条仅遮胸近裸",
+      "步骤1类型": "生图",
+      "步骤1提示词": "High-fashion editorial photograph of an adult woman sitting on the floor against a light gray wall. Loose high bun with a few soft strands around the face and nape, not tight. Cool haughty expression, one eyebrow slightly raised, eyes narrowed, lips slightly parted, dusty rose lipstick. Black nail polish.\n\nOutfit,  a chain top built like a crisscross scarf halter, not one solid band across the chest. Fine watch-band chains. Silver chains leave the left shoulder, cross the sternum, and cover only the right bust in several parallel horizontal rows. Gold chains leave the right shoulder, cross the sternum, and cover only the left bust in several parallel horizontal rows. The two sides cross at the center of the chest, leaving a clear open V gap between the busts and a lower décolletage, like a wrapped scarf top. Each bust is covered by its own chain rows. Narrow gaps only between the chain rows, not an open top.\n\nLong red satin skirt with a side slit. One leg extended through the slit toward the opposite side, the other foot resting on the floor. Pose: one elbow on the raised knee, forearm forward, hand relaxed with fingers pointing down. The other hand planted on the floor beside her for support.\n\nSoft front light, subtle side rim so silver and gold separate. Clean magazine lookbook, realistic skin, no text, no logos.\n（作者注：Banana 与 Grok Imagine 对比；ChatGPT 拒绝生成，通过 X 的 Grok 也未生成）",
+      "步骤1中文翻译": "高级时装大片照片：一位成年女性靠着浅灰色墙壁坐在地上。松散的高丸子头，脸周和后颈有几缕柔软发丝，不要扎得太紧。冷傲表情，一侧眉毛微挑，眯眼，嘴唇微张，灰玫瑰色口红。黑色指甲油。\n\n服装：一件做成交叉围巾式挂脖款的链条上衣，不是横跨胸前的一整条带子。细表带式链条。银色链条从左肩出发，穿过胸骨，只以数排平行的横向链条覆盖右侧胸部。金色链条从右肩出发，穿过胸骨，只以数排平行的横向链条覆盖左侧胸部。两侧在胸口中央交叉，在双乳之间留下清晰的V形开口和较低的领口，像一件缠绕式围巾上衣。每侧胸部都由各自的链条排覆盖。只在链条排之间有窄缝，而不是敞开的上衣。\n\n红色缎面长裙，侧边开衩。一条腿从开衩处伸向另一侧，另一只脚踩在地上。姿势：一侧手肘撑在抬起的膝盖上，前臂向前，手放松、手指朝下。另一只手撑在身旁地面上作支撑。\n\n柔和正面光，细微的侧面轮廓光，使银色和金色区分开。干净的杂志型录风格，真实皮肤，无文字，无Logo。\n（作者注：Banana 与 Grok Imagine 对比；ChatGPT 拒绝生成，通过 X 的 Grok 也未生成）",
+      "提示词位置": "正文",
+      "点赞数": 3,
+      "参考图": null,
+      "分区": "新发现博主"
+    },
+    {
+      "来源": "新发现",
       "博主": "@Matsutake273610",
       "帖子链接": "https://x.com/Matsutake273610/status/2108711436965036166",
       "发布时间(UTC+8)": "2026-10-10 08:09",
       "发布时间ISO(UTC)": "2026-10-10T00:09:19Z",
-      "距今": "6小时前",
+      "距今": "11小时前",
       "类型分组": "生图",
       "类型": "生图",
       "步骤数": 1,
@@ -416,11 +602,33 @@
     },
     {
       "来源": "新发现",
+      "博主": "@punkhuri1",
+      "帖子链接": "https://x.com/punkhuri1/status/2108594192234717334",
+      "发布时间(UTC+8)": "2026-10-10 00:23",
+      "发布时间ISO(UTC)": "2026-10-09T16:23:25Z",
+      "距今": "18小时前",
+      "类型分组": "生图",
+      "类型": "生图",
+      "步骤数": 1,
+      "题材标签": "真人风、泳装比基尼、湿身、户外",
+      "NSFW程度": 22,
+      "参考图兼容": "可用参考图",
+      "判断理由": "泳装近景，轻微性感",
+      "步骤1类型": "生图",
+      "步骤1提示词": "Create an ultra-photorealistic, cinematic fine-art vertical 9:16 close-up portrait of a breathtakingly beautiful adult South Asian Indian woman in her early twenties, standing beside the ocean during an intensely golden sunset. The atmosphere is intimate, ethereal, romantic, peaceful, and visually immersive, with brilliant amber sunlight illuminating her delicate facial profile, wet hair, and glistening skin.\nWOMAN — FACIAL FEATURES AND APPEARANCE\nShe is a naturally beautiful, fair-complexioned Indian woman with light ivory-beige skin, delicate warm-neutral undertones, and smooth, realistically textured skin. Her face is softly elongated and oval, with subtle high cheekbones, gently filled lean cheeks, a slim tapered jawline, and a small rounded chin.\nShe has expressive deep dark-brown almond-shaped eyes, naturally defined dark eyebrows, a slender straight nose with a softly rounded tip, and naturally rosy medium-full lips with a slightly fuller lower lip. Her facial features are distinctly South Asian, harmonious, refined, and naturally feminine.\nHer makeup is extremely minimal, with softly defined eyelashes and natural lips. Her skin is slightly damp, with delicate seawater droplets scattered across her forehead, cheeks, neck, collarbones, and shoulders.\nHAIRSTYLE — WET AND WINDSWEPT\nHer long, naturally black hair is wet from the ocean and loosely swept backward, appearing effortlessly tousled. Several delicate damp strands fall across her forehead, temples, cheeks, and neck. Thin wavy tendrils cling gently to her skin, while loose strands move naturally in the coastal breeze.\nIndividual strands catch the setting sunlight, producing glowing copper-gold highlights against her dark hair. Maintain realistic wet texture, natural separation, subtle shine, and spontaneous movement rather than an artificially styled appearance.\nPOSE AND EXPRESSION\nCapture her in a tightly framed, intimate side-profile portrait facing right. Her head is tilted slightly upward toward the setting sun, her chin gently raised, and her long neck gracefully extended.\nHer eyes are softly closed, delicate eyelashes visible, and lips gently parted. Her expression conveys complete tranquility, emotional release, quiet freedom, and the simple pleasure of feeling warm sunlight against her skin.\nHer shoulders are relaxed, with her upper torso angled slightly away from the camera. The photograph should feel spontaneous, as though she has just emerged from a peaceful ocean swim and paused to absorb the sunset.\nCLOTHING AND BODY DETAILS\nOnly her bare shoulders, upper chest, collarbones, and a small portion of her upper torso are visible. She wears an elegant, minimal swimwear top in a muted neutral shade, mostly obscured by the close crop and natural shadows.\nCountless tiny seawater droplets glisten realistically across her skin. Golden reflections trace her shoulders, collarbones, jawline, and neck. Fine wet strands of hair rest naturally against her shoulders and upper chest. Preserve delicate proportions, realistic anatomy, and natural skin texture.\n（原帖为 ChatGPT Image 2 / Grok Imagine / Nano Banana 2 同提示词对比，带 #GrokImagine）",
+      "步骤1中文翻译": "创作一张超写实、电影感的艺术级竖版9:16特写人像：一位美得惊人的成年南亚印度女性，20岁出头，在强烈的金色日落中站在海边。氛围亲密、空灵、浪漫、宁静，视觉沉浸感强，灿烂的琥珀色阳光照亮她精致的侧脸轮廓、湿发和闪闪发光的皮肤。\n女性——面部特征与外貌\n她是一位天生美丽、肤色白皙的印度女性，浅象牙米色皮肤，细腻的暖中性底调，皮肤光滑且有真实纹理。脸型柔和修长的鹅蛋形，颧骨微高，脸颊轻盈饱满，下颌线纤细收窄，下巴小而圆润。\n她有一双富有表现力的深褐色杏眼，自然分明的深色眉毛，纤细挺直、鼻尖柔和圆润的鼻子，以及自然红润、中等丰满、下唇略厚的嘴唇。五官具有鲜明的南亚特征，和谐、精致、自然女性化。\n妆容极简，睫毛轻轻勾勒，嘴唇自然。皮肤略带湿润，额头、脸颊、颈部、锁骨和肩膀上散落着细小的海水水珠。\n发型——湿润、被风吹乱\n她自然的黑色长发因海水而湿透，松散地向后拢，显得随意凌乱。几缕细湿发丝落在额头、太阳穴、脸颊和颈部。细细的波浪发丝轻贴在皮肤上，松散的发丝在海风中自然飘动。\n每一缕发丝都捕捉到落日余晖，在深色头发上泛出发光的铜金色高光。保持真实的湿发质感、自然分缕、细微光泽和随性的动态，而不是人工造型的样子。\n姿势与表情\n以紧凑构图拍下她面向右侧的亲密侧脸特写。头部微微向上朝向落日，下巴轻抬，修长的脖颈优雅伸展。\n她双眼轻闭，可见纤细的睫毛，嘴唇微张。表情传达出完全的宁静、情绪释放、安静的自由，以及感受温暖阳光洒在皮肤上的简单愉悦。\n她肩膀放松，上身略微背离镜头。照片应有自发感，仿佛她刚结束一次宁静的海中游泳，停下来沐浴落日。\n服装与身体细节\n只能看到她裸露的肩膀、上胸、锁骨和一小部分上身。她穿着一件优雅、极简的柔和中性色泳衣上衣，大部分被紧凑裁切和自然阴影遮住。\n无数细小的海水水珠在皮肤上真实地闪烁。金色反光勾勒出她的肩膀、锁骨、下颌线和脖颈。细湿发丝自然地落在肩膀和上胸。保持精致的比例、真实的解剖结构和自然的皮肤纹理。\n（原帖为 ChatGPT Image 2 / Grok Imagine / Nano Banana 2 同提示词对比，带 #GrokImagine）",
+      "提示词位置": "正文",
+      "点赞数": 1,
+      "参考图": null,
+      "分区": "新发现博主"
+    },
+    {
+      "来源": "新发现",
       "博主": "@Matsutake273610",
       "帖子链接": "https://x.com/Matsutake273610/status/2108711215757496741",
       "发布时间(UTC+8)": "2026-10-10 08:08",
       "发布时间ISO(UTC)": "2026-10-10T00:08:26Z",
-      "距今": "6小时前",
+      "距今": "11小时前",
       "类型分组": "生图",
       "类型": "生图",
       "步骤数": 1,
@@ -431,6 +639,28 @@
       "步骤1类型": "生图",
       "步骤1提示词": "Ani, Mika, haloween, lingerie",
       "步骤1中文翻译": "Ani、Mika，万圣节（haloween），内衣（lingerie）",
+      "提示词位置": "正文",
+      "点赞数": 0,
+      "参考图": null,
+      "分区": "新发现博主"
+    },
+    {
+      "来源": "新发现",
+      "博主": "@yngfipng1",
+      "帖子链接": "https://x.com/yngfipng1/status/2108610940346474963",
+      "发布时间(UTC+8)": "2026-10-10 01:29",
+      "发布时间ISO(UTC)": "2026-10-09T17:29:58Z",
+      "距今": "17小时前",
+      "类型分组": "生视频",
+      "类型": "生视频",
+      "步骤数": 1,
+      "题材标签": "情侣互动、臀部特写、表情动作",
+      "NSFW程度": 55,
+      "参考图兼容": "可用参考图",
+      "判断理由": "性暗示动作，无裸露描述（可能被拦）",
+      "步骤1类型": "生视频",
+      "步骤1提示词": "The beautiful woman turned around and knelt on the table with her back to the camera, twisting her buttocks, and the man caressed her.\n（原帖：Grok Imagine prompt，图生视频）",
+      "步骤1中文翻译": "美丽的女人转过身，背对镜头跪在桌子上，扭动臀部，男人爱抚着她。\n（原帖：Grok Imagine 提示词，图生视频）",
       "提示词位置": "正文",
       "点赞数": 0,
       "参考图": null,
