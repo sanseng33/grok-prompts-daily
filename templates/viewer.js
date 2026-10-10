@@ -98,7 +98,7 @@
       const fs = document.createElement('div'); fs.className = 'fused';
       const groups = [...new Set(fused.map(f => f.group))];
       fs.innerHTML = '<h2>融合提示词</h2>' + groups.map(g => `<div class="fused-group"><h3>${esc(g)}</h3><div class="fused-cards">` +
-        fused.filter(f => f.group === g).map(f => `<div class="fused-card"><div class="fused-meta"><span class="fused-type">${esc(f.type || '')}</span> <b>NSFW ${esc(String(f.nsfw ?? ''))}</b></div>
+        fused.filter(f => f.group === g).map(f => `<div class="fused-card"><div class="fused-meta"><span class="fused-type">${esc(f.type || '')}</span> <b>NSFW ${esc(String(f.nsfw ?? ''))}</b> <span class="fused-test">测试结果 ${esc(f.test_result || '未测')}</span></div>
           <pre class="fused-en">${esc(f.prompt || '')}</pre><button type="button" class="fused-copy">复制</button>
           <pre class="fused-zh">${esc(f.zh || '')}</pre>
           <ul class="fused-src">${(f.sources || []).map(x => `<li>${esc(x.post)}：${esc(x.element)}</li>`).join('')}</ul></div>`).join('') + '</div></div>').join('');

@@ -45,7 +45,8 @@ def convert(xlsx: Path, out: Path | None = None) -> Path:
                     a, _, b = line.partition("：")
                     if a.strip(): srcs.append({"post": a.strip(), "element": b.strip()})
                 fused.append({"group": cell(row["分组"]), "type": cell(row["类型"]), "nsfw": cell(row["NSFW程度"]),
-                              "prompt": cell(row["英文提示词"]), "zh": cell(row["中文翻译"]), "sources": srcs})
+                              "prompt": cell(row["英文提示词"]), "zh": cell(row["中文翻译"]), "sources": srcs,
+                              "test_result": cell(row.get("测试结果")) or "未测"})
             continue
         if name == "已排除":  # handles only — nothing else is ever stored for these
             for v in df.get("博主", []):
