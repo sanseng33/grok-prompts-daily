@@ -90,7 +90,14 @@
   };
   const idOf = r => String(r[C.link] || '').split('/').pop();
 
-  async function mount(root, rows, dateLabel) {
+  async function mount(root, data, dateLabel) {
+    const rows = Array.isArray(data) ? data : ((data && data.rows) || []);
+    const excludedCreators = Array.isArray(data) ? [] : [...new Set(((data && data.excluded_creators) || []).map(h => '@' + String(h).replace(/^@+/, '')))];
+    if (excludedCreators.length) {
+      const sec = document.createElement('div'); sec.className = 'excluded-creators';
+      sec.innerHTML = '<h2>已排除</h2><ul>' + excludedCreators.map(h => `<li>${esc(h)}</li>`).join('') + '</ul>';
+      root.appendChild(sec);
+    }
     const dl = root.querySelector('#date-label'); if (dl && dateLabel) dl.textContent = dateLabel;
     const v = root.querySelector('#viewer');
     const store = window.HiddenStore;
@@ -193,7 +200,7 @@
   }
 
   async function loadRows() {
-    if (Array.isArray(window.DAY_DATA)) return window.DAY_DATA;
+    if (window.DAY_DATA && typeof window.DAY_DATA === 'object') return window.DAY_DATA;
     const date = new URLSearchParams(location.search).get('date') || window.DAY_DATE;
     let lastErr;
     for (const url of [`data/${date}.json`, `../data/${date}.json`]) {

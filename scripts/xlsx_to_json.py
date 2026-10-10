@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Convert daily grok_prompts_YYYY-MM-DD.xlsx → data/YYYY-MM-DD.json (array of row objects)."""
+"""Convert daily grok_prompts_YYYY-MM-DD.xlsx → data/YYYY-MM-DD.json ({"rows": [...], "excluded_creators": ["@handle", ...]}; older days are a bare array)."""
 from __future__ import annotations
 
 import argparse
@@ -35,14 +35,24 @@ def convert(xlsx: Path, out: Path | None = None) -> Path:
     out = out or (ROOT / "data" / f"{date}.json")
     sheets = pd.read_excel(xlsx, sheet_name=None)  # v3: 已关注博主 / 新发现博主 两个工作表
     rows = []
+    excluded = []
     for name, df in sheets.items():
+        if name == "已排除":  # handles only — nothing else is ever stored for these
+            for v in df.get("博主", []):
+                h = cell(v)
+                if h:
+                    h = "@" + str(h).strip().lstrip("@")
+                    if h.lower() not in [x.lower() for x in excluded]:
+                        excluded.append(h)
+            continue
         for _, row in df.iterrows():
             d = {c: cell(row[c]) for c in df.columns}
             d.setdefault("分区", name)
             d["分区"] = name
             rows.append(d)
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    payload = {"rows": rows, "excluded_creators": excluded}
+    out.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"wrote {out} rows={len(rows)}")
     return out
 

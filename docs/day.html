@@ -156,6 +156,8 @@ section.sec h2 { font-size: 18px; margin: 18px 0 8px; border-left: 4px solid var
 #sync-box form { display: inline-flex; gap: 4px; align-items: center; }
 #sync-box input { width: 140px; }
 #sync-err { color: var(--danger); }
+
+.excluded-creators{margin:32px 0 16px;padding-top:12px;border-top:1px solid #ddd;color:#666;font-size:13px}.excluded-creators h2{font-size:15px;margin:0 0 6px}.excluded-creators ul{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:6px 14px}
 </style>
 </head>
 <body>
@@ -359,7 +361,14 @@ section.sec h2 { font-size: 18px; margin: 18px 0 8px; border-left: 4px solid var
   };
   const idOf = r => String(r[C.link] || '').split('/').pop();
 
-  async function mount(root, rows, dateLabel) {
+  async function mount(root, data, dateLabel) {
+    const rows = Array.isArray(data) ? data : ((data && data.rows) || []);
+    const excludedCreators = Array.isArray(data) ? [] : [...new Set(((data && data.excluded_creators) || []).map(h => '@' + String(h).replace(/^@+/, '')))];
+    if (excludedCreators.length) {
+      const sec = document.createElement('div'); sec.className = 'excluded-creators';
+      sec.innerHTML = '<h2>已排除</h2><ul>' + excludedCreators.map(h => `<li>${esc(h)}</li>`).join('') + '</ul>';
+      root.appendChild(sec);
+    }
     const dl = root.querySelector('#date-label'); if (dl && dateLabel) dl.textContent = dateLabel;
     const v = root.querySelector('#viewer');
     const store = window.HiddenStore;
@@ -462,7 +471,7 @@ section.sec h2 { font-size: 18px; margin: 18px 0 8px; border-left: 4px solid var
   }
 
   async function loadRows() {
-    if (Array.isArray(window.DAY_DATA)) return window.DAY_DATA;
+    if (window.DAY_DATA && typeof window.DAY_DATA === 'object') return window.DAY_DATA;
     const date = new URLSearchParams(location.search).get('date') || window.DAY_DATE;
     let lastErr;
     for (const url of [`data/${date}.json`, `../data/${date}.json`]) {

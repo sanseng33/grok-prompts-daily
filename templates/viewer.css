@@ -150,3 +150,5 @@ section.sec h2 { font-size: 18px; margin: 18px 0 8px; border-left: 4px solid var
 #sync-box form { display: inline-flex; gap: 4px; align-items: center; }
 #sync-box input { width: 140px; }
 #sync-err { color: var(--danger); }
+
+.excluded-creators{margin:32px 0 16px;padding-top:12px;border-top:1px solid #ddd;color:#666;font-size:13px}.excluded-creators h2{font-size:15px;margin:0 0 6px}.excluded-creators ul{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:6px 14px}
