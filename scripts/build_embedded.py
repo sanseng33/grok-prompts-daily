@@ -15,7 +15,7 @@ def build(date: str, data_path: Path | None = None) -> Path:
     data_path = data_path or (ROOT / "data" / f"{date}.json")
     rows = json.loads(data_path.read_text(encoding="utf-8"))
     css = (TEMPLATES / "viewer.css").read_text(encoding="utf-8")
-    js = (TEMPLATES / "viewer.js").read_text(encoding="utf-8")
+    js = (TEMPLATES / "storage.js").read_text(encoding="utf-8") + "\n" + (TEMPLATES / "viewer.js").read_text(encoding="utf-8")
     gate = (TEMPLATES / "gate.js").read_text(encoding="utf-8")
     payload = json.dumps(rows, ensure_ascii=False)
     html = f"""<!DOCTYPE html>
@@ -23,15 +23,13 @@ def build(date: str, data_path: Path | None = None) -> Path:
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Grok 提示词 · {date}（离线）</title>
+  <title>Grok 提示词 · {date}</title>
   <style>{css}</style>
 </head>
 <body>
   <div class="wrap gated" id="app">
-    <div class="banner">⚠️ 成人内容（NSFW）· 仅供私人收藏与研究 · 本页数据已内联 · 客户端密码仅为软锁（源码可查）</div>
     <div class="nav"><a href="../index.html">← 日期列表</a></div>
     <h1>Grok 提示词 · <span id="date-label">{date}</span></h1>
-    <p class="sub">离线内联版 · {len(rows)} 条（已关注 {sum(1 for r in rows if str(r.get('来源','')).startswith('已关注'))} · 新发现 {sum(1 for r in rows if not str(r.get('来源','')).startswith('已关注'))}）· 生成自 data/{date}.json</p>
     <div id="viewer"></div>
   </div>
   <script>window.DAY_DATA = {payload}; window.DAY_DATE = {json.dumps(date)};</script>

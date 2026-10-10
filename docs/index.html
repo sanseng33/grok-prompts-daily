@@ -138,9 +138,7 @@ html:not(.unlocked) .gated { display: none !important; }
 </head>
 <body>
   <div class="wrap gated">
-    <div class="banner">⚠️ 成人内容（NSFW）· 仅供私人收藏与研究 · 客户端密码仅为软锁（源码/哈希可查，不是真安全）· Pages 站点本身公开</div>
     <h1>Grok Imagine 每日提示词</h1>
-    <p class="sub">私有仓库 + 客户端密码门。推荐打开 <code>embedded/YYYY-MM-DD.html</code>（数据已内联）。本标签页解锁一次后保持到关闭。</p>
     <ul class="date-list" id="dates"><li class="empty">加载中…</li></ul>
   </div>
   <script>
@@ -163,7 +161,7 @@ html:not(.unlocked) .gated { display: none !important; }
       }
       if (lastErr && !dates.length) {
         // Pages (/docs) may not have ../data; fall back to listing embedded links from known pattern
-        ul.innerHTML = '<li class="empty">无法读取 index.json（' + lastErr.message + '）。请直接打开 <a href="embedded/2026-10-09.html">embedded/2026-10-09.html</a>，或 clone 后本地打开。</li>';
+        ul.innerHTML = '<li class="empty">—</li>';
         return;
       }
       if (!dates.length) {
@@ -173,14 +171,12 @@ html:not(.unlocked) .gated { display: none !important; }
       ul.innerHTML = dates.map(d => `
         <li>
           <a href="day.html?date=${encodeURIComponent(d)}">
-            <span>${d} · 在线拉取 JSON</span>
-            <span style="color:var(--muted);font-size:12px">day.html →</span>
+            <span>${d}</span>
           </a>
         </li>
         <li>
           <a href="embedded/${encodeURIComponent(d)}.html">
-            <span>${d} · 离线内联版（推荐）</span>
-            <span style="color:var(--muted);font-size:12px">打开 ↓</span>
+            <span>${d} · 离线</span>
           </a>
         </li>
       `).join('');
@@ -213,13 +209,10 @@ html:not(.unlocked) .gated { display: none !important; }
     el.id = 'pw-gate';
     el.innerHTML =
       '<div class="pw-card">' +
-        '<h2>需要密码</h2>' +
-        '<p>私人收藏页 · 输入密码后本标签页内保持解锁</p>' +
         '<form id="pw-form" autocomplete="current-password">' +
           '<input type="password" id="pw-input" placeholder="密码" autofocus />' +
-          '<button type="submit">解锁</button>' +
         '</form>' +
-        '<p class="pw-err" id="pw-err" hidden>密码不对，请重试</p>' +
+        '<p class="pw-err" id="pw-err" hidden>×</p>' +
       '</div>';
     document.body.appendChild(el);
     return el;

@@ -141,3 +141,7 @@ section.sec h2 { font-size: 18px; margin: 18px 0 8px; border-left: 4px solid var
 .chip.n4 { background: #7a3d1d; } .chip.n5 { background: #8a1f2f; }
 .reltime { cursor: help; border-bottom: 1px dotted var(--muted); }
 .toolbar input[type=range] { width: 90px; vertical-align: middle; }
+.del { background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 6px; cursor: pointer; margin-top: 6px; padding: 1px 7px; }
+.del:hover { color: var(--danger); border-color: var(--danger); }
+.hidden-ctl { font-size: 12px; color: var(--muted); }
+.hidden-ctl button { background: var(--panel2); color: var(--text); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; padding: 3px 8px; }

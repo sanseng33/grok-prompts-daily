@@ -70,3 +70,19 @@ git add -A && git commit -m "daily: YYYY-MM-DD ..." && git push
 - 客户端密码门**可被绕过**（查看源码 / 哈希 / DevTools）；仅防随手点开
 - Pages 站点 URL 是公开的；不要把链接发到公开场合
 - 真正保密请勿依赖 Pages，改用 clone / 传 embedded 文件
+
+## 隐藏条目（✕ 按钮）与存储适配器
+
+- 每行右侧 ✕ = 仅在本浏览器隐藏。状态由 `templates/storage.js` 的 `window.HiddenStore` 管理（异步 `get(id)` / `set(id, rec|null)` / `list()`），当前实现为 localStorage，键 `grok-hidden:<帖子id>`。
+- 记录结构：`{ id, handle, date, hidden_at, reason }`。「导出隐藏列表」下载 `{exported_at, version:1, hidden:[记录...]}`。
+- 排序/分区选择存在 `grok-pref:sort`、`grok-pref:section`。
+
+### 跨设备同步（未实现，所需工作）
+1. 后端：Cloudflare Worker + KV（key=`hidden:<id>`，value=记录 JSON）或 Supabase 表 `hidden(id text pk, handle, date, hidden_at, reason)` + RLS。
+2. 认证：静态页的密码门只是软锁，后端需要独立凭据（Worker 校验共享密钥/签名 token，或 Supabase 匿名登录 + 行级策略）；不要把可写密钥硬编码进公开页面。
+3. 在 `storage.js` 中实现同签名的 `remote` 适配器（fetch Worker/Supabase REST），在页面加载时用 `window.HiddenStore = remote` 替换；可保留 localStorage 作离线缓存，联网后合并（以 hidden_at 新者为准）。viewer.js 无需改动。
+4. CORS：Worker/Supabase 允许 `https://sanseng33.github.io`。
+
+### 回流到每日采集（未实现）
+- 采集前拉取隐藏列表（导出 JSON 或后端 API），把 id 写入 `/workspace/xprompts/seen_ids.txt`（`# hidden`），避免重复入表。
+- 统计被隐藏作者：同一作者 ≥N 次 → 自动加入跳过名单（如 `skip_authors.txt`，build_xlsx.py 过滤）；`reason` 字段可用于提炼排除模式（关键词/标签），喂给 learn_keywords.py 作为负样本。

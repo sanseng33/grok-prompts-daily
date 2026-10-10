@@ -24,13 +24,10 @@
     el.id = 'pw-gate';
     el.innerHTML =
       '<div class="pw-card">' +
-        '<h2>需要密码</h2>' +
-        '<p>私人收藏页 · 输入密码后本标签页内保持解锁</p>' +
         '<form id="pw-form" autocomplete="current-password">' +
           '<input type="password" id="pw-input" placeholder="密码" autofocus />' +
-          '<button type="submit">解锁</button>' +
         '</form>' +
-        '<p class="pw-err" id="pw-err" hidden>密码不对，请重试</p>' +
+        '<p class="pw-err" id="pw-err" hidden>×</p>' +
       '</div>';
     document.body.appendChild(el);
     return el;
