@@ -158,6 +158,7 @@ section.sec h2 { font-size: 18px; margin: 18px 0 8px; border-left: 4px solid var
 #sync-err { color: var(--danger); }
 
 .excluded-creators{margin:32px 0 16px;padding-top:12px;border-top:1px solid #ddd;color:#666;font-size:13px}.excluded-creators h2{font-size:15px;margin:0 0 6px}.excluded-creators ul{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:6px 14px}
+.fused{margin:8px 0 20px}.fused h2{font-size:17px;margin:0 0 8px}.fused h3{font-size:14px;margin:10px 0 6px}.fused-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:12px}.fused-card{border:1px solid #ddd;border-radius:8px;padding:10px;background:#fafafa}.fused-card pre{white-space:pre-wrap;word-break:break-word;font-family:inherit;font-size:13px;margin:6px 0}.fused-zh{color:#555}.fused-src{font-size:12px;color:#777;margin:6px 0 0;padding-left:16px}.fused-copy{font-size:12px}
 </style>
 </head>
 <body>
@@ -364,6 +365,19 @@ section.sec h2 { font-size: 18px; margin: 18px 0 8px; border-left: 4px solid var
   async function mount(root, data, dateLabel) {
     const rows = Array.isArray(data) ? data : ((data && data.rows) || []);
     const excludedCreators = Array.isArray(data) ? [] : [...new Set(((data && data.excluded_creators) || []).map(h => '@' + String(h).replace(/^@+/, '')))];
+    const fused = Array.isArray(data) ? [] : ((data && data.fused) || []);
+    if (fused.length) {
+      const fs = document.createElement('div'); fs.className = 'fused';
+      const groups = [...new Set(fused.map(f => f.group))];
+      fs.innerHTML = '<h2>融合提示词</h2>' + groups.map(g => `<div class="fused-group"><h3>${esc(g)}</h3><div class="fused-cards">` +
+        fused.filter(f => f.group === g).map(f => `<div class="fused-card"><div class="fused-meta"><span class="fused-type">${esc(f.type || '')}</span> <b>NSFW ${esc(String(f.nsfw ?? ''))}</b></div>
+          <pre class="fused-en">${esc(f.prompt || '')}</pre><button type="button" class="fused-copy">复制</button>
+          <pre class="fused-zh">${esc(f.zh || '')}</pre>
+          <ul class="fused-src">${(f.sources || []).map(x => `<li>${esc(x.post)}：${esc(x.element)}</li>`).join('')}</ul></div>`).join('') + '</div></div>').join('');
+      fs.addEventListener('click', e => { const b = e.target.closest('.fused-copy'); if (!b) return;
+        const t = b.previousElementSibling.textContent; (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => { b.textContent = '已复制'; setTimeout(() => b.textContent = '复制', 1200); }).catch(() => {}); });
+      const vv = root.querySelector('#viewer'); root.insertBefore(fs, vv);
+    }
     if (excludedCreators.length) {
       const sec = document.createElement('div'); sec.className = 'excluded-creators';
       sec.innerHTML = '<h2>已排除</h2><ul>' + excludedCreators.map(h => `<li>${esc(h)}</li>`).join('') + '</ul>';

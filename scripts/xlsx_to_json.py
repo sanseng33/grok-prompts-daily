@@ -36,7 +36,17 @@ def convert(xlsx: Path, out: Path | None = None) -> Path:
     sheets = pd.read_excel(xlsx, sheet_name=None)  # v3: 已关注博主 / 新发现博主 两个工作表
     rows = []
     excluded = []
+    fused = []
     for name, df in sheets.items():
+        if name == "融合提示词":
+            for _, row in df.iterrows():
+                srcs = []
+                for line in str(cell(row.get("来源元素")) or "").splitlines():
+                    a, _, b = line.partition("：")
+                    if a.strip(): srcs.append({"post": a.strip(), "element": b.strip()})
+                fused.append({"group": cell(row["分组"]), "type": cell(row["类型"]), "nsfw": cell(row["NSFW程度"]),
+                              "prompt": cell(row["英文提示词"]), "zh": cell(row["中文翻译"]), "sources": srcs})
+            continue
         if name == "已排除":  # handles only — nothing else is ever stored for these
             for v in df.get("博主", []):
                 h = cell(v)
@@ -51,7 +61,7 @@ def convert(xlsx: Path, out: Path | None = None) -> Path:
             d["分区"] = name
             rows.append(d)
     out.parent.mkdir(parents=True, exist_ok=True)
-    payload = {"rows": rows, "excluded_creators": excluded}
+    payload = {"fused": fused, "rows": rows, "excluded_creators": excluded}
     out.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"wrote {out} rows={len(rows)}")
     return out
