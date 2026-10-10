@@ -186,6 +186,9 @@
       const box = btn.previousElementSibling; box.classList.toggle('expanded'); box.classList.toggle('collapsed');
     });
     setInterval(() => v.querySelectorAll('.reltime').forEach(el => { if (el.dataset.iso) el.textContent = rel(el.dataset.iso); }), 60000);
+    window.addEventListener('grok-hidden-sync', async () => {
+      hidden.clear(); (await store.list()).forEach(x => x && x.id && hidden.add(x.id)); apply();
+    });
     render();
   }
 

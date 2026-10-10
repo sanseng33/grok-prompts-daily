@@ -145,3 +145,8 @@ section.sec h2 { font-size: 18px; margin: 18px 0 8px; border-left: 4px solid var
 .del:hover { color: var(--danger); border-color: var(--danger); }
 .hidden-ctl { font-size: 12px; color: var(--muted); }
 .hidden-ctl button { background: var(--panel2); color: var(--text); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; padding: 3px 8px; }
+#sync-box { position: fixed; top: 10px; right: 12px; z-index: 50; font-size: 12px; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+#sync-box button, #sync-box input { background: var(--panel2); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; font-size: 12px; }
+#sync-box form { display: inline-flex; gap: 4px; align-items: center; }
+#sync-box input { width: 140px; }
+#sync-err { color: var(--danger); }

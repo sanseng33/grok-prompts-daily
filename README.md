@@ -77,7 +77,12 @@ git add -A && git commit -m "daily: YYYY-MM-DD ..." && git push
 - 记录结构：`{ id, handle, date, hidden_at, reason }`。「导出隐藏列表」下载 `{exported_at, version:1, hidden:[记录...]}`。
 - 排序/分区选择存在 `grok-pref:sort`、`grok-pref:section`。
 
-### 跨设备同步（未实现，所需工作）
+### 跨设备同步（已实现：Supabase）
+- 右上角「登录同步」用 Supabase email+密码登录（会话由 supabase-js 持久化）。登录后 hidden_items 为准、localStorage 作离线缓存；本设备首次登录时会把本地已隐藏条目 upsert 上去。隐藏对所有日期生效。
+- 表：`public.hidden_items(user_id uuid default auth.uid(), post_id, handle, day, reason, hidden_at, PK(user_id,post_id))`，RLS `auth.uid()=user_id`。
+- 采集回流：`/workspace/xprompts/fetch_hidden.py`。
+
+#### 原设计说明
 1. 后端：Cloudflare Worker + KV（key=`hidden:<id>`，value=记录 JSON）或 Supabase 表 `hidden(id text pk, handle, date, hidden_at, reason)` + RLS。
 2. 认证：静态页的密码门只是软锁，后端需要独立凭据（Worker 校验共享密钥/签名 token，或 Supabase 匿名登录 + 行级策略）；不要把可写密钥硬编码进公开页面。
 3. 在 `storage.js` 中实现同签名的 `remote` 适配器（fetch Worker/Supabase REST），在页面加载时用 `window.HiddenStore = remote` 替换；可保留 localStorage 作离线缓存，联网后合并（以 hidden_at 新者为准）。viewer.js 无需改动。
