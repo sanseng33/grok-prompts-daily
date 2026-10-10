@@ -128,3 +128,16 @@ html:not(.unlocked) .gated { display: none !important; }
 }
 #pw-gate button:hover { filter: brightness(1.08); }
 #pw-gate .pw-err { color: var(--danger); margin: 12px 0 0; font-size: 13px; }
+/* v3 */
+.tabs { display: flex; gap: 8px; margin: 6px 0 14px; flex-wrap: wrap; }
+.tab { background: var(--panel2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; cursor: pointer; font-size: 14px; }
+.tab.active { background: var(--accent); color: #0f1115; border-color: var(--accent); }
+section.sec h2 { font-size: 18px; margin: 18px 0 8px; border-left: 4px solid var(--accent); padding-left: 8px; }
+.grp h3 { font-size: 15px; margin: 14px 0 6px; color: var(--warn); }
+.chip.noref { background: #5a2323; color: #ffc9c9; }
+.chip.okref { background: #1f4a2e; color: #c9ffd9; }
+.chip.nsfw { font-weight: 700; }
+.chip.n1 { background: #2a3348; } .chip.n2 { background: #3c4a2a; } .chip.n3 { background: #6b5a1d; }
+.chip.n4 { background: #7a3d1d; } .chip.n5 { background: #8a1f2f; }
+.reltime { cursor: help; border-bottom: 1px dotted var(--muted); }
+.toolbar input[type=range] { width: 90px; vertical-align: middle; }

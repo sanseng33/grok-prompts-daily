@@ -31,23 +31,8 @@ def build(date: str, data_path: Path | None = None) -> Path:
     <div class="banner">⚠️ 成人内容（NSFW）· 仅供私人收藏与研究 · 本页数据已内联 · 客户端密码仅为软锁（源码可查）</div>
     <div class="nav"><a href="../index.html">← 日期列表</a></div>
     <h1>Grok 提示词 · <span id="date-label">{date}</span></h1>
-    <p class="sub">离线内联版 · {len(rows)} 条 · 生成自 data/{date}.json</p>
-    <div class="toolbar">
-      <div><label>来源</label><select id="filter-source"></select></div>
-      <div><label>类型</label><select id="filter-type"></select></div>
-      <div class="stat" id="stat"></div>
-    </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>来源</th><th>博主</th><th>链接</th><th>时间</th><th>类型</th>
-            <th>步骤数</th><th>题材</th><th>各步骤提示词 + 中文翻译</th><th>位置</th><th>点赞</th>
-          </tr>
-        </thead>
-        <tbody id="tbody"></tbody>
-      </table>
-    </div>
+    <p class="sub">离线内联版 · {len(rows)} 条（已关注 {sum(1 for r in rows if str(r.get('来源','')).startswith('已关注'))} · 新发现 {sum(1 for r in rows if not str(r.get('来源','')).startswith('已关注'))}）· 生成自 data/{date}.json</p>
+    <div id="viewer"></div>
   </div>
   <script>window.DAY_DATA = {payload}; window.DAY_DATE = {json.dumps(date)};</script>
   <script>{js}</script>

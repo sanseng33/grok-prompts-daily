@@ -33,8 +33,14 @@ def convert(xlsx: Path, out: Path | None = None) -> Path:
         raise SystemExit(f"cannot parse date from filename: {xlsx.name}")
     date = m.group(1)
     out = out or (ROOT / "data" / f"{date}.json")
-    df = pd.read_excel(xlsx)
-    rows = [{c: cell(row[c]) for c in df.columns} for _, row in df.iterrows()]
+    sheets = pd.read_excel(xlsx, sheet_name=None)  # v3: 已关注博主 / 新发现博主 两个工作表
+    rows = []
+    for name, df in sheets.items():
+        for _, row in df.iterrows():
+            d = {c: cell(row[c]) for c in df.columns}
+            d.setdefault("分区", name)
+            d["分区"] = name
+            rows.append(d)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(rows, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"wrote {out} rows={len(rows)}")

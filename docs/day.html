@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Grok 每日提示词</title>
+  <title>Grok 提示词 · 日视图</title>
   <style>:root {
   --bg: #0f1115;
   --panel: #171a21;
@@ -134,6 +134,19 @@ html:not(.unlocked) .gated { display: none !important; }
 }
 #pw-gate button:hover { filter: brightness(1.08); }
 #pw-gate .pw-err { color: var(--danger); margin: 12px 0 0; font-size: 13px; }
+/* v3 */
+.tabs { display: flex; gap: 8px; margin: 6px 0 14px; flex-wrap: wrap; }
+.tab { background: var(--panel2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; cursor: pointer; font-size: 14px; }
+.tab.active { background: var(--accent); color: #0f1115; border-color: var(--accent); }
+section.sec h2 { font-size: 18px; margin: 18px 0 8px; border-left: 4px solid var(--accent); padding-left: 8px; }
+.grp h3 { font-size: 15px; margin: 14px 0 6px; color: var(--warn); }
+.chip.noref { background: #5a2323; color: #ffc9c9; }
+.chip.okref { background: #1f4a2e; color: #c9ffd9; }
+.chip.nsfw { font-weight: 700; }
+.chip.n1 { background: #2a3348; } .chip.n2 { background: #3c4a2a; } .chip.n3 { background: #6b5a1d; }
+.chip.n4 { background: #7a3d1d; } .chip.n5 { background: #8a1f2f; }
+.reltime { cursor: help; border-bottom: 1px dotted var(--muted); }
+.toolbar input[type=range] { width: 90px; vertical-align: middle; }
 </style>
 </head>
 <body>
@@ -141,191 +154,181 @@ html:not(.unlocked) .gated { display: none !important; }
     <div class="banner">⚠️ 成人内容（NSFW）· 仅供私人收藏与研究 · 客户端密码仅为软锁（源码可查）</div>
     <div class="nav"><a href="index.html">← 日期列表</a></div>
     <h1>Grok 提示词 · <span id="date-label">…</span></h1>
-    <p class="sub">从 <code>../data/YYYY-MM-DD.json</code>（或 Pages 下 <code>data/</code>）拉取。若失败请改用 <code>docs/embedded/</code> 内联页。</p>
-    <div class="toolbar">
-      <div><label>来源</label><select id="filter-source"></select></div>
-      <div><label>类型</label><select id="filter-type"></select></div>
-      <div class="stat" id="stat"></div>
-    </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>来源</th><th>博主</th><th>链接</th><th>时间</th><th>类型</th>
-            <th>步骤数</th><th>题材</th><th>各步骤提示词 + 中文翻译</th><th>位置</th><th>点赞</th>
-          </tr>
-        </thead>
-        <tbody id="tbody"><tr><td colspan="10" class="empty">加载中…</td></tr></tbody>
-      </table>
-    </div>
+    <p class="sub">在线拉取 data/日期.json · 已关注 / 新发现 分区，组内按 类型(生图/生视频/多步) → 点赞 排序 · 发布时间悬停显示 UTC+8 绝对时间</p>
+    <div id="viewer"><p class="empty">加载中…</p></div>
   </div>
   <script>(function () {
-  const COLS = {
-    source: '来源',
-    handle: '博主',
-    link: '帖子链接',
-    time: '发布时间(UTC+8)',
-    type: '类型',
-    steps: '步骤数',
-    tags: '题材标签',
-    loc: '提示词位置',
-    likes: '点赞数'
+  // v3 viewer (2026-10-10): 已关注/新发现 分区 + 类型分组 + 题材/参考图/NSFW 筛选 + 实时相对时间
+  const C = {
+    source: '来源', part: '分区', handle: '博主', link: '帖子链接', time: '发布时间(UTC+8)', iso: '发布时间ISO(UTC)',
+    tcat: '类型分组', type: '类型', steps: '步骤数', tags: '题材标签', nsfw: 'NSFW程度', ref: '参考图兼容',
+    reason: '判断理由', loc: '提示词位置', likes: '点赞数'
   };
+  const SECTIONS = [['已关注', '已关注博主'], ['新发现', '新发现博主']];
+  const TYPES = ['生图', '生视频', '多步'];
+  const BUCKETS = [[0, 20, '0-20 日常/轻微性感'], [21, 40, '21-40 泳装内衣擦边'], [41, 60, '41-60 半裸/强暗示'],
+                   [61, 80, '61-80 裸露/性暗示'], [81, 100, '81-100 露骨性行为']];
 
   function esc(s) {
-    return String(s == null ? '' : s)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
-
+  function tagsOf(r) { return String(r[C.tags] || '').split(/[、,，|]/).map(s => s.trim()).filter(Boolean); }
+  function tcat(r) {
+    if (r[C.tcat]) return r[C.tcat];
+    return (Number(r[C.steps]) > 1 || String(r[C.type] || '').includes('→')) ? '多步' : (r[C.type] || '');
+  }
+  function srcOf(r) { const s = r[C.source] || r[C.part] || ''; return s.startsWith('已关注') ? '已关注' : '新发现'; }
+  function isoOf(r) {
+    if (r[C.iso]) return r[C.iso];
+    const t = r[C.time]; if (!t) return null;
+    return String(t).replace(' ', 'T') + ':00+08:00';
+  }
+  function rel(iso) {
+    const t = Date.parse(iso); if (isNaN(t)) return '';
+    const s = Math.max(0, (Date.now() - t) / 1000);
+    if (s < 60) return '刚刚';
+    if (s < 3600) return Math.floor(s / 60) + '分钟前';
+    if (s < 86400) return Math.floor(s / 3600) + '小时前';
+    if (s < 86400 * 30) return Math.floor(s / 86400) + '天前';
+    return Math.floor(s / 86400 / 30) + '个月前';
+  }
+  function abs8(iso) {
+    const t = Date.parse(iso); if (isNaN(t)) return '';
+    const d = new Date(t + 8 * 3600e3);
+    const p = n => String(n).padStart(2, '0');
+    return `${d.getUTCFullYear()}-${p(d.getUTCMonth() + 1)}-${p(d.getUTCDate())} ${p(d.getUTCHours())}:${p(d.getUTCMinutes())} (UTC+8)`;
+  }
   function stepFields(row) {
     const out = [];
     for (let i = 1; i <= 8; i++) {
-      const t = row[`步骤${i}类型`];
-      const p = row[`步骤${i}提示词`];
-      const z = row[`步骤${i}中文翻译`];
-      if (p == null && z == null && t == null) continue;
-      if (p === '' && z === '' && (t == null || t === '')) continue;
+      const t = row[`步骤${i}类型`], p = row[`步骤${i}提示词`], z = row[`步骤${i}中文翻译`];
+      if (!p && !z) continue;
       out.push({ i, type: t || '', prompt: p || '', zh: z || '' });
     }
     return out;
   }
-
-  function unique(arr) {
-    return [...new Set(arr.filter(Boolean))].sort();
-  }
-
-  function fillSelect(sel, values, allLabel) {
-    sel.innerHTML = '';
-    const o0 = document.createElement('option');
-    o0.value = ''; o0.textContent = allLabel;
-    sel.appendChild(o0);
-    values.forEach(v => {
-      const o = document.createElement('option');
-      o.value = v; o.textContent = v;
-      sel.appendChild(o);
-    });
-  }
-
   function promptHtml(label, text) {
     if (!text) return '';
     const collapsed = text.length > 120 || text.split('\n').length > 3;
-    return `<div class="prompt-block">
-      <div class="prompt-label">${esc(label)}</div>
+    return `<div class="prompt-block"><div class="prompt-label">${esc(label)}</div>
       <div class="prompt-text${collapsed ? ' collapsed' : ''}">${esc(text)}</div>
-      ${collapsed ? '<button type="button" class="toggle">展开 / 收起</button>' : ''}
-    </div>`;
+      ${collapsed ? '<button type="button" class="toggle">展开 / 收起</button>' : ''}</div>`;
   }
+  function nsfwClass(n) { return n > 80 ? 'n5' : n > 60 ? 'n4' : n > 40 ? 'n3' : n > 20 ? 'n2' : 'n1'; }
 
-  function renderRow(row) {
-    const steps = stepFields(row);
-    const source = row[COLS.source] || '';
-    const typ = row[COLS.type] || '';
-    const tags = (row[COLS.tags] || '').split(/[、,，]/).map(s => s.trim()).filter(Boolean);
-    const link = row[COLS.link] || '#';
-    const handle = row[COLS.handle] || '';
+  function renderRow(r) {
+    const steps = stepFields(r);
+    const iso = isoOf(r);
+    const n = Number(r[C.nsfw]);
+    const ref = r[C.ref] || '';
     const prompts = steps.map(s => {
       const head = `步骤${s.i}${s.type ? ' · ' + s.type : ''}`;
       return promptHtml(head + ' · 原文', s.prompt) + promptHtml(head + ' · 中文', s.zh);
     }).join('');
-
-    return `<tr data-source="${esc(source)}" data-type="${esc(typ)}">
-      <td><span class="chip source-${esc(source)}">${esc(source)}</span></td>
-      <td class="handle">${esc(handle)}</td>
-      <td><a href="${esc(link)}" target="_blank" rel="noopener">打开</a></td>
-      <td class="meta">${esc(row[COLS.time] || '')}</td>
-      <td><span class="chip type-${esc(typ)}">${esc(typ)}</span></td>
-      <td class="meta">${esc(row[COLS.steps] ?? steps.length)}</td>
-      <td class="tags">${tags.map(t => `<span class="chip">${esc(t)}</span>`).join('')}</td>
+    return `<tr data-tags="${esc(tagsOf(r).join('|'))}" data-ref="${esc(ref)}" data-nsfw="${isNaN(n) ? '' : n}">
+      <td class="handle">${esc(r[C.handle] || '')}<br/><a href="${esc(r[C.link] || '#')}" target="_blank" rel="noopener">打开帖子</a></td>
+      <td class="meta"><span class="reltime" data-iso="${esc(iso || '')}" title="${esc(iso ? abs8(iso) : '')}">${esc(iso ? rel(iso) : '')}</span></td>
+      <td><span class="chip">${esc(r[C.type] || '')}</span></td>
+      <td><span class="chip nsfw ${isNaN(n) ? '' : nsfwClass(n)}">${isNaN(n) ? '—' : n}</span></td>
+      <td><span class="chip ${ref === '仅无图生成' ? 'noref' : 'okref'}">${esc(ref || '—')}</span><div class="meta">${esc(r[C.reason] || '')}</div></td>
+      <td class="tags">${tagsOf(r).map(t => `<span class="chip">${esc(t)}</span>`).join('')}</td>
       <td class="prompt-cell">${prompts || '<span class="meta">—</span>'}</td>
-      <td class="meta">${esc(row[COLS.loc] || '')}</td>
-      <td class="meta">${esc(row[COLS.likes] ?? '')}</td>
+      <td class="meta">${esc(r[C.loc] || '')}</td>
+      <td class="meta">${esc(r[C.likes] ?? '')}</td>
     </tr>`;
   }
-
-  function applyFilters(root) {
-    const src = root.querySelector('#filter-source').value;
-    const typ = root.querySelector('#filter-type').value;
-    let shown = 0, total = 0;
-    root.querySelectorAll('tbody tr').forEach(tr => {
-      total++;
-      const ok =
-        (!src || tr.getAttribute('data-source') === src) &&
-        (!typ || tr.getAttribute('data-type') === typ);
-      tr.style.display = ok ? '' : 'none';
-      if (ok) shown++;
-    });
-    root.querySelector('#stat').textContent = `显示 ${shown} / ${total} 条`;
-  }
+  const THEAD = '<thead><tr><th>博主</th><th>发布</th><th>类型</th><th>NSFW</th><th>参考图兼容</th><th>题材</th><th>各步骤提示词 + 中文翻译</th><th>位置</th><th>点赞</th></tr></thead>';
 
   function mount(root, rows, dateLabel) {
-    if (dateLabel) {
-      const el = root.querySelector('#date-label');
-      if (el) el.textContent = dateLabel;
+    const dl = root.querySelector('#date-label'); if (dl && dateLabel) dl.textContent = dateLabel;
+    const v = root.querySelector('#viewer');
+    const allTags = [...new Set(rows.flatMap(tagsOf))].sort();
+    const refs = [...new Set(rows.map(r => r[C.ref]).filter(Boolean))].sort();
+    let html = `<div class="toolbar">
+      <div><label>题材标签</label><select id="f-tag"><option value="">全部</option>${allTags.map(t => `<option>${esc(t)}</option>`).join('')}</select></div>
+      <div><label>参考图兼容</label><select id="f-ref"><option value="">全部</option>${refs.map(t => `<option>${esc(t)}</option>`).join('')}</select></div>
+      <div><label>NSFW档</label><select id="f-bucket"><option value="">全部</option>${BUCKETS.map((b, i) => `<option value="${i}">${b[2]}</option>`).join('')}</select></div>
+      <div><label>NSFW 范围</label><input type="range" id="f-min" min="0" max="100" value="0"/><input type="range" id="f-max" min="0" max="100" value="100"/><span id="f-range">0–100</span></div>
+      <div class="stat" id="stat"></div></div>
+      <div class="tabs">${SECTIONS.map(([k, l], i) => `<button type="button" class="tab${i === 0 ? ' active' : ''}" data-sec="${k}">${l} <b data-count="${k}"></b></button>`).join('')}
+      <button type="button" class="tab" data-sec="*">全部显示</button></div>`;
+    for (const [k, label] of SECTIONS) {
+      const part = rows.filter(r => srcOf(r) === k);
+      html += `<section class="sec" data-sec="${k}"><h2>${label} <span class="meta" data-count2="${k}"></span></h2>`;
+      if (!part.length) html += '<p class="empty">无</p>';
+      for (const t of TYPES) {
+        const g = part.filter(r => tcat(r) === t).sort((a, b) => (b[C.likes] || 0) - (a[C.likes] || 0));
+        if (!g.length) continue;
+        html += `<div class="grp"><h3>${t} <span class="meta grp-count"></span></h3><div class="table-wrap"><table>${THEAD}<tbody>${g.map(renderRow).join('')}</tbody></table></div></div>`;
+      }
+      html += '</section>';
     }
-    fillSelect(root.querySelector('#filter-source'), unique(rows.map(r => r[COLS.source])), '全部来源');
-    fillSelect(root.querySelector('#filter-type'), unique(rows.map(r => r[COLS.type])), '全部类型');
-    const tbody = root.querySelector('#tbody');
-    tbody.innerHTML = rows.length
-      ? rows.map(renderRow).join('')
-      : '<tr><td colspan="10" class="empty">当日无数据</td></tr>';
-    root.querySelector('#filter-source').onchange = () => applyFilters(root);
-    root.querySelector('#filter-type').onchange = () => applyFilters(root);
-    tbody.addEventListener('click', (e) => {
-      const btn = e.target.closest('.toggle');
-      if (!btn) return;
-      const box = btn.previousElementSibling;
-      if (!box) return;
-      box.classList.toggle('expanded');
-      box.classList.toggle('collapsed');
+    v.innerHTML = html;
+    const $ = s => v.querySelector(s);
+    let current = SECTIONS[0][0];
+    function apply() {
+      const tag = $('#f-tag').value, ref = $('#f-ref').value, b = $('#f-bucket').value;
+      let lo = +$('#f-min').value, hi = +$('#f-max').value; if (lo > hi) [lo, hi] = [hi, lo];
+      if (b !== '') { lo = Math.max(lo, BUCKETS[b][0]); hi = Math.min(hi, BUCKETS[b][1]); }
+      $('#f-range').textContent = `${lo}–${hi}`;
+      let shown = 0;
+      v.querySelectorAll('section.sec').forEach(sec => {
+        const k = sec.getAttribute('data-sec'); let ss = 0, st = 0;
+        sec.querySelectorAll('.grp').forEach(g => {
+          let gs = 0, gt = 0;
+          g.querySelectorAll('tbody tr').forEach(tr => {
+            gt++;
+            const n = tr.dataset.nsfw === '' ? -1 : +tr.dataset.nsfw;
+            const ok = (!tag || tr.dataset.tags.split('|').includes(tag)) && (!ref || tr.dataset.ref === ref) &&
+              (n < 0 ? (lo === 0 && hi === 100) : (n >= lo && n <= hi));
+            tr.style.display = ok ? '' : 'none'; if (ok) gs++;
+          });
+          g.querySelector('.grp-count').textContent = `${gs} / ${gt}`;
+          g.style.display = gs ? '' : 'none'; ss += gs; st += gt;
+        });
+        v.querySelector(`[data-count="${k}"]`).textContent = `(${ss}/${st})`;
+        v.querySelector(`[data-count2="${k}"]`).textContent = `${ss} / ${st} 条`;
+        const vis = current === '*' || current === k;
+        sec.style.display = vis ? '' : 'none'; if (vis) shown += ss;
+      });
+      $('#stat').textContent = `当前显示 ${shown} 条 · 全日 ${rows.length} 条`;
+    }
+    ['#f-tag', '#f-ref', '#f-bucket'].forEach(s => $(s).onchange = apply);
+    ['#f-min', '#f-max'].forEach(s => $(s).oninput = apply);
+    v.querySelectorAll('.tab').forEach(btn => btn.onclick = () => {
+      current = btn.dataset.sec;
+      v.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b === btn)); apply();
     });
-    applyFilters(root);
+    v.addEventListener('click', e => {
+      const btn = e.target.closest('.toggle'); if (!btn) return;
+      const box = btn.previousElementSibling; box.classList.toggle('expanded'); box.classList.toggle('collapsed');
+    });
+    const tick = () => v.querySelectorAll('.reltime').forEach(el => { if (el.dataset.iso) el.textContent = rel(el.dataset.iso); });
+    setInterval(tick, 60000);
+    apply();
   }
 
   async function loadRows() {
     if (Array.isArray(window.DAY_DATA)) return window.DAY_DATA;
-    const params = new URLSearchParams(location.search);
-    const date = params.get('date') || window.DAY_DATE;
-    if (!date) throw new Error('缺少 date 参数');
-    const res = await fetch(`../data/${date}.json`);
-    if (!res.ok) throw new Error(`无法加载 ${date}.json（${res.status}）。私有仓库 raw 需登录；请改用 docs/embedded/${date}.html`);
-    return res.json();
+    const date = new URLSearchParams(location.search).get('date') || window.DAY_DATE;
+    let lastErr;
+    for (const url of [`data/${date}.json`, `../data/${date}.json`]) {
+      try { const r = await fetch(url); if (!r.ok) throw new Error(`${url} ${r.status}`); return await r.json(); } catch (e) { lastErr = e; }
+    }
+    throw lastErr;
   }
-
-  window.GrokPromptViewer = { mount, loadRows, COLS };
+  window.GrokPromptViewer = { mount, loadRows, COLS: C };
 })();
 </script>
   <script>
     (async function () {
-      const params = new URLSearchParams(location.search);
-      const date = params.get('date');
-      const app = document.getElementById('app');
-      if (!date) {
-        document.getElementById('tbody').innerHTML = '<tr><td colspan="10" class="empty">请带上 ?date=YYYY-MM-DD</td></tr>';
-        return;
-      }
+      const date = new URLSearchParams(location.search).get('date');
+      const v = document.getElementById('viewer');
+      if (!date) { v.innerHTML = '<p class="empty">请带上 ?date=YYYY-MM-DD</p>'; return; }
       document.title = 'Grok 提示词 · ' + date;
-      try {
-        // Prefer repo-relative ../data; on Pages also try docs/data/
-        let rows = null;
-        let lastErr = null;
-        for (const url of [`../data/${date}.json`, `data/${date}.json`]) {
-          try {
-            const res = await fetch(url);
-            if (!res.ok) throw new Error(`无法加载 ${url}（${res.status}）`);
-            rows = await res.json();
-            lastErr = null;
-            break;
-          } catch (e) { lastErr = e; }
-        }
-        if (!rows) throw lastErr || new Error('无数据');
-        GrokPromptViewer.mount(app, rows, date);
-      } catch (e) {
-        document.getElementById('date-label').textContent = date;
-        document.getElementById('tbody').innerHTML =
-          '<tr><td colspan="10" class="empty">' + String(e.message || e) +
-          '<br/><br/>请打开 <a href="embedded/' + encodeURIComponent(date) + '.html">embedded/' + date + '.html</a></td></tr>';
-      }
+      try { GrokPromptViewer.mount(document.getElementById('app'), await GrokPromptViewer.loadRows(), date); }
+      catch (e) { document.getElementById('date-label').textContent = date;
+        v.innerHTML = '<p class="empty">' + String(e.message || e) + '<br/>请打开 <a href="embedded/' + encodeURIComponent(date) + '.html">embedded/' + date + '.html</a></p>'; }
     })();
   </script>
   <script>(function () {
