@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Grok 提示词 · 2026-10-12</title>
+  <style>:root {
+  --bg: #0f1115;
+  --panel: #171a21;
+  --panel2: #1e2330;
+  --border: #2a3142;
+  --text: #e8eaed;
+  --muted: #9aa3b2;
+  --accent: #7aa2ff;
+  --warn: #f0b429;
+  --danger: #ff6b6b;
+  --chip: #2a3348;
+  --row-hover: #222836;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background: var(--bg); color: var(--text);
+  font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.wrap { max-width: 1400px; margin: 0 auto; padding: 20px 16px 48px; }
+.banner {
+  background: #3a1d1d; border: 1px solid #6b2e2e; color: #ffc9c9;
+  padding: 10px 14px; border-radius: 8px; margin-bottom: 16px; font-size: 13px;
+}
+h1 { font-size: 22px; margin: 0 0 4px; font-weight: 650; }
+.sub { color: var(--muted); margin-bottom: 16px; font-size: 13px; }
+.toolbar {
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 10px; padding: 12px; margin-bottom: 14px;
+}
+.toolbar label { color: var(--muted); font-size: 12px; margin-right: 4px; }
+.toolbar select, .toolbar input {
+  background: var(--panel2); color: var(--text); border: 1px solid var(--border);
+  border-radius: 6px; padding: 6px 10px; font-size: 13px;
+}
+.stat { color: var(--muted); margin-left: auto; font-size: 12px; }
+.table-wrap {
+  overflow: auto; border: 1px solid var(--border); border-radius: 10px;
+  background: var(--panel);
+}
+table { border-collapse: collapse; width: 100%; min-width: 1100px; }
+th, td {
+  border-bottom: 1px solid var(--border); padding: 10px 12px;
+  vertical-align: top; text-align: left;
+}
+th {
+  position: sticky; top: 0; background: var(--panel2);
+  color: var(--muted); font-weight: 600; font-size: 12px;
+  white-space: nowrap; z-index: 1;
+}
+tr:hover td { background: var(--row-hover); }
+.chip {
+  display: inline-block; background: var(--chip); color: var(--text);
+  border-radius: 999px; padding: 2px 8px; font-size: 12px; margin: 1px 2px 1px 0;
+}
+.chip.source-关注, .chip.source-已关注 { background: #1e3a2f; color: #8dffc1; }
+.chip.source-新发现 { background: #2a2f4a; color: #a9b8ff; }
+.chip.type-生图 { background: #2a3a1e; color: #b8e986; }
+.chip.type-生视频 { background: #3a2a1e; color: #ffc98a; }
+.handle { font-weight: 600; white-space: nowrap; }
+.meta { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.prompt-cell { min-width: 280px; max-width: 420px; }
+.prompt-block { margin-bottom: 8px; }
+.prompt-block:last-child { margin-bottom: 0; }
+.prompt-label {
+  font-size: 11px; color: var(--muted); margin-bottom: 2px;
+  display: flex; gap: 6px; align-items: center;
+}
+.prompt-text {
+  white-space: pre-wrap; word-break: break-word;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 6px; padding: 8px 10px; font-size: 12.5px;
+  max-height: 4.8em; overflow: hidden; position: relative;
+}
+.prompt-text.expanded { max-height: none; }
+.prompt-text.collapsed::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1.6em;
+  background: linear-gradient(transparent, var(--bg));
+}
+.toggle {
+  background: none; border: none; color: var(--accent);
+  cursor: pointer; font-size: 12px; padding: 4px 0 0; display: inline-block;
+}
+.tags { max-width: 180px; }
+.empty {
+  text-align: center; color: var(--muted); padding: 40px 16px;
+}
+.date-list { list-style: none; padding: 0; margin: 0; }
+.date-list li {
+  border: 1px solid var(--border); background: var(--panel);
+  border-radius: 10px; margin-bottom: 8px;
+}
+.date-list a {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 16px; color: var(--text); text-decoration: none;
+}
+.date-list a:hover { background: var(--row-hover); border-radius: 10px; }
+.nav { margin-bottom: 12px; font-size: 13px; }
+.nav a { margin-right: 12px; }
+
+/* --- client-side password gate (soft lock) --- */
+html:not(.unlocked) .gated { display: none !important; }
+#pw-gate {
+  position: fixed; inset: 0; z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(15, 17, 21, 0.96);
+  padding: 24px;
+}
+#pw-gate .pw-card {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 12px; padding: 28px 24px; width: 100%; max-width: 360px;
+  text-align: center;
+}
+#pw-gate h2 { margin: 0 0 8px; font-size: 18px; }
+#pw-gate p { color: var(--muted); font-size: 13px; margin: 0 0 16px; }
+#pw-gate form { display: flex; gap: 8px; }
+#pw-gate input[type="password"] {
+  flex: 1; background: var(--panel2); color: var(--text);
+  border: 1px solid var(--border); border-radius: 6px;
+  padding: 10px 12px; font-size: 14px;
+}
+#pw-gate button {
+  background: var(--accent); color: #0f1115; border: none;
+  border-radius: 6px; padding: 10px 16px; font-weight: 600; cursor: pointer;
+}
+#pw-gate button:hover { filter: brightness(1.08); }
+#pw-gate .pw-err { color: var(--danger); margin: 12px 0 0; font-size: 13px; }
+/* v3 */
+.tabs { display: flex; gap: 8px; margin: 6px 0 14px; flex-wrap: wrap; }
+.tab { background: var(--panel2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; cursor: pointer; font-size: 14px; }
+.tab.active { background: var(--accent); color: #0f1115; border-color: var(--accent); }
+section.sec h2 { font-size: 18px; margin: 18px 0 8px; border-left: 4px solid var(--accent); padding-left: 8px; }
+.grp h3 { font-size: 15px; margin: 14px 0 6px; color: var(--warn); }
+.chip.noref { background: #5a2323; color: #ffc9c9; }
+.chip.okref { background: #1f4a2e; color: #c9ffd9; }
+.chip.nsfw { font-weight: 700; }
+.chip.n1 { background: #2a3348; } .chip.n2 { background: #3c4a2a; } .chip.n3 { background: #6b5a1d; }
+.chip.n4 { background: #7a3d1d; } .chip.n5 { background: #8a1f2f; }
+.reltime { cursor: help; border-bottom: 1px dotted var(--muted); }
+.toolbar input[type=range] { width: 90px; vertical-align: middle; }
+.del { background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 6px; cursor: pointer; margin-top: 6px; padding: 1px 7px; }
+.del:hover { color: var(--danger); border-color: var(--danger); }
+.hidden-ctl { font-size: 12px; color: var(--muted); }
+.hidden-ctl button { background: var(--panel2); color: var(--text); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; padding: 3px 8px; }
+#sync-box { position: fixed; top: 10px; right: 12px; z-index: 50; font-size: 12px; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+#sync-box button, #sync-box input { background: var(--panel2); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; font-size: 12px; }
+#sync-box form { display: inline-flex; gap: 4px; align-items: center; }
+#sync-box input { width: 140px; }
+#sync-err { color: var(--danger); }
+
+.excluded-creators{margin:32px 0 16px;padding-top:12px;border-top:1px solid #ddd;color:#666;font-size:13px}.excluded-creators h2{font-size:15px;margin:0 0 6px}.excluded-creators ul{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:6px 14px}
+.fused{margin:8px 0 20px}.fused h2{font-size:17px;margin:0 0 8px}.fused h3{font-size:14px;margin:10px 0 6px}.fused-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:12px}.fused-card{border:1px solid #ddd;border-radius:8px;padding:10px;background:#fafafa}.fused-card pre{white-space:pre-wrap;word-break:break-word;font-family:inherit;font-size:13px;margin:6px 0}.fused-zh{color:#555}.fused-src{font-size:12px;color:#777;margin:6px 0 0;padding-left:16px}.fused-copy{font-size:12px}
+.refthumb{display:block;max-width:90px;max-height:120px;margin-top:6px;border:1px solid #ddd;border-radius:4px}
+.fused-test{font-size:12px;color:#a15c00;margin-left:6px}
+</style>
+</head>
+<body>
+  <div class="wrap gated" id="app">
+    <div class="nav"><a href="../index.html">← 日期列表</a></div>
+    <h1>Grok 提示词 · <span id="date-label">2026-10-12</span></h1>
+    <div id="viewer"></div>
+  </div>
+  <script>window.DAY_DATA = {"fused": [{"group": "可用参考图", "type": "生图→生视频", "nsfw": 46, "prompt": "Photorealistic vertical 9:16 editorial, shot on a 1990s disposable film camera with harsh direct flash, ISO800 grain, slight light leaks. An adult Japanese woman clearly in her mid-20s with a mature face, long soft black waves with see-through bangs, glossy peach lips and a pronounced hourglass figure. She wears a white triangle halter bikini top with thin strings and matching high-cut tie-side bottoms, fully covered. She kneels on crisp white sheets in a boutique hotel room, back slightly arched, one hand lifting her hair off her neck, chin raised, half-lidded eyes locked on the lens with a soft parted-lip smile. Camera slightly above, angled down, close three-quarter framing from head to thighs. Cool-white room light plus hard frontal flash, compact crisp shadows, real skin texture, no text.\nVideo (apply to the image above): she slowly lets her hair fall, leans toward the camera on both hands and gives a slow teasing smile; handheld micro-sway, flash-like flicker, soft room ambience.", "zh": "竖版9:16写实编辑大片，用1990年代一次性胶片相机拍摄，强烈直射闪光，ISO800颗粒，轻微漏光。一位明确20多岁中段、面容成熟的成年日本女性，柔软黑色长波浪配空气刘海，光泽蜜桃唇，明显沙漏身材。她穿白色三角挂脖比基尼上衣（细系带）和配套高叉侧系带下装，完整覆盖。她跪在精品酒店房间挺括的白床单上，背部微弓，一手把头发从颈后撩起，下巴抬起，半闭的眼睛紧盯镜头，双唇微启柔笑。镜头略高向下俯拍，从头到大腿的近距离四分之三构图。冷白室内光加强硬正面闪光，紧凑清晰的阴影，真实肤质，无文字。\n视频（对上图使用）：她慢慢放下头发，双手撑着向镜头前倾，缓缓露出挑逗的微笑；手持微晃，闪光般的闪烁，轻柔房间环境音。", "sources": [{"post": "VIBEQUIRKLABS/2109374513599414639", "element": "白三角比基尼、酒店白床、俯拍近景与沙漏身材描述"}, {"post": "chichipuijaian/2109251596106551479", "element": "写ルンです直射闪光胶片质感"}, {"post": "sdjn_wgc/2109444397477540209", "element": "撩起后颈头发、半垂眼神与微启双唇"}], "test_result": "未测"}, {"group": "可用参考图", "type": "生图", "nsfw": 44, "prompt": "Photorealistic full-body 9:16 glamour shot. An adult blonde woman in her late 20s crouches against a weathered brick corner at night, wearing a jet-black long-sleeve sheer mesh bodysuit over an opaque matte bust band and high-cut brief, with thigh-high glossy latex stiletto boots. She turns her head to the lens with sultry half-lidded eyes and glossy lips, one hand pressed flat on the wall. Harsh direct flash, sharp highlights on latex, deep shadows, edgy urban fetish aesthetic, no text.", "zh": "竖版9:16写实全身魅力照。一位20多岁后段的成年金发女性夜里蹲在风化砖墙角，穿黑色长袖透明网纱连体衣，内有不透明哑光胸带和高叉三角裤，配光亮乳胶过膝细高跟靴。她转头看向镜头，眼神慵懒半闭，嘴唇光泽，一只手平按在墙上。强烈直射闪光，乳胶上锐利高光，深影，前卫都市恋物美学，无文字。", "sources": [{"post": "BubbaArtwork/2109369702803808291", "element": "砖墙角蹲姿、乳胶长靴、直射闪光"}, {"post": "GenAngelsX/2109290406336991476", "element": "黑色透明网纱连体衣+不透胸带"}], "test_result": "未测"}, {"group": "仅无图生成", "type": "生图", "nsfw": 78, "prompt": "Photorealistic 9:16 shot on a 1990s disposable camera, harsh flash, ISO800 grain. A dim bedroom bathed in warm orange light. An adult woman clearly in her mid-20s, topless, wearing only a thin pink tie-side thong, straddles her adult male partner who lies on his back, facing away from him, knees deeply bent, back arched, chest lifted, looking back over her shoulder at the camera with flushed cheeks, furrowed brows and parted lips. His hands grip her waist from the bottom of the frame. Full first-person POV from his eye level, fine sweat beads on her back and thighs, shallow depth of field.", "zh": "竖版9:16写实，1990年代一次性相机拍摄，强烈闪光，ISO800颗粒。被暖橙色灯光笼罩的昏暗卧室。一位明确20多岁中段的成年女性，赤裸上身，只穿一条细粉色侧系带丁字裤，背对着仰躺的成年男伴跨坐其上，双膝深屈、背部反弓、胸部抬起，越过肩膀回头看向镜头，脸颊泛红、眉头微蹙、双唇微张。他的双手从画面底部握住她的腰。完全以他视线高度的第一人称POV，她的背和大腿上布满细汗珠，浅景深。", "sources": [{"post": "chichipuijaian/2109251596106551479", "element": "反向跨坐POV、回头、汗珠、写ルンです闪光"}, {"post": "kissfetisubro/2108523352113705248", "element": "近裸尺度"}], "test_result": "未测"}, {"group": "仅无图生成", "type": "生图→生视频", "nsfw": 74, "prompt": "Realistic candid photo, 9:16. An adult Japanese woman clearly in her mid-20s, delicate black lace lingerie set, sitting on a wooden desk in a dim late-night art studio, a white silicone sculpting toy standing on the desk beside her. She strokes it lovingly with both hands and brushes it with her lips, smiling softly, half-lidded eyes toward the lens. Warm desk-lamp key light, faint film grain, 85mm, shallow depth of field.\nVideo (apply to the image above, spicy mode): she slowly slides one lace strap off her shoulder, leans closer to the toy and glances up at the camera with a teasing smile; slow push-in, soft breathing audio.", "zh": "写实抓拍照片，9:16。一位明确20多岁中段的成年日本女性，穿精致黑色蕾丝内衣套装，坐在深夜昏暗艺术工作室的木桌上，桌上她身旁立着一根白色硅胶造型玩具。她用双手爱怜地抚摸它，并用嘴唇轻触，温柔微笑，半闭的眼睛望向镜头。暖色台灯主光，淡淡胶片颗粒，85mm，浅景深。\n视频（对上图使用，spicy 模式）：她慢慢把一侧蕾丝肩带滑下肩膀，靠近玩具，抬眼带着挑逗的微笑看向镜头；缓慢推近，轻柔呼吸声。", "sources": [{"post": "_Futaba_AI_/2109461484141158776", "element": "内衣+硅胶玩具抚摸亲吻、spicy 动画"}, {"post": "chichipuijaian/2109479418678628780", "element": "侧脸含物视线对镜"}], "test_result": "未测"}], "rows": [{"来源": "已关注", "博主": "@chichipuijaian", "帖子链接": "https://x.com/chichipuijaian/status/2109251596106551479", "发布时间(UTC+8)": "2026-10-11 19:55", "发布时间ISO(UTC)": "2026-10-11T11:55:43Z", "距今": "15小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、胶片风、情侣互动、参考图", "NSFW程度": 72, "参考图兼容": "可用参考图", "判断理由": "性暗示体位，着装无裸露描述(可能被拦)", "步骤1类型": "生图", "步骤1提示词": "フォトリアルな縦長9:16の写ルンです実写写真。1990年代の使い捨てフィルムカメラで撮影。ISO800の粗いフィルム粒子、強い直射フラッシュ、低解像度、わずかなピンぼけ、色にじみ、暖色寄りの退色、暗部の黒つぶれ。24歳の成人女性と成人男性。持ち込み画像の女性の顔立ち、髪型、髪色、長さ、分け目、毛束、毛流れ、毛量、体格を忠実に維持する。  暖かなオレンジ色の照明に包まれた薄暗い寝室。女性はピンク色のトップスと、ピンク色の細いサイドストラップが付いた衣装を着用。生地には自然な張りと皺がある。  男性はベッドに仰向け。女性は男性と180度反対向きになり、背中を男性の顔へ向けて胴体を跨ぐ。両膝を深く曲げて腰を低く下ろす。骨盤を低い位置に保ちながら腰から背中にかけて深い弓なりの曲線を作り、胸を高く持ち上げ、両肩を後方へ引く。肩と背筋に力が入る。  女性は背中をカメラへ向けたまま、首と上半身をひねり、片方の肩越しに大きく振り返る。顔をカメラ方向へ向け、目元と口元がはっきり見える。腰と骨盤の向きは変えず、上半身だけをひねる。  男性は両腕を女性の腰へ伸ばし、左右の手のひらで腰をしっかり支える。指は腰の自然な曲線に沿って広がり、反った姿勢を安定させる。  女性は眉を軽く寄せ、目を半開きにし、唇を小さく開く。瞳はカメラ方向へ向け、頬にはごく薄い赤み。  額、首元、背中、腕、太腿には細かな透明の汗粒。肌には薄い湿った艶があり、数滴が自然に流れる。  カメラは仰向けの男性の目の位置に固定した完全な一人称視点（POV）。男性の両手と前腕だけが画面下部の左右から伸びる。女性を低い位置から見上げ、振り返った顔、肩、背中、反らした腰を大きく写す。 暖色の柔らかな陰影、浅い被写界深度。女性の顔に優先してピントを合わせる。自然な肌、汗、髪、衣服の質感。直射フラッシュによって手前の肌が明るく浮かび、背景は暗く沈む。\n（作者注：需要初手图，使用作者置顶帖的「白色画布」初手图；Xgrok 已验证，难度较高）", "步骤1中文翻译": "竖版9:16写实「写ルンです」实拍照片。用1990年代一次性胶片相机拍摄。ISO800粗颗粒、强烈直射闪光、低分辨率、轻微失焦、色彩溢出、偏暖褪色、暗部死黑。24岁成年女性与成年男性。忠实保持上传图片中女性的五官、发型、发色、长度、分缝、发束、发流、发量、体格。被温暖橙色灯光包围的昏暗卧室。女性穿粉色上衣与带粉色细侧带的服装，面料有自然的张力与褶皱。男性仰躺在床上。女性与男性180度反向，背对男性的脸跨坐在其躯干上。双膝深屈、腰压低。保持骨盆低位，从腰到背形成深深的弓形曲线，胸部高抬，双肩后拉，肩背肌肉用力。女性背对镜头，扭转脖子和上半身，越过一侧肩膀大幅回头，脸朝镜头，眼部和嘴部清晰可见。腰和骨盆朝向不变，只扭转上半身。男性双臂伸向女性腰部，左右手掌牢牢扶住腰，手指沿腰部自然曲线张开，稳定反弓的姿势。女性眉头微蹙，半睁眼，嘴唇微张，瞳孔看向镜头，脸颊淡淡泛红。额头、颈部、背部、手臂、大腿布满细小透明汗珠，皮肤有薄薄湿润光泽，几滴自然流下。镜头固定在仰躺男性眼睛位置的完全第一人称视角（POV）。只有男性双手和前臂从画面下部左右伸入。从低处仰视女性，大幅拍下回头的脸、肩、背、反弓的腰。暖色柔和阴影，浅景深，优先对焦女性面部。自然的皮肤、汗、头发、衣物质感。直射闪光让前景皮肤明亮突出，背景暗沉。\n（作者注：需要初手图，使用作者置顶帖的「白色画布」初手图；Xgrok 已验证，难度较高）", "提示词位置": "alt", "点赞数": 102, "参考图": "ref/2109251596106551479_1.jpg", "分区": "已关注博主"}, {"来源": "已关注", "博主": "@chichipuijaian", "帖子链接": "https://x.com/chichipuijaian/status/2109479418678628780", "发布时间(UTC+8)": "2026-10-12 11:01", "发布时间ISO(UTC)": "2026-10-12T03:01:00Z", "距今": "30分钟前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、擦边遮挡、表情动作", "NSFW程度": 55, "参考图兼容": "可用参考图", "判断理由": "食物口含性暗示，无裸露描述", "步骤1类型": "生图", "步骤1提示词": "SFW。フォトリアルな縦長9:16の実写スナップ写真。24歳の成人女性。最重要：女性を明確な主役とし、女性の顔と表情が画面の大部分を占める。顔から上半身を大きく捉えた横顔寄りの至近距離構図。\n\n女性は身体を横向きにして、顔だけを少し前へ出している。顔は横向き寄りの角度を保ちながら、瞳だけをカメラ方向へ向け、レンズとしっかり目線を合わせている。女性の顔、瞳、表情に最優先でピントを合わせる。\n\n非常に長い焼きソーセージは、根元が画面右側の壁に直接しっかり固定されている。ソーセージを女性が持ち運んでいるのではなく、根元は常に壁へ接続された固定物。ただしカメラは女性へ大きく寄っているため、その壁、接続部分、根元はすべて画面右端より外側にあり一切写らない。画面内にはソーセージの途中部分から先端までだけが入り、画面右端の外側にある壁からまっすぐ水平に伸びている。太さは一般的なフランクフルト程度。\n\n女性は壁に固定されたソーセージを取り外さず、画面内に見えている中央付近を片手で握っている。手のひらを密着させ、親指と残りの指を周囲へ自然に回しているが、ソーセージを手で支えたり持ち上げたりはしていない。\n\nソーセージ全体を完全な黒一色のベタ塗りで覆う。表面の色、焼き目、切れ込み、質感などは一切見えない。モザイクやぼかしではなく、不透明な真っ黒の塗りつぶし処理。女性の手や指には黒塗りをかけない。\n\n女性は口を自然に開け、ソーセージの先端部分を口の中へ少し入れてくわえている。唇は先端の周囲に自然に触れている。口は開いているが、上下の歯は先端と唇の位置関係によって完全に隠れており、一切見えない。噛み切る瞬間ではない。顔は横向き寄りのまま、瞳はカメラへ向けてレンズをしっかり見つめている。性的な意味や演出は一切入れない。\n\nカメラは女性の斜め横から至近距離で撮影。女性の顔を画面内で最も大きく目立たせ、黒く塗りつぶされたソーセージと握る手は画面の一部に留める。壁、固定部分、根元は完全に画角外。女性の瞳と顔にフォーカスし、その他は軽くぼかす。柔らかな自然光、浅い被写界深度。肌や髪の質感をリアルに表現。iPhoneで撮影したような自然で高精細な実写画質。アニメ、イラスト、CGにしない。\n（作者注：无需初手图）", "步骤1中文翻译": "SFW。竖版9:16写实实拍抓拍照片。24岁成年女性。最重要：女性是明确的主角，女性的脸和表情占画面大部分。从脸到上半身大幅取景、偏侧脸的极近距离构图。\n女性身体侧向，只把脸稍稍前伸。脸保持偏侧面角度，只有眼睛转向镜头，与镜头牢牢对视。最优先对焦女性的脸、眼睛、表情。\n一根非常长的烤香肠，根部直接牢牢固定在画面右侧的墙上。不是女性拿着香肠，根部始终是连在墙上的固定物。但镜头大幅靠近女性，所以墙、连接部分、根部全在画面右端以外，完全不入镜。画面内只有香肠的中段到尖端，从画面右端外的墙笔直水平伸出。粗细和一般法兰克福香肠相当。\n女性不把固定在墙上的香肠取下，而是单手握住画面内可见的中段附近。手掌紧贴，拇指和其余手指自然环绕，但不用手支撑或抬起香肠。\n整根香肠用完全纯黑的实心涂黑覆盖，表面颜色、烤痕、切口、质感一律不可见。不是马赛克或模糊，而是不透明的纯黑涂抹处理。女性的手和手指不涂黑。\n女性自然张嘴，把香肠尖端稍稍含入口中。嘴唇自然贴在尖端周围。嘴是张开的，但上下牙齿因尖端与嘴唇的位置关系被完全挡住，一点都不露。不是咬断的瞬间。脸保持偏侧面，眼睛看向镜头牢牢注视。不加入任何性意味或演出。\n镜头从女性斜侧方极近距离拍摄。让女性的脸在画面中最大最醒目，涂黑的香肠和握着的手只占画面一部分。墙、固定部分、根部完全在画外。对焦女性眼睛和脸，其余轻微虚化。柔和自然光，浅景深。真实表现皮肤与头发质感。像用iPhone拍摄的自然高清实拍画质。不要做成动漫、插画、CG。\n（作者注：无需初手图）", "提示词位置": "alt", "点赞数": 20, "参考图": null, "分区": "已关注博主"}, {"来源": "新发现", "博主": "@GenAngelsX", "帖子链接": "https://x.com/GenAngelsX/status/2109288837130379574", "发布时间(UTC+8)": "2026-10-11 22:23", "发布时间ISO(UTC)": "2026-10-11T14:23:42Z", "距今": "13小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、泳装比基尼、写真、户外", "NSFW程度": 30, "参考图兼容": "可用参考图", "判断理由": "比基尼写真", "步骤1类型": "生图", "步骤1提示词": "She sits on a weathered granite boulder where the coastal field meets a pale hazy sky and muted slate ocean. Her presence is composed and unsmiling, gaze drifting off toward camera-right with a level head and softly parted lips. A bright optic white triangle bikini in matte soft-touch swim fabric catches the hard daylight, halter straps at the neck and high-cut hip ties lying smooth against sun-kissed skin. Light falls hard from camera-left, crisp and high-contrast, warming the shoulder and thigh while deep shadow pools between the rocks. Behind her the open sea meets a desaturated blue-grey horizon, complementary against warm skin and cool stone. The frame feels like a printed magazine plate: chromatic, still, and quietly monumental.\n（多工具通用，原帖标签 #Krea-2 #nanobananapro #Grok）", "步骤1中文翻译": "她坐在一块风化的花岗岩巨石上，海岸草地与苍白朦胧的天空、暗哑的石板色海洋在此相接。她神态沉着不笑，目光飘向镜头右侧，头部平正，双唇微启。一套亮光学白的三角比基尼，哑光柔触泳衣面料，在强烈日光下发亮，挂脖肩带系在颈部，高叉胯部系带平贴在晒成小麦色的皮肤上。光线从镜头左侧强烈打来，清晰高反差，照暖肩膀和大腿，岩石之间积着深影。她身后开阔的海与去饱和的蓝灰地平线相接，温暖肤色与冷色石头互补。画面像一张印刷杂志插页：有色彩、静止、安静而宏伟。\n（多工具通用，原帖标签 #Krea-2 #nanobananapro #Grok）", "提示词位置": "正文", "点赞数": 548, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@GenAngelsX", "帖子链接": "https://x.com/GenAngelsX/status/2109290406336991476", "发布时间(UTC+8)": "2026-10-11 22:29", "发布时间ISO(UTC)": "2026-10-11T14:29:56Z", "距今": "13小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、皮衣紧身、写真、姿势", "NSFW程度": 42, "参考图兼容": "可用参考图", "判断理由": "透视网纱连体衣，无裸露描述", "步骤1类型": "生图", "步骤1提示词": "A seamless pale cool grey cyclorama curves without horizon, empty and controlled, the figure standing as a graphic vertical mass. Emilia holds a near-frontal gaze to the lens with closed lips and level brow, weight shifted into one hip so the spine traces a gentle S. The jet-black long-sleeve mock-neck bodysuit of sheer fine mesh clings with soft elastic tension, opaque matte bust band and high-cut brief catching light while a delicate chain rests at the sternum. Large soft key light from the left wraps cool-neutral across the face and torso, leaving gentle shadow on the right side. The backdrop gradients from lighter right to deeper left, warm skin set against the monochromatic cool field. The frame holds quiet editorial poise, hair lifted by a faint breeze, every plane of the black mesh reading clean against the open studio void.\n（多工具通用，原帖标签 #Krea-2 #nanobananapro #Grok）", "步骤1中文翻译": "无缝的浅冷灰无影墙弯曲无地平线，空旷而受控，人物作为一个图形化的竖向体块站立。Emilia 近乎正面凝视镜头，双唇闭合、眉头平展，重心移到一侧髋部，使脊柱勾勒出柔和的S形。黑色长袖高领连体衣由细透明网纱制成，以柔和的弹性张力紧贴身体，不透明哑光胸带和高叉三角裤部分接住光线，一条精致细链垂在胸骨处。大面积柔和主光从左侧打来，冷中性地包裹脸部和躯干，右侧留下柔和阴影。背景从右侧较亮渐变到左侧较深，温暖肤色衬在单色冷调中。画面保持安静的编辑大片姿态，头发被微风轻轻扬起，黑色网纱的每个面在开放的影棚虚空中都清晰可读。\n（多工具通用，原帖标签 #Krea-2 #nanobananapro #Grok）", "提示词位置": "正文", "点赞数": 193, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@GenAngelsX", "帖子链接": "https://x.com/GenAngelsX/status/2109289605472338080", "发布时间(UTC+8)": "2026-10-11 22:26", "发布时间ISO(UTC)": "2026-10-11T14:26:45Z", "距今": "13小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、内衣、写真、室内居家", "NSFW程度": 38, "参考图兼容": "可用参考图", "判断理由": "蕾丝内衣写真", "步骤1类型": "生图", "步骤1提示词": "A luxury bathroom corner transforms into a sanctuary of quiet indulgence beneath soft window daylight. Kneeling low on the checkered floor, the subject holds a serene and composed presence with an inward gaze. Her delicate black lace lingerie and pointed mules rest against the monochrome tiles, catching subtle specular highlights. Gentle side light rakes across her form, throwing soft-edged shadows that sculpt every contour. White paneled walls and a classic clawfoot bathtub establish a timeless, monochrome palette enriched by warm skin tones. The scene captures a moment of tranquil domestic luxury filled with understated couture allure.\n（多工具通用，原帖标签 #Krea-2 #nanobananapro #Grok）", "步骤1中文翻译": "奢华浴室的一角在柔和的窗边日光下变成静谧放纵的圣所。她低跪在棋盘格地板上，神态宁静沉着、目光内敛。精致的黑色蕾丝内衣与尖头穆勒鞋贴着黑白瓷砖，映出细微的镜面高光。柔和侧光扫过她的身体，投下柔边阴影，雕刻出每一处轮廓。白色护墙板和经典爪脚浴缸构成永恒的黑白色调，由温暖的肤色加以丰富。画面捕捉到宁静居家奢华的一刻，充满含蓄的高定魅惑。\n（多工具通用，原帖标签 #Krea-2 #nanobananapro #Grok）", "提示词位置": "正文", "点赞数": 167, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@tealdog2", "帖子链接": "https://x.com/tealdog2/status/2109337838336786482", "发布时间(UTC+8)": "2026-10-12 01:38", "发布时间ISO(UTC)": "2026-10-11T17:38:24Z", "距今": "9小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、内衣、写真、卧室床上", "NSFW程度": 32, "参考图兼容": "可用参考图", "判断理由": "深V露沟+三角裤坐床", "步骤1类型": "生图", "步骤1提示词": "Photorealistic, 8k, Cinematic Wide Shot. masterpiece, best quality, intricate detailed, ngrok film style, lighting and shadow effects, color cast, a beautiful young Scandinavian woman, 20s, oval face, gravure, blonde hair, natural large full bust , with ponytail (hairstyle).\n\nShe is wearing a crisp, white, long-sleeved linen crop top made of a soft, thin knit fabric, tied tightly in a large bow at the center front, creating a deep V-neckline that beautifully accentuates her cleavage. Her sleeves are gently pushed up, revealing her forearms. Below the crop top, she wears light blue bottoms featuring delicate ties on each hip and a subtle, soft pastel geometric pattern (hints of light pink and white) on the front. She is seated on a plush bed, covered with clean, white linen sheets.\n（作者注：原为 'bikini'，Grok API 不通过，改为 'briefs'；Grok app Imagine v2 无参考图生成。原 SDXL 提示词）", "步骤1中文翻译": "写实，8k，电影感广角。杰作，最佳画质，精细细节，ngrok 胶片风格，光影效果，偏色，一位美丽的年轻斯堪的纳维亚女性，20多岁，鹅蛋脸，写真(gravure)，金发，天然丰满的大胸，扎马尾（发型）。\n她穿一件挺括的白色长袖亚麻短上衣，由柔软的薄针织面料制成，在正前方紧紧系成一个大蝴蝶结，形成深V领口，漂亮地凸显乳沟。袖子轻轻推起，露出前臂。短上衣下面，她穿着浅蓝色下装，两侧胯部有精致系带，正面有淡淡的柔和粉彩几何图案（带点浅粉和白色）。她坐在铺着干净白色亚麻床单的柔软床上。\n（作者注：原为 'bikini'，Grok API 不通过，改为 'briefs'；Grok app Imagine v2 无参考图生成。原 SDXL 提示词）", "提示词位置": "正文", "点赞数": 73, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@VIBEQUIRKLABS", "帖子链接": "https://x.com/VIBEQUIRKLABS/status/2109374513599414639", "发布时间(UTC+8)": "2026-10-12 04:04", "发布时间ISO(UTC)": "2026-10-11T20:04:08Z", "距今": "7小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、泳装比基尼、写真、卧室床上", "NSFW程度": 40, "参考图兼容": "可用参考图", "判断理由": "比基尼上身+强调曲线", "步骤1类型": "生图", "步骤1提示词": "Premium fashion advertising image.\n\nThe setting is boutique hotel room, crisp bed with white sheets, bedside table.\n\nShe has her chin slightly raised.\n\nIndoor artificial-light ambience with a cool-white cast and clean neutral room brightness, strong hard key light from in front of the subject, bright frontal highlights and compact crisp shadows.\n\nShe is photographed within the scene's ambient light.\n\nHead-dominant close portrait, close camera distance, head from hair crown to chin occupying 50–60% of frame height, full face and chin within the crop, little headroom, shoulders, upper torso and arms visible below, recognizable scene around the head and body, front view. At close portrait distance, the camera is positioned above her and angled downward toward the head and upper body. Photographed directly from the front. Her chest and both shoulders face the lens in a frontal upper-body silhouette.\n\nA 20s seductive stunning Japanese or Korean woman, I–K cup bust, slim arms, narrow waist, wide hips, fuller upper thighs, slim calves, balanced proportions, pronounced hourglass silhouette, curves stretching fitted fabric with soft flesh bulges at snug garment edges; height 163–168 cm, bust–waist–hip 103–60–98 cm, young sweet pretty face, soft rounded charm, bright friendly eyes, gentle cute beauty, long soft waves with see-through bangs, defined romantic wave shape, clean face-framing ends, lightly wind-swept movement, gentle directional flow, a few naturally loose strands, controlled overall silhouette, natural black hair, soft natural smile, relaxed brows, gently narrowed eyes, softly parted lips, lifted cheeks.\n\nShe wears tight body-skimming upper-body fit, white triangle bikini top, slim halter strings, minimal sliding triangle cups, smooth stretch swim fabric.\n\nNobuyoshi Araki-inspired raw intimate diaristic image language.\n\nAnalog film light leak artifacts, irregular edge exposure burns, translucent red-orange film-gate leaks.\n\nVHS camcorder image degradation, analog tape noise, scanlines, color bleeding, chromatic aberration.", "步骤1中文翻译": "高端时尚广告图。\n场景是精品酒店房间，铺着挺括白床单的床，床头柜。\n她下巴微微抬起。\n室内人造光氛围，带冷白色偏色和干净中性的房间亮度，主体正前方强硬主光，明亮的正面高光和紧凑清晰的阴影。\n她在场景的环境光中被拍摄。\n以头部为主的近距离肖像，近距离拍摄，从头顶到下巴占画面高度的50–60%，整张脸和下巴都在画面内，头顶留白少，下方可见肩膀、上半身和手臂，头部和身体周围场景可辨认，正面视角。在近肖像距离下，相机位于她上方并向下俯拍头部和上半身。正面直拍。她的胸部和双肩面向镜头，呈正面上半身轮廓。\n一位20多岁、诱惑惊艳的日本或韩国女性，I–K罩杯胸围，纤细手臂，细腰，宽髋，较丰满的大腿上部，纤细小腿，比例均衡，明显的沙漏轮廓，曲线撑紧贴身面料，在紧身衣物边缘有柔软的肉感挤压；身高163–168cm，三围103–60–98cm，年轻甜美漂亮的脸，柔和圆润的魅力，明亮友善的眼睛，温柔可爱的美，柔软长波浪配空气刘海，清晰浪漫的波浪造型，干净的修脸发尾，轻微被风吹动，柔和的方向性流动，几缕自然松散的发丝，整体轮廓受控，天然黑发，柔和自然的微笑，放松的眉，轻轻眯起的眼，微启的双唇，上扬的脸颊。\n她穿着紧贴身体的上身剪裁，白色三角比基尼上衣，细挂脖系带，极小的可滑动三角罩杯，光滑弹力泳衣面料。\n荒木经惟(Nobuyoshi Araki)风格的原始、亲密、日记式影像语言。\n模拟胶片漏光瑕疵，不规则边缘曝光灼痕，半透明红橙色片门漏光。\nVHS摄像机画质劣化，模拟磁带噪点，扫描线，色彩溢出，色差。", "提示词位置": "正文", "点赞数": 53, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@sdjn_wgc", "帖子链接": "https://x.com/sdjn_wgc/status/2109413698125087157", "发布时间(UTC+8)": "2026-10-12 06:39", "发布时间ISO(UTC)": "2026-10-11T22:39:51Z", "距今": "4小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、写真、姿势", "NSFW程度": 25, "参考图兼容": "可用参考图", "判断理由": "高开叉缎面短裙", "步骤1类型": "生图", "步骤1提示词": "人设：绝美23岁东亚美女，身材匀称丰满，胸部明显自然丰满，视觉约E杯，具有自然重量感与柔和圆润轮廓，胸腰差明显但自然，纤细腰部与丰满胸部形成清晰比例；气质：烈艳媚，明艳张扬，气场全开。\n服装：正红色缎面挂脖短裙，后背交叉细带，裙摆高开叉，手腕叠戴金镯，耳下长流苏耳环\n妆发：高颅顶大波浪，正红丝绒唇，眼线上挑\n眼神与神态：直视镜头，眼神笃定带锋芒，双唇微启，一侧嘴角上扬\n瞬间：站在影棚深灰背景前，身体微侧，一手撩起头发，另一手扶腰，姿态舒展\n光影环境：身后一盏大柔光箱打出鲜明的发丝光和肩线边缘光，发丝边缘发亮；正面大柔光作主光，面部五官清晰、皮肤高光干净；背景是有层次的深灰，不是纯黑，红色缎面吃出强烈反光\n镜头：85mm，七分身，略仰拍，高对比高饱和，奢牌广告片质感\n负面提示词：\n低质量，模糊，变形，多余手指，肢体畸形，塑料感皮肤，过曝，卡通，动漫，文字，水印，夸张美颜，畸形解剖，剪影过重，面部全黑，轮廓光溢出成白片，强眩光吞脸，纯黑无细节背景", "步骤1中文翻译": "人设：绝美23岁东亚美女，身材匀称丰满，胸部明显自然丰满，视觉约E杯，具有自然重量感与柔和圆润轮廓，胸腰差明显但自然，纤细腰部与丰满胸部形成清晰比例；气质：烈艳媚，明艳张扬，气场全开。\n服装：正红色缎面挂脖短裙，后背交叉细带，裙摆高开叉，手腕叠戴金镯，耳下长流苏耳环\n妆发：高颅顶大波浪，正红丝绒唇，眼线上挑\n眼神与神态：直视镜头，眼神笃定带锋芒，双唇微启，一侧嘴角上扬\n瞬间：站在影棚深灰背景前，身体微侧，一手撩起头发，另一手扶腰，姿态舒展\n光影环境：身后一盏大柔光箱打出鲜明的发丝光和肩线边缘光，发丝边缘发亮；正面大柔光作主光，面部五官清晰、皮肤高光干净；背景是有层次的深灰，不是纯黑，红色缎面吃出强烈反光\n镜头：85mm，七分身，略仰拍，高对比高饱和，奢牌广告片质感\n负面提示词：\n低质量，模糊，变形，多余手指，肢体畸形，塑料感皮肤，过曝，卡通，动漫，文字，水印，夸张美颜，畸形解剖，剪影过重，面部全黑，轮廓光溢出成白片，强眩光吞脸，纯黑无细节背景", "提示词位置": "正文", "点赞数": 43, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@sdjn_wgc", "帖子链接": "https://x.com/sdjn_wgc/status/2109309592421244966", "发布时间(UTC+8)": "2026-10-11 23:46", "发布时间ISO(UTC)": "2026-10-11T15:46:10Z", "距今": "11小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、丝袜美腿、写真、户外", "NSFW程度": 24, "参考图兼容": "可用参考图", "判断理由": "低领露脐+超短裙丝袜", "步骤1类型": "生图", "步骤1提示词": "绝美23岁东亚美女，身材匀称丰满，胸部明显自然丰满，视觉约 D 至 E 杯，具有自然重量感与柔和圆润轮廓，胸腰差明显，但不夸张、不假体感；纤细腰部，与丰满胸部形成清晰但自然的比例对比；气质时尚、自信、温柔。海军蓝与奶油色宽条纹挂脖低领露脐上衣，低领口呈现锁骨与自然胸线，低腰橄榄绿A字超短裙，黑色连裤丝袜完整包裹腿部，深蓝厚底运动鞋。\n\n冷调干净妆、灰棕眼影与豆沙玫瑰唇；深发半扎高髻，发尾散落肩后；银色小圈耳饰。\n\n她坐在十字路口安全岛的路缘石上，臀部稳落石沿，右脚平踩地面，左脚略收回靠近身体，双手正给运动鞋打结，行人信号仍亮着红灯时抬脸正面看向镜头。斑马线、倒计时信号灯与对街霓虹招牌构成开阔夜街，出租车尾灯在背景里拉成暖色光带，神情像红灯还没走完，却先把这一秒给了你。\n\n50mm人像摄影，平视正面、头部至地面环境构图，竖幅4:5，大光圈浅景深，奶油散景，真实皮肤质感，粉青霓虹与信号灯红光在面部交织，高级生活方式写真，电影感。", "步骤1中文翻译": "绝美23岁东亚美女，身材匀称丰满，胸部明显自然丰满，视觉约 D 至 E 杯，具有自然重量感与柔和圆润轮廓，胸腰差明显，但不夸张、不假体感；纤细腰部，与丰满胸部形成清晰但自然的比例对比；气质时尚、自信、温柔。海军蓝与奶油色宽条纹挂脖低领露脐上衣，低领口呈现锁骨与自然胸线，低腰橄榄绿A字超短裙，黑色连裤丝袜完整包裹腿部，深蓝厚底运动鞋。\n\n冷调干净妆、灰棕眼影与豆沙玫瑰唇；深发半扎高髻，发尾散落肩后；银色小圈耳饰。\n\n她坐在十字路口安全岛的路缘石上，臀部稳落石沿，右脚平踩地面，左脚略收回靠近身体，双手正给运动鞋打结，行人信号仍亮着红灯时抬脸正面看向镜头。斑马线、倒计时信号灯与对街霓虹招牌构成开阔夜街，出租车尾灯在背景里拉成暖色光带，神情像红灯还没走完，却先把这一秒给了你。\n\n50mm人像摄影，平视正面、头部至地面环境构图，竖幅4:5，大光圈浅景深，奶油散景，真实皮肤质感，粉青霓虹与信号灯红光在面部交织，高级生活方式写真，电影感。", "提示词位置": "正文", "点赞数": 36, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@sdjn_wgc", "帖子链接": "https://x.com/sdjn_wgc/status/2109444397477540209", "发布时间(UTC+8)": "2026-10-12 08:41", "发布时间ISO(UTC)": "2026-10-12T00:41:50Z", "距今": "2小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、居家便装、写真、室内居家", "NSFW程度": 36, "参考图兼容": "可用参考图", "判断理由": "露背吊带裙肩带滑落", "步骤1类型": "生图", "步骤1提示词": "人设：绝美23岁东亚美女，身材匀称丰满，胸部明显自然丰满，视觉约E杯，具有自然重量感与柔和圆润轮廓，胸腰差明显但自然，纤细腰部与丰满胸部形成清晰比例；气质：慵懒媚，像刚醒的午后，松弛又勾人。\n服装：香槟金缎面吊带长裙，细肩带，后背大面积敞开到腰线，面料贴身垂坠吃光，一侧肩带滑落到上臂，腰间一条细金链\n妆发：凌乱长卷发散在肩头，几缕贴在颈侧，蜜桃色水光唇，脸颊微微泛红\n眼神与神态：眼皮半垂，视线从睫毛下慢慢抬起看镜头，唇角似笑非笑，双唇微启\n瞬间：侧身倚在落地窗边，一手撩起后颈头发，腰线扭成柔和的S形\n光影环境：清晨强烈的窗光透过薄纱帘洒进来，身后形成鲜明的暖金边缘光，发丝和肩线像镶了一圈光边；正面有充足的柔和窗光补脸，五官清晰可见，室内暗部有层次，空气里飘着细小光尘\n镜头：85mm，七分身，略低机位，浅景深，前景虚化纱帘，电影感暖调\n负面提示词：\n低质量，模糊，变形，多余手指，肢体畸形，塑料感皮肤，过曝，卡通，动漫，文字，水印，夸张美颜，畸形解剖，剪影过重，面部全黑，轮廓光溢出成白片，强眩光吞脸，纯黑无细节背景", "步骤1中文翻译": "人设：绝美23岁东亚美女，身材匀称丰满，胸部明显自然丰满，视觉约E杯，具有自然重量感与柔和圆润轮廓，胸腰差明显但自然，纤细腰部与丰满胸部形成清晰比例；气质：慵懒媚，像刚醒的午后，松弛又勾人。\n服装：香槟金缎面吊带长裙，细肩带，后背大面积敞开到腰线，面料贴身垂坠吃光，一侧肩带滑落到上臂，腰间一条细金链\n妆发：凌乱长卷发散在肩头，几缕贴在颈侧，蜜桃色水光唇，脸颊微微泛红\n眼神与神态：眼皮半垂，视线从睫毛下慢慢抬起看镜头，唇角似笑非笑，双唇微启\n瞬间：侧身倚在落地窗边，一手撩起后颈头发，腰线扭成柔和的S形\n光影环境：清晨强烈的窗光透过薄纱帘洒进来，身后形成鲜明的暖金边缘光，发丝和肩线像镶了一圈光边；正面有充足的柔和窗光补脸，五官清晰可见，室内暗部有层次，空气里飘着细小光尘\n镜头：85mm，七分身，略低机位，浅景深，前景虚化纱帘，电影感暖调\n负面提示词：\n低质量，模糊，变形，多余手指，肢体畸形，塑料感皮肤，过曝，卡通，动漫，文字，水印，夸张美颜，畸形解剖，剪影过重，面部全黑，轮廓光溢出成白片，强眩光吞脸，纯黑无细节背景", "提示词位置": "正文", "点赞数": 27, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@GenAngelsX", "帖子链接": "https://x.com/GenAngelsX/status/2109290156511703092", "发布时间(UTC+8)": "2026-10-11 22:28", "发布时间ISO(UTC)": "2026-10-11T14:28:56Z", "距今": "13小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、泳装比基尼、写真、泳池", "NSFW程度": 33, "参考图兼容": "可用参考图", "判断理由": "比基尼写真", "步骤1类型": "生图", "步骤1提示词": "An outdoor resort pool deck stretches under a cloudless saturated blue sky, pink-painted motel walls and white trim framing the scene with languid heat. She stands with chin raised and lips softly parted, face angled upward toward the sun behind white rectangular sunglasses, carrying confident languid ease. A vivid saturated yellow triangle bikini top with sliding cups and thin halter ties, each shoulder strap anchored by multicolored faceted gemstone clusters, catches hard light while the matching low-rise bottom sits at the hips. Hard direct overhead sunlight as key carves sharp shadows beneath the jaw and bust, warm neutral temperature throwing specular highlights along shoulders and collarbone. Softly blurred pink motel facade and white parasols rise against deep blue sky, a lone palm silhouette at camera-right, the palette saturated yellow, pink, turquoise and blue. The frame holds the grade of a printed magazine plate, chromatic depth over restraint in high-end editorial stillness.\n（多工具通用，原帖标签 #Krea-2 #nanobananapro #Grok）", "步骤1中文翻译": "户外度假村泳池甲板在万里无云的饱和蓝天下延展，粉色汽车旅馆墙面和白色饰边以慵懒的热气框住画面。她下巴抬起、双唇微启站立，脸朝上迎向身后的太阳，戴着白色长方形墨镜，带着自信慵懒的从容。一件鲜艳饱和的黄色三角比基尼上衣，可滑动罩杯和细挂脖系带，每条肩带都由多彩切面宝石簇固定，接住强光，配套低腰下装落在胯部。强烈的顶部直射阳光作主光，在下巴和胸部下方刻出锐利阴影，暖中性色温在肩膀和锁骨上投下镜面高光。柔焦的粉色汽车旅馆外墙和白色遮阳伞衬着深蓝天空，镜头右侧一棵孤零零的棕榈剪影，色调为饱和的黄、粉、青绿和蓝。画面具有印刷杂志插页的调色，在高端编辑大片的静止感中以色彩深度取代克制。\n（多工具通用，原帖标签 #Krea-2 #nanobananapro #Grok）", "提示词位置": "正文", "点赞数": 25, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@NameIsSudee", "帖子链接": "https://x.com/NameIsSudee/status/2109322223035298202", "发布时间(UTC+8)": "2026-10-12 00:36", "发布时间ISO(UTC)": "2026-10-11T16:36:21Z", "距今": "10小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、湿身、写真", "NSFW程度": 42, "参考图兼容": "可用参考图", "判断理由": "湿身贴体吊带裙深乳沟", "步骤1类型": "生图", "步骤1提示词": "{\n  \"prompt\": \"A highly detailed photorealistic portrait of a beautiful young woman with long wavy wet red hair, fair freckled skin, bright blue eyes, and a seductive smile, sitting in a pink bathtub filled with creamy pink milk. Colorful jelly beans and fresh cherries are floating around her. She is wearing a tight, wet, white spaghetti-strap dress that clings to her body, showing deep cleavage. Water droplets glisten on her skin and dress. Soft cinematic lighting, gentle highlights, shallow depth of field, ultra-realistic, 8k resolution, masterpiece, best quality.\",\n  \"negative_prompt\": \"blurry, deformed, ugly, extra limbs, bad anatomy, watermark, text, low quality, cartoon, painting, illustration, 3d render, overexposed, underexposed, plastic skin\",\n  \"style\": \"photorealistic\",\n  \"aspect_ratio\": \"9:16\"\n}", "步骤1中文翻译": "{\n  \"prompt\": \"一张高度精细的写实肖像：一位美丽的年轻女性，长而卷的湿红发，白皙带雀斑的皮肤，明亮的蓝眼睛，带着诱惑的微笑，坐在盛满奶油粉色牛奶的粉色浴缸里。彩色软糖豆和新鲜樱桃漂浮在她周围。她穿着一件紧身、湿透的白色细肩带连衣裙，紧贴身体，露出深深的乳沟。水珠在她的皮肤和裙子上闪烁。柔和的电影感光线，轻柔高光，浅景深，超写实，8k分辨率，杰作，最佳画质。\",\n  \"negative_prompt\": \"模糊，变形，丑陋，多余肢体，解剖错误，水印，文字，低画质，卡通，绘画，插画，3D渲染，过曝，欠曝，塑料皮肤\",\n  \"style\": \"写实(photorealistic)\",\n  \"aspect_ratio\": \"9:16\"\n}", "提示词位置": "正文", "点赞数": 19, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@AaronAILab", "帖子链接": "https://x.com/AaronAILab/status/2109430094007828657", "发布时间(UTC+8)": "2026-10-12 07:45", "发布时间ISO(UTC)": "2026-10-11T23:45:00Z", "距今": "3小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、泳装比基尼、写真、室内居家", "NSFW程度": 32, "参考图兼容": "可用参考图", "判断理由": "紐比基尼室内", "步骤1类型": "生图", "步骤1提示词": "🖤 夜のリビング｜模様入りの黒い紐ビキニとスマートフォン\n\n縦9:16、フォトリアルな室内写真。明確に成人した20代の韓国系女性が、自宅リビングのソファに座ってスマートフォンを見ている。明るく自然な肌、背中まで伸びる黒髪。画面から顔を上げ、こちらへ穏やかな視線を向ける。\n\n衣装は黒地に細いグレーの花と葉の模様を散らした紐ビキニ。首元と両腰の結び目が見え、透けない水着生地が身体に自然にフィットする。右手だけでスマートフォンを持ち、左手は膝の上に置く。 両腕と両手は左右一つずつ、肩から指先まで自然につなげる。\n\n背景には少ししわのあるクッション、木製テーブル、暖色のフロアランプ、暗くなった窓。頭から膝下まで写し、ランプの柔らかな光で肌、髪、模様入りの布を実写らしく描く。余分な手足、歪んだスマートフォン、衣装の透け、画面内の読める文字・ロゴ・透かしはなし。\n（原帖标签 #chatgpt #grok）", "步骤1中文翻译": "🖤 夜晚的客厅｜带图案的黑色系带比基尼与智能手机\n\n竖版9:16，写实室内照片。一位明确已成年的20多岁韩系女性，坐在自家客厅沙发上看手机。明亮自然的肌肤，及背黑发。她从屏幕上抬起脸，向这边投来平静的目光。\n\n服装是黑底上散布细灰色花叶图案的系带比基尼。颈部和两侧胯部的绳结可见，不透的泳衣面料自然贴合身体。只用右手拿手机，左手放在膝上。双臂双手左右各一，从肩到指尖自然相连。\n\n背景是略有褶皱的靠垫、木桌、暖色落地灯、已暗下来的窗户。从头拍到膝下，用台灯柔光写实地描绘皮肤、头发和图案布料。没有多余手脚、变形手机、服装透视、画面内可读文字/logo/水印。\n（原帖标签 #chatgpt #grok）", "提示词位置": "正文", "点赞数": 13, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@GenAngelsX", "帖子链接": "https://x.com/GenAngelsX/status/2109289167029194945", "发布时间(UTC+8)": "2026-10-11 22:25", "发布时间ISO(UTC)": "2026-10-11T14:25:00Z", "距今": "13小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、内衣、写真、户外", "NSFW程度": 40, "参考图兼容": "可用参考图", "判断理由": "半透蕾丝文胸开衫", "步骤1类型": "生图", "步骤1提示词": "An open rural meadow path stretches in early evening, packed bare earth running between overgrown grasses and wildflower stalks with tree lines rising on both sides. Emilia crouches in a deep squat, knees drawn high, chin resting into one hand, heavy-lidded eyes meeting the lens with composed inward stillness. The cropped fitted cardigan in bright optic white, ribbed knit with scalloped edges and ruffled cuffs, hangs open over a semi-sheer floral lace bra in warm ivory while the sheer maxi skirt of fine tulle with floral appliqué drifts translucent over the legs. Low warm key light from the left wraps gradually across the torso at golden hour, soft and directional against cool ambient fill from the open sky. Distant wooden poles recede under a pale sky, the palette dividing warm skin and fabric against cool green surroundings with long shadows on the dry soil. The frame holds a quiet editorial stillness, the figure grounded yet suspended between earth and fading light.\n（多工具通用，原帖标签 #Krea-2 #nanobananapro #Grok）", "步骤1中文翻译": "一条乡间草地小路在傍晚延伸，夯实的裸土路夹在丛生的野草和野花茎之间，两侧树林升起。Emilia 深蹲着，膝盖高高抬起，下巴托在一只手里，眼睑沉重的双眼以沉着内敛的静止与镜头对视。亮光学白的修身短款开衫，罗纹针织带扇贝边和荷叶袖口，敞开着罩在一件暖象牙色的半透明花卉蕾丝文胸外，细薄纱长裙带花卉贴花，半透明地飘在双腿上。低角度暖色主光从左侧在黄金时刻逐渐包裹躯干，柔和且有方向性，与来自开阔天空的冷色环境补光相对。远处木电线杆在苍白天空下渐远，色调把温暖的肤色和布料与冷绿色环境分开，干燥土地上拖着长长的影子。画面保持安静的编辑大片静止感，人物扎根大地却又悬在大地与渐逝的光之间。\n（多工具通用，原帖标签 #Krea-2 #nanobananapro #Grok）", "提示词位置": "正文", "点赞数": 12, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@BubbaArtwork", "帖子链接": "https://x.com/BubbaArtwork/status/2109369702803808291", "发布时间(UTC+8)": "2026-10-12 03:45", "发布时间ISO(UTC)": "2026-10-11T19:45:01Z", "距今": "7小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、皮衣紧身、姿势", "NSFW程度": 40, "参考图兼容": "可用参考图", "判断理由": "乳胶迷你裙恋物风，无裸露", "步骤1类型": "生图", "步骤1提示词": "A full-body shot of a blonde woman in a crouched, provocative pose against a weathered brick corner. She wears a tight, black latex mini-dress with a low back and matching thigh-high stiletto boots, both highly reflective under direct flash lighting. Her long, wavy platinum blonde hair cascades over her shoulder as she turns her head to gaze directly at the camera with sultry, half-lidded eyes and glossy lips. Her right hand presses flat against the wall, fingers splayed, revealing red nail polish; a small tattoo is visible on her inner forearm. The setting features exposed brick with faded green paint patches and reddish-brown tiled steps beneath her boots. Lighting is harsh and frontal, creating sharp highlights on the latex and deep shadows behind her, enhancing texture and contours. The composition emphasizes curvature and contrast between the sleek outfit and gritty background. Style: high-contrast glamour photography with edgy, urban fetish aesthetic. Focus on material sheen, body posture, and intense eye contact for maximum visual impact.", "步骤1中文翻译": "一张全身照：一位金发女性在风化的砖墙角以蹲伏的挑逗姿势摆拍。她穿着紧身黑色乳胶迷你裙，低背设计，配同款过膝细高跟长靴，在直射闪光下都高度反光。她长长的波浪铂金色金发垂过肩膀，转头用慵懒半睁的眼睛和光泽的嘴唇直视镜头。她右手平按在墙上，手指张开，露出红色指甲油；前臂内侧可见一个小纹身。场景有裸露砖墙和褪色的绿色油漆斑块，脚下是红褐色瓷砖台阶。光线强烈正面，在乳胶上形成锐利高光、身后形成深影，强化质感与轮廓。构图强调曲线以及光滑服装与粗粝背景的对比。风格：高反差魅力摄影，带有前卫的都市恋物(fetish)美学。聚焦材质光泽、身体姿态和强烈的眼神接触，以达到最大视觉冲击。", "提示词位置": "正文", "点赞数": 4, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@_Futaba_AI_", "帖子链接": "https://x.com/_Futaba_AI_/status/2109461484141158776", "发布时间(UTC+8)": "2026-10-12 09:49", "发布时间ISO(UTC)": "2026-10-12T01:49:44Z", "距今": "1小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、内衣、露骨18+、Spicy模式", "NSFW程度": 72, "参考图兼容": "仅无图生成", "判断理由": "性玩具+内衣", "步骤1类型": "生图", "步骤1提示词": "Realistic Candid photograph of a 23-year-old Japanese woman, wearing delicate lingerie set. ordinary individual random face, black hair, side-profile head shot, she’s a silicone modeling artist, sitting on the desk of university library, a white dildo standing on the desk, lovingly rubbing it by hands while kissing it, smiling gently, indoor studio lighting , high quality, 85mm lens.\n（作者注：Grok 限定；静止图生成后用｛▶︎动画｝或 spicy 模式，不加提示词也能自动生成视频）", "步骤1中文翻译": "写实抓拍照片：一位23岁日本女性，穿着精致的内衣套装。普通个体的随机面孔，黑发，侧脸头部特写，她是一名硅胶模型艺术家，坐在大学图书馆的桌子上，桌上立着一根白色假阳具，她一边用双手爱怜地抚摸它一边亲吻它，温柔微笑，室内影棚灯光，高画质，85mm镜头。\n（作者注：Grok 限定；静止图生成后用｛▶︎动画｝或 spicy 模式，不加提示词也能自动生成视频）", "提示词位置": "alt", "点赞数": 2, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@punkhuri1", "帖子链接": "https://x.com/punkhuri1/status/2109329827602030869", "发布时间(UTC+8)": "2026-10-12 01:06", "发布时间ISO(UTC)": "2026-10-11T17:06:35Z", "距今": "10小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、湿身、写真", "NSFW程度": 32, "参考图兼容": "可用参考图", "判断理由": "温泉，肤色泳衣遮挡无裸露", "步骤1类型": "生图", "步骤1提示词": "Create a photorealistic cinematic fine-art portrait of an adult South Asian Indian woman in her early twenties, relaxing in a luxurious traditional stone hot spring bath at night. The atmosphere is intimate, serene, softly romantic, and visually immersive, with warm amber lantern light reflecting across gently steaming water.\n\nWOMAN — FACIAL FEATURES AND APPEARANCE\n\nShe is a naturally beautiful, fair-complexioned South Asian Indian woman with a light ivory-beige skin tone and delicate warm-neutral undertones. Her skin is smooth, luminous, and naturally textured, with subtle warmth across her cheeks and nose, realistic pores, and delicate moisture highlights.\n\nHer face is softly elongated and oval, with subtle high cheekbones, gently filled lean cheeks, a slim tapered jawline, and a small softly rounded chin. She has expressive, deep dark-brown almond-shaped eyes, softly lifted outer corners, naturally defined dark eyebrows, a slender straight nose with a softly rounded tip, and naturally rosy medium-full lips with a slightly fuller lower lip.\n\nHer facial appearance is distinctly Indian, with harmonious South Asian features, understated elegance, and delicate feminine proportions. She wears minimal, polished makeup: soft brown eyeliner, delicately defined lashes, a hint of warm rose blush, and naturally muted pink lips.\n\nHer expression is peaceful, thoughtful, and slightly dreamy, with relaxed eyelids and a quiet, introspective softness.\n\nHAIR AND BODY\n\nHer naturally jet-black hair is gathered into a voluminous, loosely twisted updo with soft, imperfect strands. Delicate wet tendrils escape around her temples, cheeks, ears, and neck, some curling softly against her damp skin.\n\nA small ivory floral hairpin with delicate dangling pearl ornaments is tucked into one side of her updo, adding a refined traditional touch.\n\nShe has a distinctly slender, elongated feminine silhouette, a light narrow frame, delicate shoulders, a long graceful neck, slender arms, subtle collarbone definition, and naturally soft feminine proportions.\n\nTiny droplets of water glisten across her shoulders, collarbones, neck, and upper arms, catching the warm ambient light. Her skin remains realistic, with subtle variations in tone and naturally luminous wet highlights.\n\nWARDROBE AND COVERAGE\n\nShe wears a discreet, strapless, skin-toned bathing garment, naturally concealed beneath the opaque, gently steaming bathwater. Her shoulders, collarbones, and upper arms remain visible above the waterline, while her chest and lower body are fully obscured by the cloudy mineral water and soft drifting steam.\n\nThe aesthetic is elegant, tasteful, and artistic, without explicit nudity.\n\nPOSE AND COMPOSITION\n\nShe is reclining comfortably inside a traditional stone-lined hot spring bath, with her upper body emerging gently from the warm water.\n\nHer left arm is bent upward, with her hand resting loosely behind her head, fingers naturally nestled into her dark updo. Her left elbow extends outward and rests comfortably against the stone edge of the bath.\n\nHer opposite arm remains relaxed, partially submerged beneath the water.\n\nHer shoulders are slightly angled, creating a graceful diagonal composition across the frame. Her head tilts gently downward and toward her right shoulder, with her eyes gazing softly at the water just beside her.\n\nHer posture feels unposed, natural, and quietly absorbed in the moment.\n\nThe camera captures her from a slightly elevated, intimate three-quarter angle, revealing her face, wet hair, delicate shoulders, bent arm, the stone bath edge, and the shimmering water surrounding her.\n（多工具对比：ChatGPT Image 2 / Grok Imagine / Nano Banana 2，原帖标签 #GrokImagine）", "步骤1中文翻译": "创作一张写实电影感艺术肖像：一位二十出头的成年南亚印度女性，夜晚在奢华的传统石砌温泉浴池中放松。氛围亲密、宁静、柔和浪漫且极具沉浸感，温暖的琥珀色灯笼光映在微微冒着热气的水面上。\n\n女性——面部特征与外貌\n她是一位天生美丽、肤色白皙的南亚印度女性，浅象牙米色肤色带细腻暖中性底调。皮肤光滑、有光泽且有自然纹理，脸颊和鼻子有淡淡暖意，真实毛孔和细腻的湿润高光。\n她的脸微长呈椭圆形，颧骨略高，脸颊纤瘦饱满，下颌线纤细收窄，下巴小而圆润。她有富有表现力的深棕色杏眼，眼尾微扬，天然浓密的深色眉毛，纤细挺直、鼻尖圆润的鼻子，以及天然红润、中等丰满、下唇略厚的嘴唇。\n她的面部外貌具有鲜明的印度特征，和谐的南亚五官，含蓄的优雅与精致的女性比例。她化着简洁精致的妆：柔和棕色眼线、精致的睫毛、一抹暖玫瑰腮红和自然柔和的粉色唇。\n她的表情平静、若有所思、略带梦幻，眼睑放松，有一种安静内省的柔和。\n\n头发与身体\n她天生乌黑的头发盘成蓬松、松散扭转的发髻，带着柔软不完美的发丝。几缕湿发从太阳穴、脸颊、耳边和颈部散落，有些柔软地卷贴在潮湿的皮肤上。\n发髻一侧插着一枚小巧的象牙色花朵发簪，垂着精致的珍珠坠饰，增添精致的传统气息。\n她有明显纤细修长的女性轮廓、轻盈窄小的骨架、精致的肩膀、修长优雅的脖颈、纤细的手臂、微显的锁骨，以及自然柔美的女性比例。\n细小的水珠在她的肩膀、锁骨、脖颈和上臂上闪烁，接住温暖的环境光。皮肤保持真实，肤色有细微变化，带自然发亮的湿润高光。\n\n服装与遮盖\n她穿着一件低调的无肩带肤色泡汤衣，自然隐没在不透明、微微冒气的洗澡水下。肩膀、锁骨和上臂露在水面之上，胸部和下半身被浑浊的矿物质水和柔和飘散的蒸汽完全遮住。\n美学优雅、有品位、艺术化，没有露骨裸露。\n\n姿势与构图\n她舒适地斜倚在传统石砌温泉池中，上半身从温水中缓缓浮出。\n她的左臂向上弯曲，手松松地放在脑后，手指自然埋入深色发髻。左肘向外伸出，舒适地搭在池边石头上。\n另一只手臂放松，部分没入水下。\n她的肩膀略微倾斜，在画面中形成优雅的对角线构图。她的头微微向下、向右肩倾斜，目光柔和地注视着身旁的水面。\n她的姿态不做作、自然，安静地沉浸在当下。\n镜头从略高、亲密的四分之三角度捕捉她，展现她的脸、湿发、精致的肩膀、弯曲的手臂、石砌池边以及她周围波光粼粼的水面。\n（多工具对比：ChatGPT Image 2 / Grok Imagine / Nano Banana 2，原帖标签 #GrokImagine）", "提示词位置": "正文", "点赞数": 2, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@mumeno_shosai", "帖子链接": "https://x.com/mumeno_shosai/status/2109430302649245724", "发布时间(UTC+8)": "2026-10-12 07:45", "发布时间ISO(UTC)": "2026-10-11T23:45:50Z", "距今": "3小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、写真、室内居家", "NSFW程度": 30, "参考图兼容": "可用参考图", "判断理由": "浴巾裹身镜前自拍", "步骤1类型": "生图", "步骤1提示词": "A candid mirror selfie taken in a small, tidy bathroom right after a bath. A woman in her mid-20s with long, wet, straight black hair stands wrapped in a white bath towel, holding it closed at her chest with one hand while the other holds a smartphone up to the mirror. The harsh phone flash flares brightly in the upper right of the mirror, and soft steam fogs its edges. Behind her is a clean white sink with a faucet and a few neatly placed bottles. Her expression is calm and relaxed, her eyes on the phone screen. The shot is slightly tilted, grainy, and softly blurred, like a quick, unpolished phone snapshot.\n（作者注：ChatGPT、Grok 均可）", "步骤1中文翻译": "一张在洗完澡后、小而整洁的浴室里拍的随手镜前自拍。一位20多岁中段的女性，长而湿的直黑发，裹着白色浴巾站着，一只手在胸前把浴巾拢住，另一只手把手机举向镜子。刺眼的手机闪光在镜子右上方亮亮地炸开，柔和的蒸汽让镜子边缘起雾。她身后是干净的白色洗手池、水龙头和几个摆放整齐的瓶子。她表情平静放松，眼睛看着手机屏幕。画面略微倾斜、有颗粒感、轻微模糊，像一张快速、未修饰的手机快照。\n（作者注：ChatGPT、Grok 均可）", "提示词位置": "alt", "点赞数": 0, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@BubbaArtwork", "帖子链接": "https://x.com/BubbaArtwork/status/2109456515417423920", "发布时间(UTC+8)": "2026-10-12 09:29", "发布时间ISO(UTC)": "2026-10-12T01:29:59Z", "距今": "2小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "3D/CG、角色扮演、姿势", "NSFW程度": 28, "参考图兼容": "可用参考图", "判断理由": "奇幻薄纱蕾丝，无裸露", "步骤1类型": "生图", "步骤1提示词": "A captivating fantasy portrait of a dragonborn woman crouched in a dynamic, intimate pose. She features short, silvery-white hair with an asymmetrical cut obscuring one eye, revealing a piercing blue gaze and pale skin. Large, textured horns curve from her head, blending organic bone structures with metallic ornamentation. Her attire is an intricate fusion of gothic lace and bio-mechanical armor in shades of violet and silver, featuring sheer fabrics overlaid with ornate, skeletal embroidery that extends down her thighs. Behind her, massive dragon wings unfurl, displaying a translucent, vein-like membrane glowing with ethereal purple light against dark, spiky cartilage. The background is a blurred, cavernous environment with cool blue tones contrasting the warm magenta wing glow. Lighting is dramatic and soft, highlighting her facial features and the glossy texture of her skin while casting deep shadows within the wing structure. The style is hyper-realistic digital art with 8k detail, shallow depth of field, and a cinematic, dark fantasy atmosphere emphasizing intricate textures and ethereal beauty.", "步骤1中文翻译": "一幅迷人的奇幻肖像：一位龙裔女性以充满动感、亲密的姿势蹲伏。她有一头不对称剪裁的银白色短发遮住一只眼，露出锐利的蓝色目光和苍白皮肤。巨大的纹理角从她头上弯出，融合有机骨质结构与金属装饰。她的服装是哥特蕾丝与生物机械盔甲的精巧融合，呈紫罗兰和银色，带有叠加华丽骷髅刺绣的透明薄纱面料，一直延伸到大腿。她身后巨大的龙翼展开，半透明、带脉络的翼膜在深色尖刺软骨的衬托下发出空灵紫光。背景是模糊的洞穴环境，冷蓝色调与温暖的洋红翼光形成对比。光线戏剧而柔和，突出她的面部特征和皮肤的光泽质感，同时在翼结构内投下深影。风格为超写实数字艺术，8k细节，浅景深，电影感黑暗奇幻氛围，强调精致的纹理与空灵之美。", "提示词位置": "正文", "点赞数": 0, "参考图": null, "分区": "新发现博主"}], "excluded_creators": ["@jn121314"]}; window.DAY_DATE = "2026-10-12";</script>
+  <script>(function () {
+  // Storage adapter for hidden rows. Async API: get(id) / set(id, rec|null) / list().
+  // Record shape: { id, handle, date, hidden_at (ISO), reason }
+  // localStorage = offline cache; when signed in to Supabase, hidden_items is the source of truth.
+  const PREFIX = 'grok-hidden:';
+  const SB_URL = 'https://zvfyxgtxwwpcvrwakkzq.supabase.co';
+  const SB_KEY = 'sb_publishable_h8c4KdaD1mNrRl2b5HEn3A_MWUgUbC8';
+  const local = {
+    async get(id) { try { const v = localStorage.getItem(PREFIX + id); return v ? JSON.parse(v) : null; } catch (e) { return null; } },
+    async set(id, rec) { try { rec == null ? localStorage.removeItem(PREFIX + id) : localStorage.setItem(PREFIX + id, JSON.stringify(rec)); } catch (e) {} },
+    async list() {
+      const out = [];
+      try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.startsWith(PREFIX)) out.push(JSON.parse(localStorage.getItem(k))); } } catch (e) {}
+      return out;
+    },
+    clear() { try { Object.keys(localStorage).filter(k => k.startsWith(PREFIX)).forEach(k => localStorage.removeItem(k)); } catch (e) {} }
+  };
+  let sb = null, user = null;
+  const toRow = r => ({ post_id: r.id, handle: r.handle || null, day: r.date || null, reason: r.reason || null, hidden_at: r.hidden_at || new Date().toISOString() });
+  const fromRow = x => ({ id: x.post_id, handle: x.handle || '', date: x.day || '', reason: x.reason || '', hidden_at: x.hidden_at });
+  const emit = () => window.dispatchEvent(new Event('grok-hidden-sync'));
+
+  async function sync() {
+    if (!sb || !user) return;
+    const flag = 'grok-sync-merged:' + user.id;
+    if (!localStorage.getItem(flag)) {  // first sign-in on this device: push local hides up
+      const mine = await local.list();
+      if (mine.length) {
+        const { error } = await sb.from('hidden_items').upsert(mine.map(toRow), { onConflict: 'user_id,post_id' });
+        if (error) { console.warn(error); return; }
+      }
+      localStorage.setItem(flag, '1');
+    }
+    const all = []; let from = 0;
+    for (;;) {
+      const { data, error } = await sb.from('hidden_items').select('post_id,handle,day,reason,hidden_at').range(from, from + 999);
+      if (error) { console.warn(error); return; }
+      all.push(...data); if (data.length < 1000) break; from += 1000;
+    }
+    local.clear();
+    for (const x of all) await local.set(x.post_id, fromRow(x));
+    emit();
+  }
+
+  window.HiddenStore = {
+    get: local.get,
+    list: local.list,
+    async set(id, rec) {
+      await local.set(id, rec);
+      if (!sb || !user) return;
+      const q = rec == null ? sb.from('hidden_items').delete().eq('post_id', id)
+                            : sb.from('hidden_items').upsert(toRow(rec), { onConflict: 'user_id,post_id' });
+      const { error } = await q; if (error) console.warn(error);
+    }
+  };
+  window.Prefs = {
+    get(k, d) { try { const v = localStorage.getItem('grok-pref:' + k); return v == null ? d : v; } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem('grok-pref:' + k, v); } catch (e) {} }
+  };
+
+  function ui() {
+    const box = document.createElement('div'); box.id = 'sync-box';
+    document.body.appendChild(box);
+    function draw() {
+      if (user) {
+        box.innerHTML = `<span>${(user.email || '').replace(/[<>&]/g, '')}</span> <button type="button" id="sync-out">退出</button>`;
+        box.querySelector('#sync-out').onclick = async () => { await sb.auth.signOut(); };
+      } else {
+        box.innerHTML = `<button type="button" id="sync-open">登录同步</button><form id="sync-form" hidden>
+          <input type="email" id="sync-email" placeholder="email" autocomplete="username" required/>
+          <input type="password" id="sync-pw" placeholder="password" autocomplete="current-password" required/>
+          <button type="submit">登录</button><span id="sync-err"></span></form>`;
+        const f = box.querySelector('#sync-form');
+        box.querySelector('#sync-open').onclick = () => { f.hidden = !f.hidden; };
+        f.onsubmit = async e => {
+          e.preventDefault();
+          if (!sb) { box.querySelector('#sync-err').textContent = '×'; return; }
+          const { error } = await sb.auth.signInWithPassword({ email: f.querySelector('#sync-email').value, password: f.querySelector('#sync-pw').value });
+          box.querySelector('#sync-err').textContent = error ? '× ' + error.message : '';
+        };
+      }
+    }
+    draw();
+    return draw;
+  }
+
+  async function init() {
+    const draw = ui();
+    try {
+      const mod = await import('https://esm.sh/@supabase/supabase-js@2');
+      sb = mod.createClient(SB_URL, SB_KEY);
+      const { data } = await sb.auth.getSession();
+      user = data.session ? data.session.user : null; draw();
+      if (user) sync();
+      sb.auth.onAuthStateChange((ev, session) => {
+        const was = user && user.id; user = session ? session.user : null; draw();
+        if (user && user.id !== was) sync();
+      });
+    } catch (e) { console.warn('supabase unavailable', e); }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+
+(function () {
+  // v3 viewer (2026-10-10): 已关注/新发现 分区 + 类型分组 + 题材/参考图/NSFW 筛选 + 实时相对时间
+  const C = {
+    source: '来源', part: '分区', handle: '博主', link: '帖子链接', time: '发布时间(UTC+8)', iso: '发布时间ISO(UTC)',
+    tcat: '类型分组', type: '类型', steps: '步骤数', tags: '题材标签', nsfw: 'NSFW程度', ref: '参考图兼容',
+    reason: '判断理由', loc: '提示词位置', likes: '点赞数', refimg: '参考图'
+  };
+  const SECTIONS = [['已关注', '已关注博主'], ['新发现', '新发现博主']];
+  const TYPES = ['生图', '生视频', '多步'];
+  const BUCKETS = [[0, 20, '0-20 日常/轻微性感'], [21, 40, '21-40 泳装内衣擦边'], [41, 60, '41-60 半裸/强暗示'],
+                   [61, 80, '61-80 裸露/性暗示'], [81, 100, '81-100 露骨性行为']];
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function tagsOf(r) { return String(r[C.tags] || '').split(/[、,，|]/).map(s => s.trim()).filter(Boolean); }
+  function tcat(r) {
+    if (r[C.tcat]) return r[C.tcat];
+    return (Number(r[C.steps]) > 1 || String(r[C.type] || '').includes('→')) ? '多步' : (r[C.type] || '');
+  }
+  function srcOf(r) { const s = r[C.source] || r[C.part] || ''; return s.startsWith('已关注') ? '已关注' : '新发现'; }
+  function isoOf(r) {
+    if (r[C.iso]) return r[C.iso];
+    const t = r[C.time]; if (!t) return null;
+    return String(t).replace(' ', 'T') + ':00+08:00';
+  }
+  function rel(iso) {
+    const t = Date.parse(iso); if (isNaN(t)) return '';
+    const s = Math.max(0, (Date.now() - t) / 1000);
+    if (s < 60) return '刚刚';
+    if (s < 3600) return Math.floor(s / 60) + '分钟前';
+    if (s < 86400) return Math.floor(s / 3600) + '小时前';
+    if (s < 86400 * 30) return Math.floor(s / 86400) + '天前';
+    return Math.floor(s / 86400 / 30) + '个月前';
+  }
+  function abs8(iso) {
+    const t = Date.parse(iso); if (isNaN(t)) return '';
+    const d = new Date(t + 8 * 3600e3);
+    const p = n => String(n).padStart(2, '0');
+    return `${d.getUTCFullYear()}-${p(d.getUTCMonth() + 1)}-${p(d.getUTCDate())} ${p(d.getUTCHours())}:${p(d.getUTCMinutes())} (UTC+8)`;
+  }
+  function stepFields(row) {
+    const out = [];
+    for (let i = 1; i <= 8; i++) {
+      const t = row[`步骤${i}类型`], p = row[`步骤${i}提示词`], z = row[`步骤${i}中文翻译`];
+      if (!p && !z) continue;
+      out.push({ i, type: t || '', prompt: p || '', zh: z || '' });
+    }
+    return out;
+  }
+  function promptHtml(label, text) {
+    if (!text) return '';
+    const collapsed = text.length > 120 || text.split('\n').length > 3;
+    return `<div class="prompt-block"><div class="prompt-label">${esc(label)}</div>
+      <div class="prompt-text${collapsed ? ' collapsed' : ''}">${esc(text)}</div>
+      ${collapsed ? '<button type="button" class="toggle">展开 / 收起</button>' : ''}</div>`;
+  }
+  function nsfwClass(n) { return n > 80 ? 'n5' : n > 60 ? 'n4' : n > 40 ? 'n3' : n > 20 ? 'n2' : 'n1'; }
+
+  function renderRow(r) {
+    const steps = stepFields(r);
+    const iso = isoOf(r);
+    const n = Number(r[C.nsfw]);
+    const ref = r[C.ref] || '';
+    const prompts = steps.map(s => {
+      const head = `步骤${s.i}${s.type ? ' · ' + s.type : ''}`;
+      return promptHtml(head + ' · 原文', s.prompt) + promptHtml(head + ' · 中文', s.zh);
+    }).join('');
+    const id = String(r[C.link] || '').split('/').pop();
+    return `<tr data-id="${esc(id)}" data-handle="${esc(r[C.handle] || '')}" data-tags="${esc(tagsOf(r).join('|'))}" data-ref="${esc(ref)}" data-nsfw="${isNaN(n) ? '' : n}">
+      <td class="handle">${esc(r[C.handle] || '')}<br/><a href="${esc(r[C.link] || '#')}" target="_blank" rel="noopener">打开帖子</a></td>
+      <td class="meta"><span class="reltime" data-iso="${esc(iso || '')}" title="${esc(iso ? abs8(iso) : '')}">${esc(iso ? rel(iso) : '')}</span></td>
+      <td><span class="chip">${esc(r[C.type] || '')}</span></td>
+      <td><span class="chip nsfw ${isNaN(n) ? '' : nsfwClass(n)}">${isNaN(n) ? '—' : n}</span></td>
+      <td><span class="chip ${ref === '仅无图生成' ? 'noref' : 'okref'}">${esc(ref || '—')}</span><div class="meta">${esc(r[C.reason] || '')}</div>${String(r[C.refimg] || '').split('\n').filter(Boolean).map(p => { const u = (window.DAY_DATA ? '../' : '') + p; return `<a href="${esc(u)}" target="_blank" rel="noopener"><img class="refthumb" src="${esc(u)}" alt="参考图" loading="lazy"/></a>`; }).join('')}</td>
+      <td class="tags">${tagsOf(r).map(t => `<span class="chip">${esc(t)}</span>`).join('')}</td>
+      <td class="prompt-cell">${prompts || '<span class="meta">—</span>'}</td>
+      <td class="meta">${esc(r[C.loc] || '')}</td>
+      <td class="meta">${esc(r[C.likes] ?? '')}<br/><button type="button" class="del" title="隐藏">✕</button></td>
+    </tr>`;
+  }
+  const THEAD = '<thead><tr><th>博主</th><th>发布</th><th>类型</th><th>NSFW</th><th>参考图兼容</th><th>题材</th><th>各步骤提示词 + 中文翻译</th><th>位置</th><th>点赞</th></tr></thead>';
+
+  const SORTS = [['default', '默认(类型→点赞)'], ['nsfw', 'NSFW评分(高→低)'], ['likes', '点赞(高→低)'], ['time', '发布时间(新→旧)']];
+  const num = x => Number(x) || 0;
+  const SORTFN = {
+    nsfw: (a, b) => num(b[C.nsfw]) - num(a[C.nsfw]) || num(b[C.likes]) - num(a[C.likes]),
+    likes: (a, b) => num(b[C.likes]) - num(a[C.likes]),
+    time: (a, b) => (Date.parse(isoOf(b)) || 0) - (Date.parse(isoOf(a)) || 0)
+  };
+  const idOf = r => String(r[C.link] || '').split('/').pop();
+
+  async function mount(root, data, dateLabel) {
+    const rows = Array.isArray(data) ? data : ((data && data.rows) || []);
+    const excludedCreators = Array.isArray(data) ? [] : [...new Set(((data && data.excluded_creators) || []).map(h => '@' + String(h).replace(/^@+/, '')))];
+    const fused = Array.isArray(data) ? [] : ((data && data.fused) || []);
+    if (fused.length) {
+      const fs = document.createElement('div'); fs.className = 'fused';
+      const groups = [...new Set(fused.map(f => f.group))];
+      fs.innerHTML = '<h2>融合提示词</h2>' + groups.map(g => `<div class="fused-group"><h3>${esc(g)}</h3><div class="fused-cards">` +
+        fused.filter(f => f.group === g).map(f => `<div class="fused-card"><div class="fused-meta"><span class="fused-type">${esc(f.type || '')}</span> <b>NSFW ${esc(String(f.nsfw ?? ''))}</b> <span class="fused-test">测试结果 ${esc(f.test_result || '未测')}</span></div>
+          <pre class="fused-en">${esc(f.prompt || '')}</pre><button type="button" class="fused-copy">复制</button>
+          <pre class="fused-zh">${esc(f.zh || '')}</pre>
+          <ul class="fused-src">${(f.sources || []).map(x => `<li>${esc(x.post)}：${esc(x.element)}</li>`).join('')}</ul></div>`).join('') + '</div></div>').join('');
+      fs.addEventListener('click', e => { const b = e.target.closest('.fused-copy'); if (!b) return;
+        const t = b.previousElementSibling.textContent; (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => { b.textContent = '已复制'; setTimeout(() => b.textContent = '复制', 1200); }).catch(() => {}); });
+      const vv = root.querySelector('#viewer'); root.insertBefore(fs, vv);
+    }
+    if (excludedCreators.length) {
+      const sec = document.createElement('div'); sec.className = 'excluded-creators';
+      sec.innerHTML = '<h2>已排除</h2><ul>' + excludedCreators.map(h => `<li>${esc(h)}</li>`).join('') + '</ul>';
+      root.appendChild(sec);
+    }
+    const dl = root.querySelector('#date-label'); if (dl && dateLabel) dl.textContent = dateLabel;
+    const v = root.querySelector('#viewer');
+    const store = window.HiddenStore;
+    const hidden = new Set((await store.list()).map(x => x && x.id).filter(Boolean));
+    const allTags = [...new Set(rows.flatMap(tagsOf))].sort();
+    const refs = [...new Set(rows.map(r => r[C.ref]).filter(Boolean))].sort();
+    let sort = Prefs.get('sort', 'default'); if (!SORTFN[sort] && sort !== 'default') sort = 'default';
+    let current = Prefs.get('section', SECTIONS[0][0]);
+    v.innerHTML = `<div class="toolbar">
+      <div><label>排序</label><select id="f-sort">${SORTS.map(([k, l]) => `<option value="${k}"${k === sort ? ' selected' : ''}>${l}</option>`).join('')}</select></div>
+      <div><label>题材标签</label><select id="f-tag"><option value="">全部</option>${allTags.map(t => `<option>${esc(t)}</option>`).join('')}</select></div>
+      <div><label>参考图兼容</label><select id="f-ref"><option value="">全部</option>${refs.map(t => `<option>${esc(t)}</option>`).join('')}</select></div>
+      <div><label>NSFW档</label><select id="f-bucket"><option value="">全部</option>${BUCKETS.map((b, i) => `<option value="${i}">${b[2]}</option>`).join('')}</select></div>
+      <div><label>NSFW</label><input type="range" id="f-min" min="0" max="100" value="0"/><input type="range" id="f-max" min="0" max="100" value="100"/><span id="f-range">0–100</span></div>
+      <div class="stat" id="stat"></div>
+      <div class="hidden-ctl"><span id="hid-n"></span> <button type="button" id="hid-restore">恢复</button> <button type="button" id="hid-export">导出隐藏列表</button></div></div>
+      <div class="tabs">${SECTIONS.map(([k, l]) => `<button type="button" class="tab" data-sec="${k}">${l} <b data-count="${k}"></b></button>`).join('')}
+      <button type="button" class="tab" data-sec="*">全部</button></div><div id="secs"></div>`;
+    const $ = s => v.querySelector(s);
+    function render() {
+      let html = '';
+      for (const [k, label] of SECTIONS) {
+        const part = rows.filter(r => srcOf(r) === k);
+        html += `<section class="sec" data-sec="${k}"><h2>${label} <span class="meta" data-count2="${k}"></span></h2>`;
+        const groups = sort === 'default'
+          ? TYPES.map(t => [t, part.filter(r => tcat(r) === t).sort(SORTFN.likes)])
+          : [['', part.slice().sort(SORTFN[sort])]];
+        for (const [t, g] of groups) {
+          if (!g.length) continue;
+          html += `<div class="grp">${t ? `<h3>${t} <span class="meta grp-count"></span></h3>` : '<span class="grp-count" hidden></span>'}<div class="table-wrap"><table>${THEAD}<tbody>${g.map(renderRow).join('')}</tbody></table></div></div>`;
+        }
+        html += '</section>';
+      }
+      $('#secs').innerHTML = html;
+      apply();
+    }
+    function apply() {
+      const tag = $('#f-tag').value, ref = $('#f-ref').value, b = $('#f-bucket').value;
+      let lo = +$('#f-min').value, hi = +$('#f-max').value; if (lo > hi) [lo, hi] = [hi, lo];
+      if (b !== '') { lo = Math.max(lo, BUCKETS[b][0]); hi = Math.min(hi, BUCKETS[b][1]); }
+      $('#f-range').textContent = `${lo}–${hi}`;
+      let shown = 0;
+      v.querySelectorAll('section.sec').forEach(sec => {
+        const k = sec.getAttribute('data-sec'); let ss = 0, st = 0;
+        sec.querySelectorAll('.grp').forEach(g => {
+          let gs = 0, gt = 0;
+          g.querySelectorAll('tbody tr').forEach(tr => {
+            if (hidden.has(tr.dataset.id)) { tr.style.display = 'none'; return; }
+            gt++;
+            const n = tr.dataset.nsfw === '' ? -1 : +tr.dataset.nsfw;
+            const ok = (!tag || tr.dataset.tags.split('|').includes(tag)) && (!ref || tr.dataset.ref === ref) &&
+              (n < 0 ? (lo === 0 && hi === 100) : (n >= lo && n <= hi));
+            tr.style.display = ok ? '' : 'none'; if (ok) gs++;
+          });
+          g.querySelector('.grp-count').textContent = `${gs} / ${gt}`;
+          g.style.display = gs ? '' : 'none'; ss += gs; st += gt;
+        });
+        v.querySelector(`[data-count="${k}"]`).textContent = `(${ss}/${st})`;
+        v.querySelector(`[data-count2="${k}"]`).textContent = `${ss} / ${st}`;
+        const vis = current === '*' || current === k;
+        sec.style.display = vis ? '' : 'none'; if (vis) shown += ss;
+      });
+      v.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.sec === current));
+      $('#stat').textContent = `${shown} / ${rows.length}`;
+      const hn = rows.filter(r => hidden.has(idOf(r))).length;
+      $('#hid-n').textContent = `已隐藏 ${hn} 条`;
+      v.querySelector('.hidden-ctl').style.display = hidden.size ? '' : 'none';
+    }
+    ['#f-tag', '#f-ref', '#f-bucket'].forEach(s => $(s).onchange = apply);
+    ['#f-min', '#f-max'].forEach(s => $(s).oninput = apply);
+    $('#f-sort').onchange = () => { sort = $('#f-sort').value; Prefs.set('sort', sort); render(); };
+    v.querySelectorAll('.tab').forEach(btn => btn.onclick = () => { current = btn.dataset.sec; Prefs.set('section', current); apply(); });
+    $('#hid-restore').onclick = async () => {
+      const here = rows.map(idOf).filter(id => hidden.has(id));
+      for (const id of here) { await store.set(id, null); hidden.delete(id); }
+      apply();
+    };
+    $('#hid-export').onclick = async () => {
+      const list = await store.list();
+      const blob = new Blob([JSON.stringify({ exported_at: new Date().toISOString(), version: 1, hidden: list }, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = `grok-hidden-${new Date().toISOString().slice(0, 10)}.json`; a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    };
+    v.addEventListener('click', async e => {
+      const del = e.target.closest('.del');
+      if (del) {
+        const tr = del.closest('tr'); const id = tr.dataset.id;
+        await store.set(id, { id, handle: tr.dataset.handle, date: dateLabel || '', hidden_at: new Date().toISOString(), reason: '' });
+        hidden.add(id); apply(); return;
+      }
+      const btn = e.target.closest('.toggle'); if (!btn) return;
+      const box = btn.previousElementSibling; box.classList.toggle('expanded'); box.classList.toggle('collapsed');
+    });
+    setInterval(() => v.querySelectorAll('.reltime').forEach(el => { if (el.dataset.iso) el.textContent = rel(el.dataset.iso); }), 60000);
+    window.addEventListener('grok-hidden-sync', async () => {
+      hidden.clear(); (await store.list()).forEach(x => x && x.id && hidden.add(x.id)); apply();
+    });
+    render();
+  }
+
+  async function loadRows() {
+    if (window.DAY_DATA && typeof window.DAY_DATA === 'object') return window.DAY_DATA;
+    const date = new URLSearchParams(location.search).get('date') || window.DAY_DATE;
+    let lastErr;
+    for (const url of [`data/${date}.json`, `../data/${date}.json`]) {
+      try { const r = await fetch(url); if (!r.ok) throw new Error(`${url} ${r.status}`); return await r.json(); } catch (e) { lastErr = e; }
+    }
+    throw lastErr;
+  }
+  window.GrokPromptViewer = { mount, loadRows, COLS: C };
+})();
+</script>
+  <script>
+    GrokPromptViewer.mount(document.getElementById('app'), window.DAY_DATA, window.DAY_DATE);
+  </script>
+  <script>(function () {
+  var STORAGE_KEY = 'grok-prompts-gate-ok';
+  // SHA-256("soke2026") — soft client-side lock only; hash is visible in source.
+  var PASS_HASH = 'c343c00a5ef5753909541010ef9e44ac11d1c42140053c0b93ef2b6c1e3822c1';
+
+  function unlock() {
+    document.documentElement.classList.add('unlocked');
+    try { sessionStorage.setItem(STORAGE_KEY, '1'); } catch (e) {}
+  }
+
+  function alreadyOk() {
+    try { return sessionStorage.getItem(STORAGE_KEY) === '1'; } catch (e) { return false; }
+  }
+
+  async function sha256Hex(text) {
+    var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+    return Array.from(new Uint8Array(buf)).map(function (b) {
+      return b.toString(16).padStart(2, '0');
+    }).join('');
+  }
+
+  function buildOverlay() {
+    var el = document.createElement('div');
+    el.id = 'pw-gate';
+    el.innerHTML =
+      '<div class="pw-card">' +
+        '<form id="pw-form" autocomplete="current-password">' +
+          '<input type="password" id="pw-input" placeholder="密码" autofocus />' +
+        '</form>' +
+        '<p class="pw-err" id="pw-err" hidden>×</p>' +
+      '</div>';
+    document.body.appendChild(el);
+    return el;
+  }
+
+  function init() {
+    if (alreadyOk()) {
+      unlock();
+      return;
+    }
+    var overlay = buildOverlay();
+    var form = document.getElementById('pw-form');
+    var input = document.getElementById('pw-input');
+    var err = document.getElementById('pw-err');
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      err.hidden = true;
+      var ok = false;
+      try {
+        ok = (await sha256Hex(input.value)) === PASS_HASH;
+      } catch (ex) {
+        // Fallback if SubtleCrypto unavailable (e.g. file:// in some browsers)
+        ok = input.value === 'soke2026';
+      }
+      if (ok) {
+        unlock();
+        overlay.remove();
+      } else {
+        err.hidden = false;
+        input.select();
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+</body>
+</html>
