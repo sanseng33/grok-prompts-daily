@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Grok 提示词 · 2026-10-16</title>
+  <style>:root {
+  --bg: #0f1115;
+  --panel: #171a21;
+  --panel2: #1e2330;
+  --border: #2a3142;
+  --text: #e8eaed;
+  --muted: #9aa3b2;
+  --accent: #7aa2ff;
+  --warn: #f0b429;
+  --danger: #ff6b6b;
+  --chip: #2a3348;
+  --row-hover: #222836;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background: var(--bg); color: var(--text);
+  font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.wrap { max-width: 1400px; margin: 0 auto; padding: 20px 16px 48px; }
+.banner {
+  background: #3a1d1d; border: 1px solid #6b2e2e; color: #ffc9c9;
+  padding: 10px 14px; border-radius: 8px; margin-bottom: 16px; font-size: 13px;
+}
+h1 { font-size: 22px; margin: 0 0 4px; font-weight: 650; }
+.sub { color: var(--muted); margin-bottom: 16px; font-size: 13px; }
+.toolbar {
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 10px; padding: 12px; margin-bottom: 14px;
+}
+.toolbar label { color: var(--muted); font-size: 12px; margin-right: 4px; }
+.toolbar select, .toolbar input {
+  background: var(--panel2); color: var(--text); border: 1px solid var(--border);
+  border-radius: 6px; padding: 6px 10px; font-size: 13px;
+}
+.stat { color: var(--muted); margin-left: auto; font-size: 12px; }
+.table-wrap {
+  overflow: auto; border: 1px solid var(--border); border-radius: 10px;
+  background: var(--panel);
+}
+table { border-collapse: collapse; width: 100%; min-width: 1100px; }
+th, td {
+  border-bottom: 1px solid var(--border); padding: 10px 12px;
+  vertical-align: top; text-align: left;
+}
+th {
+  position: sticky; top: 0; background: var(--panel2);
+  color: var(--muted); font-weight: 600; font-size: 12px;
+  white-space: nowrap; z-index: 1;
+}
+tr:hover td { background: var(--row-hover); }
+.chip {
+  display: inline-block; background: var(--chip); color: var(--text);
+  border-radius: 999px; padding: 2px 8px; font-size: 12px; margin: 1px 2px 1px 0;
+}
+.chip.source-关注, .chip.source-已关注 { background: #1e3a2f; color: #8dffc1; }
+.chip.source-新发现 { background: #2a2f4a; color: #a9b8ff; }
+.chip.type-生图 { background: #2a3a1e; color: #b8e986; }
+.chip.type-生视频 { background: #3a2a1e; color: #ffc98a; }
+.handle { font-weight: 600; white-space: nowrap; }
+.meta { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.prompt-cell { min-width: 280px; max-width: 420px; }
+.prompt-block { margin-bottom: 8px; }
+.prompt-block:last-child { margin-bottom: 0; }
+.prompt-label {
+  font-size: 11px; color: var(--muted); margin-bottom: 2px;
+  display: flex; gap: 6px; align-items: center;
+}
+.prompt-text {
+  white-space: pre-wrap; word-break: break-word;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 6px; padding: 8px 10px; font-size: 12.5px;
+  max-height: 4.8em; overflow: hidden; position: relative;
+}
+.prompt-text.expanded { max-height: none; }
+.prompt-text.collapsed::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1.6em;
+  background: linear-gradient(transparent, var(--bg));
+}
+.toggle {
+  background: none; border: none; color: var(--accent);
+  cursor: pointer; font-size: 12px; padding: 4px 0 0; display: inline-block;
+}
+.tags { max-width: 180px; }
+.empty {
+  text-align: center; color: var(--muted); padding: 40px 16px;
+}
+.date-list { list-style: none; padding: 0; margin: 0; }
+.date-list li {
+  border: 1px solid var(--border); background: var(--panel);
+  border-radius: 10px; margin-bottom: 8px;
+}
+.date-list a {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 16px; color: var(--text); text-decoration: none;
+}
+.date-list a:hover { background: var(--row-hover); border-radius: 10px; }
+.nav { margin-bottom: 12px; font-size: 13px; }
+.nav a { margin-right: 12px; }
+
+/* --- client-side password gate (soft lock) --- */
+html:not(.unlocked) .gated { display: none !important; }
+#pw-gate {
+  position: fixed; inset: 0; z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(15, 17, 21, 0.96);
+  padding: 24px;
+}
+#pw-gate .pw-card {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: 12px; padding: 28px 24px; width: 100%; max-width: 360px;
+  text-align: center;
+}
+#pw-gate h2 { margin: 0 0 8px; font-size: 18px; }
+#pw-gate p { color: var(--muted); font-size: 13px; margin: 0 0 16px; }
+#pw-gate form { display: flex; gap: 8px; }
+#pw-gate input[type="password"] {
+  flex: 1; background: var(--panel2); color: var(--text);
+  border: 1px solid var(--border); border-radius: 6px;
+  padding: 10px 12px; font-size: 14px;
+}
+#pw-gate button {
+  background: var(--accent); color: #0f1115; border: none;
+  border-radius: 6px; padding: 10px 16px; font-weight: 600; cursor: pointer;
+}
+#pw-gate button:hover { filter: brightness(1.08); }
+#pw-gate .pw-err { color: var(--danger); margin: 12px 0 0; font-size: 13px; }
+/* v3 */
+.tabs { display: flex; gap: 8px; margin: 6px 0 14px; flex-wrap: wrap; }
+.tab { background: var(--panel2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; cursor: pointer; font-size: 14px; }
+.tab.active { background: var(--accent); color: #0f1115; border-color: var(--accent); }
+section.sec h2 { font-size: 18px; margin: 18px 0 8px; border-left: 4px solid var(--accent); padding-left: 8px; }
+.grp h3 { font-size: 15px; margin: 14px 0 6px; color: var(--warn); }
+.chip.noref { background: #5a2323; color: #ffc9c9; }
+.chip.okref { background: #1f4a2e; color: #c9ffd9; }
+.chip.nsfw { font-weight: 700; }
+.chip.n1 { background: #2a3348; } .chip.n2 { background: #3c4a2a; } .chip.n3 { background: #6b5a1d; }
+.chip.n4 { background: #7a3d1d; } .chip.n5 { background: #8a1f2f; }
+.reltime { cursor: help; border-bottom: 1px dotted var(--muted); }
+.toolbar input[type=range] { width: 90px; vertical-align: middle; }
+.del { background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 6px; cursor: pointer; margin-top: 6px; padding: 1px 7px; }
+.del:hover { color: var(--danger); border-color: var(--danger); }
+.hidden-ctl { font-size: 12px; color: var(--muted); }
+.hidden-ctl button { background: var(--panel2); color: var(--text); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; padding: 3px 8px; }
+#sync-box { position: fixed; top: 10px; right: 12px; z-index: 50; font-size: 12px; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+#sync-box button, #sync-box input { background: var(--panel2); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; font-size: 12px; }
+#sync-box form { display: inline-flex; gap: 4px; align-items: center; }
+#sync-box input { width: 140px; }
+#sync-err { color: var(--danger); }
+
+.excluded-creators{margin:32px 0 16px;padding-top:12px;border-top:1px solid #ddd;color:#666;font-size:13px}.excluded-creators h2{font-size:15px;margin:0 0 6px}.excluded-creators ul{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:6px 14px}
+.fused{margin:8px 0 20px}.fused h2{font-size:17px;margin:0 0 8px}.fused h3{font-size:14px;margin:10px 0 6px}.fused-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:12px}.fused-card{border:1px solid #ddd;border-radius:8px;padding:10px;background:#fafafa}.fused-card pre{white-space:pre-wrap;word-break:break-word;font-family:inherit;font-size:13px;margin:6px 0}.fused-zh{color:#555}.fused-src{font-size:12px;color:#777;margin:6px 0 0;padding-left:16px}.fused-copy{font-size:12px}
+.refthumb{display:block;max-width:90px;max-height:120px;margin-top:6px;border:1px solid #ddd;border-radius:4px}
+.fused-test{font-size:12px;color:#a15c00;margin-left:6px}
+</style>
+</head>
+<body>
+  <div class="wrap gated" id="app">
+    <div class="nav"><a href="../index.html">← 日期列表</a></div>
+    <h1>Grok 提示词 · <span id="date-label">2026-10-16</span></h1>
+    <div id="viewer"></div>
+  </div>
+  <script>window.DAY_DATA = {"fused": [{"group": "可用参考图", "type": "生图→生视频", "nsfw": 50, "prompt": "Photorealistic vertical 9:16 candid phone snap. Lunch-hour Chinese convenience store under an office tower: fogged glass of a chilled rice-ball fridge, steam from an oden pot at frame edge, fluorescent aisles. An adult East Asian woman clearly in her mid-20s with a mature face, soft low bun with nape wisps, bean-paste lips and a full hourglass figure leans to open the fridge door, weight on one leg, other heel lifted, comparing two onigiri packs. She wears a mist-blue silk blouse unbuttoned to mid-sternum and tucked in, a caramel bodycon mini skirt ending at the upper third of her thighs, sheer nude pantyhose with a faint sheen, and beige pointed loafers; a staff lanyard hangs between her breasts; everything opaque and fully on. Shot from ~3 m near the register at eye height through the oden steam; side-three-quarter of chest, waist and hip line. Soft fluorescent practicals, raw phone grade, no text.\nVideo (apply to the image above): she picks one pack, closes the door with a hip bump, glances half-profile toward the aisle; fridge hum and soft chatter, gentle handheld sway.", "zh": "竖版9:16手机纪实抓拍。写字楼楼下午休便利店：冷藏饭团柜起雾玻璃、画缘关东煮热气、日光灯货架。一位明确20多岁中段、面容成熟的成年东亚女性，松低盘发带颈后碎发，豆沙唇，丰满沙漏身材，俯身拉开冷柜门，重心单腿、另一脚跟轻抬，对比两盒饭团。穿雾蓝真丝衬衫解到胸骨中段并塞进腰线、焦糖色包臀超短裙到大腿上三分之一、带细微光泽的肉色超薄丝袜、米色尖头乐福；工牌挂绳垂在胸前；全部不透明完整穿着。约三米处收银台旁眼高，透过关东煮热气拍侧三分之三胸腰臀线。日光灯实景，原始手机质感，无文字。\n视频（对上图使用）：她选中一盒、用髋一顶关上门，半侧脸瞥向过道；冷柜嗡鸣与轻交谈，轻微手持晃动。", "sources": [{"post": "sdjn_wgc/2110753177645576702", "element": "便利店冷柜挑饭团、雾蓝真丝深解扣+焦糖包臀裙丝袜"}, {"post": "sdjn_wgc/2110863902309314705", "element": "办公室侧坐刷手机的纪实机位与身材比例语言"}], "test_result": "未测(浏览器无法打开grok.com)"}, {"group": "可用参考图", "type": "生图→生视频", "nsfw": 48, "prompt": "Photorealistic vertical 9:16 candid. Rainy-night independent bookstore: warm wood shelves, wet windows, a stack of new books soft in the right foreground. An adult East Asian woman clearly in her mid-20s with a mature face, damp deep-brown waves, glossy lips, full figure tiptoes to reach a top-shelf spine, torso toward the shelf, face half-turned to the aisle with a stubborn little smile; one hand tips a book spine, the other holds hair off her chest. She wears a burgundy thin-satin asymmetric one-shoulder top cut to lower sternum with a fine metal chain at the hem, a black mesh-layered mini skirt ending at the upper quarter of her thighs with side ties, and caramel ankle boots; everything fully on. Shot from the next aisle mouth ~3 m, slightly low, subject left-weighted. Soft practical lamps, phone-doc grade, no text, not an upskirt angle.\nVideo (apply to the image above): she pulls the book down, lands on both heels, hugs it to her chest and glances toward the rainy window; soft rain and page rustle, gentle handheld.", "zh": "竖版9:16纪实。雨夜独立书店：暖木书架、湿窗、右前景虚化新书堆。一位明确20多岁中段、面容成熟的成年东亚女性，被雨打湿的深棕波浪发，水润唇，丰满身材，踮脚够顶层书脊，躯干朝架，脸半侧向通道带一点不服气的笑；一手指尖勾书脊，另一手按住垂到胸前的长发。穿酒红薄缎不对称单肩上衣（领口斜开到胸骨下段、下摆细金属链）、黑色网纱拼层迷你裙（大腿上四分之一、侧细系带）、焦糖短靴；全部完整穿着。相邻通道口约三米略低机位，人物偏左。柔和实景灯，手机纪实质感，无文字，非裙底视角。\n视频（对上图使用）：她把书抽下、双脚落地、抱在胸前，再瞥向雨窗；雨声与翻页轻响，轻微手持。", "sources": [{"post": "sdjn_wgc/2110883088083440002", "element": "雨夜书店踮脚够书、酒红单肩+网纱迷你裙"}, {"post": "AI_money_club/2110860775195811995", "element": "酒红蕾丝吊带睡裙的宝石酒红调与精致领圈气质（改为外穿缎面）"}], "test_result": "未测(浏览器无法打开grok.com)"}, {"group": "仅无图生成", "type": "生视频", "nsfw": 86, "prompt": "Photorealistic vertical 9:16 explicit adult clip, spicy mode, about 8 seconds. Two consenting adult Japanese women clearly in their late 20s on a rumpled bed. One in white lingerie straddles and leans over the other who is loosely wrist-bound with soft rope to the headboard; she gently tugs the rope, whispers teasing Japanese close to her ear, smiles, and slowly strokes down the bound woman's torso. Soft amber bedside practicals, shallow depth, audible soft moans and whispered breath, gentle handheld sway. Strictly adult faces and bodies, no youthful traits, no voyeur framing — clear mutual play.", "zh": "竖版9:16露骨成年片段，spicy 模式，约8秒。两名两厢情愿、明确20多岁后段的成年日本女性在凌乱床上。穿白色内衣的一方跨坐俯身在另一方上方；下方女性手腕被软绳松松绑在床头。上方轻拉绳、贴耳用日语低声挑逗、微笑，手缓慢抚过被绑者躯干。琥珀色床头实景光，浅景深，可听见轻柔呻吟与耳语喘息，轻微手持晃动。严格成年五官与身体，无幼态，非偷拍构图——双方明显共同游戏。", "sources": [{"post": "KURARA13520706/2110867773375271191", "element": "白内衣俯身、软绳拉扯、贴耳日语挑逗、床上延续镜头"}, {"post": "paopao1313/2110149029615333546", "element": "喘息呻吟与手持上下晃的声画节奏"}], "test_result": "未测(浏览器无法打开grok.com)"}, {"group": "仅无图生成", "type": "生视频", "nsfw": 84, "prompt": "Photorealistic vertical 9:16 explicit adult clip, spicy mode, about 7 seconds. A consenting adult East Asian couple clearly in their late 20s in a dim living room. She kneels on a low coffee table facing away, back arched; he stands behind and caresses her hips while she twists them in a slow rhythm. She wears only an open thin shirt; he is shirtless. Handheld camera from behind at hip height, slight bounce; audible heavy breathing. Warm practical lamps, no youthful traits, no named people, mutual participation clear — not hidden-camera framing.", "zh": "竖版9:16露骨成年片段，spicy 模式，约7秒。一对两厢情愿、明确20多岁后段的成年东亚情侣在昏暗客厅。她背对跪在矮茶几上、背微弓；他站在身后抚她髋部，她缓慢扭髋。她只穿一件敞开薄衬衫；他赤裸上身。手持从后方髋高拍摄，轻微弹动；可听见粗重呼吸。暖色实景灯，无幼态，无具名人物，双方明显共同参与——非隐藏摄像头构图。", "sources": [{"post": "yngfipng1/2108610940346474963", "element": "跪桌回扭臀部、男性抚髋"}, {"post": "meiziziai/2109925836069732742", "element": "公寓暖光POV与亲密节奏"}], "test_result": "未测(浏览器无法打开grok.com)"}], "rows": [{"来源": "已关注", "博主": "@AI_money_club", "帖子链接": "https://x.com/AI_money_club/status/2110929438305296556", "发布时间(UTC+8)": "2026-10-16 11:02", "发布时间ISO(UTC)": "2026-10-16T03:02:51Z", "距今": "8小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、皮衣紧身、写真", "NSFW程度": 42, "参考图兼容": "可用参考图", "判断理由": "粉丝绒超短裙装描述(可搭配人物参考)", "步骤1类型": "生图", "步骤1提示词": "Metallic pastel baby-pink crushed velvet ultra-mini dress with wide crossed halter-neck straps, curved bust panels, and a large geometric open front. Four vertically aligned silver O-rings connected by a narrow central pink strap, decorated with crystal hearts, dangling teardrop gems, and multiple symmetrical draped silver chains. Two large silver O-rings at the hips connect to a low-rise, tightly fitted, horizontally ruched pink velvet micro-mini skirt with curved hem and layered silver hip chains. Matching narrow pink velvet thigh bands with silver heart ornaments and dangling crystals. Shimmering pearlescent velvet, realistic fabric folds, polished silver hardware. Preserve exact design, proportions, and decorative details.", "步骤1中文翻译": "金属感粉彩婴儿粉压皱丝绒超迷你裙装，宽交叉挂脖肩带、弧形胸片，以及大面积几何前开襟。四枚纵向排列的银色O环由中央窄粉带连接，装饰水晶心、垂坠水滴宝石与多层对称垂挂银链。髋部两枚大银O环连接到低腰、紧身、横向抽褶的粉丝绒超短裙，弧形裙摆与分层银色髋链。配套窄粉丝绒大腿环，带银色心形饰件与垂坠水晶。珠光丝绒闪光、真实布料褶皱、抛光银质五金。保留精确设计、比例与装饰细节。\n\n（完整原文）\nMetallic pastel baby-pink crushed velvet ultra-mini dress with wide crossed halter-neck straps, curved bust panels, and a large geometric open front. Four vertically aligned silver O-rings connected by a narrow central pink strap, decorated with crystal hearts, dangling teardrop gems, and multiple symmetrical draped silver chains. Two large silver O-rings at the hips connect to a low-rise, tightly fitted, horizontally ruched pink velvet micro-mini skirt with curved hem and layered silver hip chains. Matching narrow pink velvet thigh bands with silver heart ornaments and dangling crystals. Shimmering pearlescent velvet, realistic fabric folds, polished silver hardware. Preserve exact design, proportions, and decorative details.", "提示词位置": "正文", "点赞数": 342, "参考图": "ref/2110929438305296556_1.jpg", "分区": "已关注博主"}, {"来源": "已关注", "博主": "@chichipuijaian", "帖子链接": "https://x.com/chichipuijaian/status/2110928720517317039", "发布时间(UTC+8)": "2026-10-16 11:00", "发布时间ISO(UTC)": "2026-10-16T03:00:00Z", "距今": "8小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、居家便装、表情动作", "NSFW程度": 48, "参考图兼容": "可用参考图", "判断理由": "车内前倾含奶昔擦边、着衣", "步骤1类型": "生图", "步骤1提示词": "深夜の駐車中の乗用車内。助手席に座る24歳の成人日本人女性。窓の外には街灯とぼんやりした夜景。生活感のある薄暗い車内。  白いゆったりしたオフショルダーのトップスを着用。肩が自然に露出し、片方の肩から細いピンク色のストラップが見えている。  女性は助手席に座ったまま、腰から上半身を大きく前へ倒し、カメラに向かって深く前のめりになっている。肩を前へ突き出し、顔をレンズの目前まで近づけている。  口の中にバニラシェイクを含んでいる。唇を閉じ、口元からごく少量がこぼれそうになっている。眉をわずかに八の字に寄せ、少し困った表情。目を潤ませ、カメラをまっすぐ見つめる。  右手を顎の真下に差し出し、手のひらを上向きに軽くくぼませている。手のひらにはごく少量のバニラシェイク。適度な液体感のある乳白色の液体が小さな雫となっている。  画面手前から撮影者の片手が伸び、軽く丸めた白いティッシュを女性に差し出している。女性は左手を伸ばしてティッシュを受け取ろうとしている瞬間。右手のポーズと前傾姿勢は変更しない。  カメラは顔より少し高い位置から斜め下への超至近距離撮影。前傾した上半身と顔、顎の下の右手を強調。顔が画面の大部分を占める。不完全で自然なフレーミング。  古いiPhoneで不意に撮影した無加工の実写スナップ。弱い直フラッシュ、不均一な明るさ、わずかな手ブレ、暗部のノイズ。毛穴や自然な肌の色むら。美肌加工、CG風の光沢、映画的な照明は禁止。", "步骤1中文翻译": "深夜停着的轿车车内。坐在副驾驶的24岁成年日本女性。窗外是路灯与模糊夜景。有生活感的昏暗车内。穿着宽松白色露肩上衣。肩膀自然露出，一侧肩上可见细粉色肩带。女性坐在副驾上，从腰到上身大幅前倾，朝镜头深深探身。肩膀前送，脸贴近镜头。嘴里含着香草奶昔。嘴唇闭合，嘴角旁有一点点快要溢出。眉头微微八字，略带困扰的表情。眼睛湿润，直视镜头。右手伸到下巴正下方，掌心向上略凹。掌心里有极少量香草奶昔。适度液态的乳白色液体成小滴。画面前方伸出拍摄者的一只手，把轻轻揉成团的白纸巾递给女性。女性正伸左手要接纸巾的瞬间。右手姿势与前倾姿态不变。相机在比脸稍高位置斜向下超近距离拍摄。强调前倾上身与脸、下巴下的右手。脸占画面大部分。不完整自然的取景。像旧iPhone无意拍下的无修实拍。弱直闪、不均匀亮度、轻微手抖、暗部噪点。毛孔与自然肤色不均。禁止美肌磨皮、CG光泽、电影灯光。", "提示词位置": "alt", "点赞数": 285, "参考图": null, "分区": "已关注博主"}, {"来源": "已关注", "博主": "@AI_money_club", "帖子链接": "https://x.com/AI_money_club/status/2110860775195811995", "发布时间(UTC+8)": "2026-10-16 06:30", "发布时间ISO(UTC)": "2026-10-15T22:30:01Z", "距今": "13小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、内衣、写真", "NSFW程度": 50, "参考图兼容": "可用参考图", "判断理由": "酒红蕾丝镂空睡衣套装描述", "步骤1类型": "生图", "步骤1提示词": "OUTFIT — Burgundy Chinese-Inspired Lace Cutout Chemise\n\nAn elegant, sensual Chinese-inspired lingerie chemise in deep ruby burgundy red, faithfully reproducing the reference outfit's exact design, silhouette, construction, fabric placement, and proportions.\n\nNECKLINE & COLLAR:\nHigh halter-neck design with a narrow burgundy satin collar wrapping around the neck.\nTwo slim burgundy fabric straps descending vertically from the collar toward the center of the bust.\nIntricate dark burgundy floral embroidered lace covering the upper chest in a symmetrical ornamental pattern.\nSemi-transparent fine mesh beneath the floral embroidery.\nDelicate scalloped lace edges and small three-dimensional floral appliqués.\n\nBUST DESIGN:\nTwo separate soft, gathered burgundy satin-like fabric panels covering the bust.\nEach panel has fine vertical ruching and gentle natural folds.\nCurved lower edges with distinctive open underbust cutouts.\nSymmetrical crescent-shaped openings beneath both bust panels, exposing the upper torso.\nA narrow central fabric connector with a small decorative floral accent.\nNo conventional bra cups, no underwire, no push-up structure.\n\nBODICE & WAIST:\nSmooth, fitted deep burgundy stretch mesh forming the central torso panel.\nDramatic asymmetrical cutout openings around the sides of the waist.\nNarrow connecting fabric sections creating a sculpted hourglass silhouette.\nThin burgundy side straps connecting the bust panels to the lower bodice.\nLightweight, slightly translucent material with realistic fabric tension.\n\nSKIRT:\nShort, body-skimming chemise skirt extending to the upper thighs.\nDeep burgundy semi-sheer stretch mesh.\nA large high-cut opening along one side, exposing the upper thigh.\nAsymmetrical draping with a long, narrow front panel.\nStraight, softly finished lower hem.\nNatural fabric folds, realistic transparency, and subtle stretch.\n\nCOLOR & MATERIAL:\nRich ruby burgundy, deep wine red, and dark crimson.\nSatin-like gathered bust panels.\nFine translucent tulle and intricate floral embroidered lace.\nSoft semi-transparent stretch mesh throughout the bodice and skirt.\nRealistic textile fibers, embroidery thickness, seams, stitching, and fabric tension.\n\nSTRICT DESIGN FIDELITY:\nPreserve the exact halter collar, embroidered chest panel, gathered bust construction, crescent underbust cutouts, asymmetrical waist openings, and sheer high-slit mini chemise silhouette.\nDo not redesign the outfit. No additional lace, ribbons, bows, sleeves, corset boning, conventional bra cups, or extra decorative accessories.", "步骤1中文翻译": "服装 — 酒红中式灵感蕾丝镂空吊带睡裙\n\n一件优雅、性感的中式灵感内衣式吊带睡裙，深宝石酒红色，忠实再现参考服装的精确设计、廓形、结构、面料布置与比例。\n\n领口与领圈：\n高挂脖设计，窄酒红缎领绕颈。\n两根细酒红布带从领圈垂直下到胸中心。\n精细深红酒红花卉刺绣蕾丝以对称装饰纹覆盖上胸。\n花卉刺绣下方为半透明细网纱。\n精致扇贝蕾丝边与小型立体花卉贴花。\n\n胸部设计：\n两片分开的柔软聚拢式罩杯……\n\n（以下完整细节与原文一致，不删减露骨/结构描述）\nOUTFIT — Burgundy Chinese-Inspired Lace Cutout Chemise\n\nAn elegant, sensual Chinese-inspired lingerie chemise in deep ruby burgundy red, faithfully reproducing the reference outfit's exact design, silhouette, construction, fabric placement, and proportions.\n\nNECKLINE & COLLAR:\nHigh halter-neck design with a narrow burgundy satin collar wrapping around the neck.\nTwo slim burgundy fabric straps descending vertically from the collar toward the center of the bust.\nIntricate dark burgundy floral embroidered lace covering the upper chest in a symmetrical ornamental pattern.\nSemi-transparent fine mesh beneath the floral embroidery.\nDelicate scalloped lace edges and small three-dimensional floral appliqués.\n\nBUST DESIGN:\nTwo separate soft, gathered burgundy satin-like fabric panels covering the bust.\nEach panel has fine vertical ruching and gentle natural folds.\nCurved lower edges with distinctive open underbust cutouts.\nSymmetrical crescent-shaped openings beneath both bust panels, exposing the upper torso.\nA narrow central fabric connector with a small decorative floral accent.\nNo conventional bra cups, no underwire, no push-up structure.\n\nBODICE & WAIST:\nSmooth, fitted deep burgundy stretch mesh forming the central torso panel.\nDramatic asymmetrical cutout openings around the sides of the waist.\nNarrow connecting fabric sections creating a sculpted hourglass silhouette.\nThin burgundy side straps connecting the bust panels to the lower bodice.\nLightweight, slightly translucent material with realistic fabric tension.\n\nSKIRT:\nShort, body-skimming chemise skirt extending to the upper thighs.\nDeep burgundy semi-sheer stretch mesh.\nA large high-cut opening along one side, exposing the upper thigh.\nAsymmetrical draping with a long, narrow front panel.\nStraight, softly finished lower hem.\nNatural fabric folds, realistic transparency, and subtle stretch.\n\nCOLOR & MATERIAL:\nRich ruby burgundy, deep wine red, and dark crimson.\nSatin-like gathered bust panels.\nFine translucent tulle and intricate floral embroidered lace.\nSoft semi-transparent stretch mesh throughout the bodice and skirt.\nRealistic textile fibers, embroidery thickness, seams, stitching, and fabric tension.\n\nSTRICT DESIGN FIDELITY:\nPreserve the exact halter collar, embroidered chest panel, gathered bust construction, crescent underbust cutouts, asymmetrical waist openings, and sheer high-slit mini chemise silhouette.\nDo not redesign the outfit. No additional lace, ribbons, bows, sleeves, corset boning, conventional bra cups, or extra decorative accessories.", "提示词位置": "正文", "点赞数": 153, "参考图": null, "分区": "已关注博主"}, {"来源": "已关注", "博主": "@storage_img", "帖子链接": "https://x.com/storage_img/status/2111049514199200053", "发布时间(UTC+8)": "2026-10-16 19:00", "发布时间ISO(UTC)": "2026-10-16T11:00:00Z", "距今": "32分钟前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、角色扮演、写真", "NSFW程度": 35, "参考图兼容": "可用参考图", "判断理由": "双人啦啦队风自拍吐舌", "步骤1类型": "生图", "步骤1提示词": "成人女性2人が室内で、スマートフォンを使って上から近距離で自撮りしているような、横長のリアル写真風ポートレート。2人は顔を近づけて並び、カメラを見上げながら明るく playful な表情で舌を少し出している。カメラはかなり高めの俯瞰アングルで、顔から上半身、腰まわりまでを中心に収めるSNS投稿風の構図。\n\n2人とも黒〜ブラウン系のロングヘアで、前髪が自然に額へかかっている。頭には赤いリボン付きのカチューシャを着け、チア風・スポーティー風の成人向けコスプレ衣装として表現する。服装は白い半袖クロップドトップスに、鮮やかなブルーのミニスカート風ボトム。ウエストまわりには黒い細いストラップやサイドのディテールが見え、衣装全体は白・青・赤で統一されたポップな配色。\n\n背景はベージュ系の床と白い壁、右奥に白い収納家具や扉が見えるシンプルな室内。照明は明るい室内光で、肌は自然な質感、全体に少しスマートフォン自撮りらしい広角感と近距離感がある。2人の距離感は近く、友人同士でふざけながら撮ったコスプレ写真のような雰囲気。超写実的、自然な肌質、髪の細かな質感、リボンや衣装の布地、室内の自然な影を丁寧に描写する。", "步骤1中文翻译": "两名成年女性在室内用智能手机从上近距离自拍的横长写实肖像风。两人脸凑近并排，仰望镜头，开朗俏皮地微吐舌头。相机很高俯拍，构图中心是脸到上身、腰际，像SNS帖。\n\n两人都是黑～棕色长发，刘海自然搭额。头戴红色蝴蝶结发箍，表现为成人向啦啦队/运动风cos。服装是白短袖短上衣+鲜蓝迷你裙风下装。腰际可见黑色细带或侧边细节，整体白蓝红统一的活泼配色。\n\n背景是米色地板与白墙，右后方有白色收纳家具或门的简洁室内。明亮室内光，皮肤自然质感，整体带一点手机自拍的广角与近距离感。两人距离近，像朋友嬉闹拍的cos照片。超写实，自然肤质、发丝细节、蝴蝶结与布料、室内自然阴影。", "提示词位置": "alt", "点赞数": 1, "参考图": null, "分区": "已关注博主"}, {"来源": "新发现", "博主": "@sdjn_wgc", "帖子链接": "https://x.com/sdjn_wgc/status/2110858470945632509", "发布时间(UTC+8)": "2026-10-16 06:20", "发布时间ISO(UTC)": "2026-10-15T22:20:51Z", "距今": "13小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、泳装比基尼、写真、室内居家", "NSFW程度": 40, "参考图兼容": "可用参考图", "判断理由": "祖母绿比基尼宫殿楼梯回眸", "步骤1类型": "生图", "步骤1提示词": "绝美23岁成年东亚美女，身材匀称丰满，胸部自然丰满，视觉约 F 杯，具有自然重量感与柔和圆润轮廓，纤细腰部与丰满胸部形成清晰而协调的胸腰对比，臀腿比例自然，气质雍容、自信、温柔，神情从容而明艳。祖母绿色半杯托杯比基尼，柔和弧形低杯缘、细肩带与清晰下围稳定承托胸线，杯缘一道细窄浅金色包边，低腰双侧系带三角泳裤，两侧单层同色细带打成整齐小结，克制缎光弹力泳衣料搭配完整同色内衬，宝石色光泽与简洁剪裁呈现端雅而丰盈的身形。\n\n暖调柔光底妆、细长棕色眼线与柔润砖红唇；深棕波浪长发向一侧梳理，另一侧耳廓清爽；一对小巧祖母绿水滴耳坠，香槟金细带低跟凉鞋。\n\n她沿宫邸宽阔的大理石旋阶缓缓下行，前脚稳落下一阶、后脚停在上一阶，右手轻搭雕花扶栏、左臂自然垂在身侧，听见身后声音时轻转躯干，清晰正脸回望镜头。双翼弧形楼梯环抱挑空门厅，浅色石纹、鎏金扶栏与高处水晶吊灯层层展开，上午高窗洒下明亮柔光，像一场盛大赴约中只为你停下的瞬间。\n\n50mm人像摄影，轻微侧身、清晰正脸、头部至小腿环境构图，竖幅4:5，大光圈浅景深，保留双翼旋阶的空间关系，高窗柔白日光与大理石反射光照亮五官，细腻真实皮肤、自然胸腰比例与缎面高光，高级宫邸泳装时尚大片，电影感，ultra realistic, masterpiece, best quality。", "步骤1中文翻译": "绝美23岁成年东亚美女，身材匀称丰满，胸部自然丰满，视觉约 F 杯，具有自然重量感与柔和圆润轮廓，纤细腰部与丰满胸部形成清晰而协调的胸腰对比，臀腿比例自然，气质雍容、自信、温柔，神情从容而明艳。祖母绿色半杯托杯比基尼，柔和弧形低杯缘、细肩带与清晰下围稳定承托胸线，杯缘一道细窄浅金色包边，低腰双侧系带三角泳裤，两侧单层同色细带打成整齐小结，克制缎光弹力泳衣料搭配完整同色内衬，宝石色光泽与简洁剪裁呈现端雅而丰盈的身形。\n\n暖调柔光底妆、细长棕色眼线与柔润砖红唇；深棕波浪长发向一侧梳理，另一侧耳廓清爽；一对小巧祖母绿水滴耳坠，香槟金细带低跟凉鞋。\n\n她沿宫邸宽阔的大理石旋阶缓缓下行，前脚稳落下一阶、后脚停在上一阶，右手轻搭雕花扶栏、左臂自然垂在身侧，听见身后声音时轻转躯干，清晰正脸回望镜头。双翼弧形楼梯环抱挑空门厅，浅色石纹、鎏金扶栏与高处水晶吊灯层层展开，上午高窗洒下明亮柔光，像一场盛大赴约中只为你停下的瞬间。\n\n50mm人像摄影，轻微侧身、清晰正脸、头部至小腿环境构图，竖幅4:5，大光圈浅景深，保留双翼旋阶的空间关系，高窗柔白日光与大理石反射光照亮五官，细腻真实皮肤、自然胸腰比例与缎面高光，高级宫邸泳装时尚大片，电影感，ultra realistic, masterpiece, best quality。", "提示词位置": "正文", "点赞数": 311, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@sdjn_wgc", "帖子链接": "https://x.com/sdjn_wgc/status/2110862487356907912", "发布时间(UTC+8)": "2026-10-16 06:36", "发布时间ISO(UTC)": "2026-10-15T22:36:49Z", "距今": "12小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、泳装比基尼、写真、户外", "NSFW程度": 40, "参考图兼容": "可用参考图", "判断理由": "墨黑金边比基尼船库", "步骤1类型": "生图", "步骤1提示词": "绝美23岁东亚美女，身材匀称丰满，胸部明显自然丰满，视觉约 F 杯，具有自然重量感与柔和圆润轮廓，胸腰差明显，但不夸张、不假体感；纤细腰部，与丰满胸部形成清晰但自然的比例对比；气质时尚、自信、温柔。雍容华贵，墨黑宽底围三角杯比基尼，细肩带与清晰下围线托住丰满圆润的胸线，金色单层包边，低腰侧系带三角泳裤，两侧细带打结，柔软哑光高弹面料，黑与金在晨光里克制而华贵。\n\n暖棕唇妆，脑后低髻留两缕脸侧碎发，发间一枚金色叶形发夹。\n\n她刚在白色小艇座板上坐稳，双脚收在船内，右手扶着船舷，左手搁在腿侧，微微侧身转脸看向镜头。石砌船库三面安静，敞开的库门对着平湖，晨光从水面反上来，轻轻停在她肩线的金边上。\n\n105mm人像摄影，轻微侧身、面部清晰的半身构图，大光圈浅景深，奶油散景，真实皮肤质感，湖面反射的晨间柔光，高级生活方式写真，电影感。", "步骤1中文翻译": "绝美23岁东亚美女，身材匀称丰满，胸部明显自然丰满，视觉约 F 杯，具有自然重量感与柔和圆润轮廓，胸腰差明显，但不夸张、不假体感；纤细腰部，与丰满胸部形成清晰但自然的比例对比；气质时尚、自信、温柔。雍容华贵，墨黑宽底围三角杯比基尼，细肩带与清晰下围线托住丰满圆润的胸线，金色单层包边，低腰侧系带三角泳裤，两侧细带打结，柔软哑光高弹面料，黑与金在晨光里克制而华贵。\n\n暖棕唇妆，脑后低髻留两缕脸侧碎发，发间一枚金色叶形发夹。\n\n她刚在白色小艇座板上坐稳，双脚收在船内，右手扶着船舷，左手搁在腿侧，微微侧身转脸看向镜头。石砌船库三面安静，敞开的库门对着平湖，晨光从水面反上来，轻轻停在她肩线的金边上。\n\n105mm人像摄影，轻微侧身、面部清晰的半身构图，大光圈浅景深，奶油散景，真实皮肤质感，湖面反射的晨间柔光，高级生活方式写真，电影感。", "提示词位置": "正文", "点赞数": 245, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@sdjn_wgc", "帖子链接": "https://x.com/sdjn_wgc/status/2110863902309314705", "发布时间(UTC+8)": "2026-10-16 06:42", "发布时间ISO(UTC)": "2026-10-15T22:42:26Z", "距今": "12小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、丝袜美腿、写真、室内居家", "NSFW程度": 45, "参考图兼容": "可用参考图", "判断理由": "办公室低胸衬衫包臀裙刷手机", "步骤1类型": "生图", "步骤1提示词": "超写实办公室手机纪实抓拍，竖版约 3:4。明确成年的 23 岁绝美东亚女性，侧身坐在办公椅上，左手拿着手机刷着什么，右手撑着椅背扶手放松身体。摄影者位于斜对面工位约 3.5 米，约 50mm 眼高，拍到头部、侧面胸型厚度、细腰和大腿，保留办公桌边缘和显示器侧影。\n\n高挑 168–172cm，头身比修长，肩窄锁骨清楚，腿长（大腿修长非短粗，小腿细长）。胸部 D–E 杯自然丰满，有重量和轮廓但胸位正常。胸腰差明显，腰细髋圆，臀腿有曲线。\n\n重心偏左侧靠椅背，头微低看手机屏幕，右手自然搭在椅背扶手，左手持手机略举在胸前，双腿并拢侧坐，右腿微收。视线专注看手机屏幕，嘴角微微放松，神态自然安静。\n\n深棕色微卷长发披肩，耳后别了一侧露出颈线，发尾略散落在肩前。鹅蛋脸，白皙肤色，细平眉，自然黑色眼线，淡粉腮红，水润裸粉唇。\n\n白色衬衫解开上面三颗扣，领口偏低露出锁骨和内搭细肩带一角，袖子挽到肘下，面料轻薄微透，贴身版型能看出胸型重量和 D–E 杯自然轮廓。\n\n酒红色包臀短裙，高腰收腰线明显，裙摆在大腿中段，坐姿时裙边微上提露出更多腿部，面料贴髋显出腰臀曲线。裸腿。\n\n米色尖头浅口高跟鞋，鞋跟约 6cm，右脚平放地面，左脚微抬脚跟只点地。\n\n右耳一枚细金色圆环耳钉。\n\n黑色皮质通勤包挂在椅背上，桌面放着保温杯和几页文件，手机是黑色直板机。\n\n普通中型公司办公区，灰色布面办公椅，白色层压板办公桌，桌面略有文件和水杯杂乱感。墙面浅米色乳胶漆，地面浅灰色方块地毯有走动磨损痕迹，天花板白色石膏板吊顶带格栅灯槽。\n\n右后方另一工位有同事后背局部入画，深蓝色衬衫肩部和黑色办公椅靠背，远处过道有人影走过。\n\n墙上贴着中文「节约用电」提示牌，办公桌挡板上有工位号小牌「A06」，远处白板边缘有周计划表一角，显示器侧面有公司 logo 贴纸。\n\n冷白色格栅顶灯为主光，色温约 5000K，右侧窗口有自然日光辅光带淡绿调，整体偏冷白中性，办公桌面反光轻微。\n\n真实办公室午休随手抓拍质感：自然曝光，中等景深，背景办公环境清楚可读，轻微手机锐化，真实皮肤纹理，日常办公杂乱感，不要商业时尚大片效果。\n\n避免\n\n未成年、幼态、矮、短腿、粗腰、桶状躯干、广角畸变、厚重浓妆、宽松遮肉、高领严实、扁平胸、头肩特写、桌子挡住胸口、豪华写字楼、空无一人、摄影棚背景、强烈虚化、动漫脸、CG感、塑料皮肤、多余肢体、水印、夸张摆拍微笑、时尚大片光", "步骤1中文翻译": "超写实办公室手机纪实抓拍，竖版约 3:4。明确成年的 23 岁绝美东亚女性，侧身坐在办公椅上，左手拿着手机刷着什么，右手撑着椅背扶手放松身体。摄影者位于斜对面工位约 3.5 米，约 50mm 眼高，拍到头部、侧面胸型厚度、细腰和大腿，保留办公桌边缘和显示器侧影。\n\n高挑 168–172cm，头身比修长，肩窄锁骨清楚，腿长（大腿修长非短粗，小腿细长）。胸部 D–E 杯自然丰满，有重量和轮廓但胸位正常。胸腰差明显，腰细髋圆，臀腿有曲线。\n\n重心偏左侧靠椅背，头微低看手机屏幕，右手自然搭在椅背扶手，左手持手机略举在胸前，双腿并拢侧坐，右腿微收。视线专注看手机屏幕，嘴角微微放松，神态自然安静。\n\n深棕色微卷长发披肩，耳后别了一侧露出颈线，发尾略散落在肩前。鹅蛋脸，白皙肤色，细平眉，自然黑色眼线，淡粉腮红，水润裸粉唇。\n\n白色衬衫解开上面三颗扣，领口偏低露出锁骨和内搭细肩带一角，袖子挽到肘下，面料轻薄微透，贴身版型能看出胸型重量和 D–E 杯自然轮廓。\n\n酒红色包臀短裙，高腰收腰线明显，裙摆在大腿中段，坐姿时裙边微上提露出更多腿部，面料贴髋显出腰臀曲线。裸腿。\n\n米色尖头浅口高跟鞋，鞋跟约 6cm，右脚平放地面，左脚微抬脚跟只点地。\n\n右耳一枚细金色圆环耳钉。\n\n黑色皮质通勤包挂在椅背上，桌面放着保温杯和几页文件，手机是黑色直板机。\n\n普通中型公司办公区，灰色布面办公椅，白色层压板办公桌，桌面略有文件和水杯杂乱感。墙面浅米色乳胶漆，地面浅灰色方块地毯有走动磨损痕迹，天花板白色石膏板吊顶带格栅灯槽。\n\n右后方另一工位有同事后背局部入画，深蓝色衬衫肩部和黑色办公椅靠背，远处过道有人影走过。\n\n墙上贴着中文「节约用电」提示牌，办公桌挡板上有工位号小牌「A06」，远处白板边缘有周计划表一角，显示器侧面有公司 logo 贴纸。\n\n冷白色格栅顶灯为主光，色温约 5000K，右侧窗口有自然日光辅光带淡绿调，整体偏冷白中性，办公桌面反光轻微。\n\n真实办公室午休随手抓拍质感：自然曝光，中等景深，背景办公环境清楚可读，轻微手机锐化，真实皮肤纹理，日常办公杂乱感，不要商业时尚大片效果。\n\n避免\n\n未成年、幼态、矮、短腿、粗腰、桶状躯干、广角畸变、厚重浓妆、宽松遮肉、高领严实、扁平胸、头肩特写、桌子挡住胸口、豪华写字楼、空无一人、摄影棚背景、强烈虚化、动漫脸、CG感、塑料皮肤、多余肢体、水印、夸张摆拍微笑、时尚大片光", "提示词位置": "正文", "点赞数": 169, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@rukaycyp", "帖子链接": "https://x.com/rukaycyp/status/2110701659290755089", "发布时间(UTC+8)": "2026-10-15 19:57", "发布时间ISO(UTC)": "2026-10-15T11:57:45Z", "距今": "23小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "动漫风、角色扮演、写真", "NSFW程度": 28, "参考图兼容": "可用参考图", "判断理由": "天狗和风万圣节衣装", "步骤1类型": "生图", "步骤1提示词": "【衣装テーマ】\n\n和風ダークファンタジー、天狗モチーフの衣装、烏天狗、妖艶で神秘的な和装、豪華で精巧な装飾、紺色・黒・深紅・金色を基調とした配色。\n\n【上半身】\n\n紺色の腹掛、身体に沿ったタイトなシルエット、ノースリーブ、首元まで覆う立ち襟風デザイン。\n腹掛の裾は短く、引き締まったウエストとお腹が見えるクロップド丈。\n腹掛には繊細な金色の和柄刺繍、上品な光沢のある生地。\n外側にゆるく羽織った黒と深紅の着物風の羽織。\n肩からずり落ちるような着崩した着こなし、肩を露出させるデザイン。\n羽織は透け感のある薄いシフォンとオーガンジー素材。\nゆったりと広がる大きな袖、流れるような長い袖口。\n羽織全体に赤と金色の花柄、雲紋、伝統的な和柄、繊細な金糸刺繍。\n袖口には深紅の組紐、金属製の鈴、小さな房飾り。\n\n【下半身】\n\n紺色と黒を基調とした丈の短い袴風ショートパンツ。\n両サイドに深いスリットが入ったデザイン。\nスリットから太ももが見える、軽やかで動きやすいシルエット。\n腰元には細い赤い組紐、金色の装飾金具、飾り結び。\n裾に金色の幾何学模様と和柄刺繍。\n太ももに黒と深紅の細い装飾ベルト。\nベルトから垂れ下がる繊細な金色のレッグチェーン、赤いタッセル、金色の小さな鈴。\n\n【手甲・装飾】\n\n黒い革製の手甲、指先が露出したフィンガーレスデザイン。\n手甲に金属製の装甲、金色の縁取り、赤い組紐。\n手首に幾重にも巻かれた赤と黒の飾り紐。\n金色の鈴、房飾り、和風の装飾金具。\n\n【結袈裟】\n\n首から胸元へ垂らした白と淡い金色の結袈裟。\n細長い布に金色の菊紋と伝統的な和柄。\n左右対称に配置された白いふわふわの梵天飾り。\n赤い組紐と金色の留め具。\n胸元から長く垂れ下がる深紅のタッセル。\n\n【天狗の仮面】\n\n頭の斜め上に飾った伝統的な赤い天狗面。\n額の横に傾けて装着し、素顔が見える配置。\n長く突き出た特徴的な鼻。\n鋭く吊り上がった眉、力強い目元、険しい表情。\n黒と金色で描かれた眉と髭の装飾。\n深紅の漆塗り風の光沢、金色の細密模様。\n仮面の両側に赤い組紐、金色の鈴、長い赤い房飾り。\n\n【烏天狗の翼】\n\n背中から生えた一対の大きな黒いカラスの翼。\n漆黒の羽毛、重なり合う精巧な羽根。\n羽先に青紫色の美しい光沢。\n大きく広がる荘厳な翼。\n光を受けて繊細に輝く羽根の質感。\n\n【小物】\n\n片手に持つ鬼灯型の和風ランタン。\n鬼灯のような丸みを帯びた赤橙色の形状。\nランタンの表面にジャック・オー・ランタンの顔。\n内側から漏れる温かな橙色の光。\n金色の透かし彫り装飾、赤い組紐、長い房飾り。\n黒と金色の金属製の持ち手。\n\n【全体の質感・仕上げ】\n\n半透明の羽織、柔らかく流れる布、繊細な金糸刺繍、漆塗りの光沢、重厚な金属装飾、複雑な組紐、精巧な羽毛表現。\n\n和風ゴシック、幻想的な烏天狗の衣装、上品で妖艶な美しさ、華奢な身体のラインを引き立てるデザイン。\n\n細部まで作り込まれた豪華な衣装、明瞭で美しいアニメ調イラスト。", "步骤1中文翻译": "【衣装主题】\n和风暗黑奇幻、天狗主题衣装、乌鸦天狗、妖艳神秘的和装、豪华精致装饰，配色以藏青·黑·深红·金色为基调。\n\n【上半身】\n藏青腹挂、贴身紧身廓形、无袖、立领风遮到颈。腹挂下摆短，露出紧致腰腹的短款。腹挂上细腻金色和纹刺绣、有光泽面料。外松披黑与深红和服风羽织。肩滑落般的凌乱穿法、露肩。羽织为带透感的薄雪纺与欧根纱。宽大飘逸长袖。羽织整体有红与金花纹、云纹、传统和纹、细金绣。袖口深红组纽、金属铃、小流苏。\n\n【下半身】\n藏青与黑短袴风短裤。两侧深开衩。开衩露出大腿、轻盈好动。腰间细红组纽、金色饰金具、饰结。下摆金色几何与和纹绣。大腿上黑与深红细装饰带……（其余见原文）", "提示词位置": "评论", "点赞数": 150, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@sdjn_wgc", "帖子链接": "https://x.com/sdjn_wgc/status/2110752144357806568", "发布时间(UTC+8)": "2026-10-15 23:18", "发布时间ISO(UTC)": "2026-10-15T15:18:21Z", "距今": "20小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、泳装比基尼、写真", "NSFW程度": 40, "参考图兼容": "可用参考图", "判断理由": "紫水晶比基尼礼仪马车", "步骤1类型": "生图", "步骤1提示词": "绝美23岁成年东亚美女，身材匀称丰满，胸部自然丰满，视觉约 F 杯，具有自然重量感与柔和圆润轮廓，纤细腰部与丰满胸部形成清晰而协调的胸腰对比，臀腿比例自然，气质雍容、自信、温柔，神情从容而明艳。柔和紫水晶色宽底围固定三角罩杯比基尼，细肩带与稳定下围衬托自然丰满胸线，布面点缀少量细小浅金花纹，低腰双侧系带三角泳裤，两侧单层同色细带打成小结，珍珠微光弹力泳衣料搭配完整同色内衬，柔紫与浅金光泽构成温柔华贵的层次。\n\n细腻暖粉底妆、柔灰棕眼影与玫瑰豆沙唇；黑色长发半挽在脑后，其余自然垂于肩后，发间一枚小巧金色叶形发夹；小珍珠耳钉。\n\n她坐在停靠宫邸门前的复古礼仪马车内，臀部稳落深紫丝绒长座、双膝自然靠拢、双脚落在车厢地板，左手轻撑身侧软垫、右手将一双缎面手套放到空座旁，车门打开时转脸向镜头露出柔和笑意。弧形木框车窗、细金雕饰与深色丝绒围出精致车厢，敞开的车门外露出雨后石板路与宫邸门灯，薄暮凉色天光从门外映入、暖色门灯照亮脸侧，像一段从容等待共同启程的私密时光。\n\n85mm人像摄影，从敞开车门平视拍摄，轻微侧身、清晰正脸、头部至膝部构图，竖幅4:5，大光圈浅景深，门框与丝绒座椅保留细腻层次，薄暮冷色漫射光配宫邸暖灯侧光，真实皮肤纹理、自然血色与柔和珠光面料，高级古典奢华泳装时尚写真，电影感，ultra realistic, masterpiece, best quality。", "步骤1中文翻译": "绝美23岁成年东亚美女，身材匀称丰满，胸部自然丰满，视觉约 F 杯，具有自然重量感与柔和圆润轮廓，纤细腰部与丰满胸部形成清晰而协调的胸腰对比，臀腿比例自然，气质雍容、自信、温柔，神情从容而明艳。柔和紫水晶色宽底围固定三角罩杯比基尼，细肩带与稳定下围衬托自然丰满胸线，布面点缀少量细小浅金花纹，低腰双侧系带三角泳裤，两侧单层同色细带打成小结，珍珠微光弹力泳衣料搭配完整同色内衬，柔紫与浅金光泽构成温柔华贵的层次。\n\n细腻暖粉底妆、柔灰棕眼影与玫瑰豆沙唇；黑色长发半挽在脑后，其余自然垂于肩后，发间一枚小巧金色叶形发夹；小珍珠耳钉。\n\n她坐在停靠宫邸门前的复古礼仪马车内，臀部稳落深紫丝绒长座、双膝自然靠拢、双脚落在车厢地板，左手轻撑身侧软垫、右手将一双缎面手套放到空座旁，车门打开时转脸向镜头露出柔和笑意。弧形木框车窗、细金雕饰与深色丝绒围出精致车厢，敞开的车门外露出雨后石板路与宫邸门灯，薄暮凉色天光从门外映入、暖色门灯照亮脸侧，像一段从容等待共同启程的私密时光。\n\n85mm人像摄影，从敞开车门平视拍摄，轻微侧身、清晰正脸、头部至膝部构图，竖幅4:5，大光圈浅景深，门框与丝绒座椅保留细腻层次，薄暮冷色漫射光配宫邸暖灯侧光，真实皮肤纹理、自然血色与柔和珠光面料，高级古典奢华泳装时尚写真，电影感，ultra realistic, masterpiece, best quality。", "提示词位置": "正文", "点赞数": 117, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@sdjn_wgc", "帖子链接": "https://x.com/sdjn_wgc/status/2110753177645576702", "发布时间(UTC+8)": "2026-10-15 23:22", "发布时间ISO(UTC)": "2026-10-15T15:22:28Z", "距今": "20小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、丝袜美腿、写真、室内居家", "NSFW程度": 48, "参考图兼容": "可用参考图", "判断理由": "便利店冷柜丝袜包臀裙", "步骤1类型": "生图", "步骤1提示词": "主题：\n午休溜进便利店，冷柜前挑饭团\n\n拍摄方式：\n超写实中国写字楼楼下便利店手机纪实抓拍，竖版 3:4。摄影者在收银台旁货架尽头约三米，50mm 眼高，隔着关东煮锅的热气，拍到侧身、胸型、细腰和臀腿线条。\n\n人物：\n23岁成年绝美东亚女性，高挑长腿，匀称丰满，视觉约F杯，自然重量感，胸腰差明显。\n\n姿态与神情：\n微微俯身拉开冷柜门，重心落在一条腿上，另一只脚跟轻抬；一手捏着两个饭团对比，侧脸低垂，嘴角带一点没睡醒的慵懒。\n\n穿搭：\n雾蓝真丝衬衫扣子解到胸骨中段，下摆塞进腰线；焦糖色包臀短裙裙摆位于大腿上三分之一处；肤色超薄丝袜带细微光泽，从脚踝包到裙摆下；米色尖头低跟乐福鞋，工牌挂绳垂在胸前。\n\n发妆与配饰：\n深棕低盘发，几缕碎发落在颈侧，淡妆豆沙唇，细金耳钉。\n\n场景环境：\n普通连锁便利店，冷柜玻璃有雾气和指印，价签与「第二件半价」黄牌，关东煮名称条，店员后脑和排队白领的手机局部入画，门口红色购物筐叠在地垫上。\n\n光线：\n高色温白光加冷柜内蓝白光，门口有正午街道溢光，丝袜在小腿上留下一道细高光。\n\n画面质感：\n真实手机抓拍质感，中等景深，背景可读，皮肤与丝袜纹理真实，不要时尚大片。", "步骤1中文翻译": "主题：\n午休溜进便利店，冷柜前挑饭团\n\n拍摄方式：\n超写实中国写字楼楼下便利店手机纪实抓拍，竖版 3:4。摄影者在收银台旁货架尽头约三米，50mm 眼高，隔着关东煮锅的热气，拍到侧身、胸型、细腰和臀腿线条。\n\n人物：\n23岁成年绝美东亚女性，高挑长腿，匀称丰满，视觉约F杯，自然重量感，胸腰差明显。\n\n姿态与神情：\n微微俯身拉开冷柜门，重心落在一条腿上，另一只脚跟轻抬；一手捏着两个饭团对比，侧脸低垂，嘴角带一点没睡醒的慵懒。\n\n穿搭：\n雾蓝真丝衬衫扣子解到胸骨中段，下摆塞进腰线；焦糖色包臀短裙裙摆位于大腿上三分之一处；肤色超薄丝袜带细微光泽，从脚踝包到裙摆下；米色尖头低跟乐福鞋，工牌挂绳垂在胸前。\n\n发妆与配饰：\n深棕低盘发，几缕碎发落在颈侧，淡妆豆沙唇，细金耳钉。\n\n场景环境：\n普通连锁便利店，冷柜玻璃有雾气和指印，价签与「第二件半价」黄牌，关东煮名称条，店员后脑和排队白领的手机局部入画，门口红色购物筐叠在地垫上。\n\n光线：\n高色温白光加冷柜内蓝白光，门口有正午街道溢光，丝袜在小腿上留下一道细高光。\n\n画面质感：\n真实手机抓拍质感，中等景深，背景可读，皮肤与丝袜纹理真实，不要时尚大片。", "提示词位置": "正文", "点赞数": 97, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@VIBEQUIRKLABS", "帖子链接": "https://x.com/VIBEQUIRKLABS/status/2110726266420957292", "发布时间(UTC+8)": "2026-10-15 21:35", "发布时间ISO(UTC)": "2026-10-15T13:35:31Z", "距今": "21小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、泳装比基尼、写真", "NSFW程度": 52, "参考图兼容": "可用参考图", "判断理由": "黑三角比基尼丰满身材编辑写真", "步骤1类型": "生图", "步骤1提示词": "Grok Imagine 2.0 :\nPhotorealistic editorial portrait.\n\nA 20-year-old seductive stunning adult woman, I–K cup bust, slim arms, narrow waist, wide hips, fuller upper thighs, slim calves, balanced proportions, pronounced hourglass silhouette, curves stretching fitted fabric with soft flesh bulges at snug garment edges; height 163–168 cm, bust–waist–hip 103–60–98 cm, young beautiful Japanese transparent face, soft natural features, clean gentle eyes, airy fresh beauty, soft natural smile, relaxed brows, gently narrowed eyes, softly parted lips, lifted cheeks.\n\nShe wears black triangle bikini top, slim halter strings, minimal sliding triangle cups, smooth stretch swim fabric, ultra-low-rise waistband sitting very low on the hips, tight body-skimming lower-body fit, black latex shorts, high-shine latex surface, concise short-bottom block, polished synthetic finish.\n\nRaised oblique Rembrandt key light on the subject, a small light triangle on the shadowed cheek.\n\nHigh-dynamic-range digital rendering, transparent shadows, crisp natural color, daylight-neutral contrast, clear highlight retention.", "步骤1中文翻译": "Grok Imagine 2.0：\n写实编辑肖像。\n\n一名20岁性感惊艳的成年女性，I–K罩杯胸、细臂、窄腰、宽髋、大腿上部较丰满、小腿纤细、比例均衡、明显沙漏轮廓，曲线把贴身衣料撑出柔软溢出；身高163–168cm，三围103–60–98，年轻美丽的日系通透脸，柔和五官，干净温柔的眼睛，清新气质，自然软笑……\n\n穿着黑色三角比基尼上装……\n（全文见英文原文，以下为对照翻译意图：丰满沙漏身材黑三角比基尼编辑写真）\n\nGrok Imagine 2.0 :\nPhotorealistic editorial portrait.\n\nA 20-year-old seductive stunning adult woman, I–K cup bust, slim arms, narrow waist, wide hips, fuller upper thighs, slim calves, balanced proportions, pronounced hourglass silhouette, curves stretching fitted fabric with soft flesh bulges at snug garment edges; height 163–168 cm, bust–waist–hip 103–60–98 cm, young beautiful Japanese transparent face, soft natural features, clean gentle eyes, airy fresh beauty, soft natural smile, relaxed brows, gently narrowed eyes, softly parted lips, lifted cheeks.\n\nShe wears black triangle bikini top, slim halter strings, minimal sliding triangle cups, smooth stretch swim fabric, ultra-low-rise waistband sitting very low on the hips, tight body-skimming lower-body fit, black latex shorts, high-shine latex surface, concise short-bottom block, polished synthetic finish.\n\nRaised oblique Rembrandt key light on the subject, a small light triangle on the shadowed cheek.\n\nHigh-dynamic-range digital rendering, transparent shadows, crisp natural color, daylight-neutral contrast, clear highlight retention.", "提示词位置": "正文", "点赞数": 60, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@sdjn_wgc", "帖子链接": "https://x.com/sdjn_wgc/status/2110748280535527749", "发布时间(UTC+8)": "2026-10-15 23:03", "发布时间ISO(UTC)": "2026-10-15T15:03:00Z", "距今": "20小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、泳装比基尼、写真、户外", "NSFW程度": 38, "参考图兼容": "可用参考图", "判断理由": "海边步道叉腰", "步骤1类型": "生图", "步骤1提示词": "主题：\n海边步道上双手叉腰\n\n主体：\n竖幅，绝美23岁东亚美女站在海边石板路上，约占画面七成。双臂抬起，双手叉在腰侧，身体微侧，脸转向镜头。不再低头走着。\n绝美23岁东亚美女，时尚生活摄影，商业写真质感。\n\n人物与表情：\n绝美23岁东亚美女，气质时尚、自信、温柔；身材匀称丰满，胸部明显自然丰满，视觉约 D 至 E 杯，具有自然重量感与柔和圆润轮廓，胸腰差明显。\n棕色头发高盘成髻，有颊侧碎发。脸型偏窄，眉眼柔和，鼻梁细，唇色淡，嘴角一点笑。妆容淡，视线看向镜头。健康肤色，阳光在肩颈和面部留下自然高光。髋部圆，下肢修长。\n\n服装与道具：\n上装是米色轻薄面料短袖短上衣，圆领，下摆收到腰上，微透光、自然垂坠，能显现上身轮廓。下装是同色侧腰系带下装，带尾垂在髋侧，不是短裤。头戴米色棒球帽，帽前有小字，不写具体品牌。脖子上两层细金链，其中一条有小圆吊坠。左手腕一条细金链。\n\n背景与光线：\n海边步道，左侧棕榈树和绿植，右侧海浪和礁石，远处有山。主光从上方打来，硬，色温暖，地面有短影。\n\n构图与镜头：\n从头到大腿，自然正面略侧机位，焦点在脸和叉腰的手。中等景深，近处衣服清楚，远处海略柔。\n\n质感与风格：\n商业时尚生活摄影，轻薄面料、系带和帽檐必须清楚，空间真实，8K 清晰，白天海边。\n\n负面提示：\n畸形手指、多余肢体、面部崩坏、穿成另一套衣服", "步骤1中文翻译": "主题：\n海边步道上双手叉腰\n\n主体：\n竖幅，绝美23岁东亚美女站在海边石板路上，约占画面七成。双臂抬起，双手叉在腰侧，身体微侧，脸转向镜头。不再低头走着。\n绝美23岁东亚美女，时尚生活摄影，商业写真质感。\n\n人物与表情：\n绝美23岁东亚美女，气质时尚、自信、温柔；身材匀称丰满，胸部明显自然丰满，视觉约 D 至 E 杯，具有自然重量感与柔和圆润轮廓，胸腰差明显。\n棕色头发高盘成髻，有颊侧碎发。脸型偏窄，眉眼柔和，鼻梁细，唇色淡，嘴角一点笑。妆容淡，视线看向镜头。健康肤色，阳光在肩颈和面部留下自然高光。髋部圆，下肢修长。\n\n服装与道具：\n上装是米色轻薄面料短袖短上衣，圆领，下摆收到腰上，微透光、自然垂坠，能显现上身轮廓。下装是同色侧腰系带下装，带尾垂在髋侧，不是短裤。头戴米色棒球帽，帽前有小字，不写具体品牌。脖子上两层细金链，其中一条有小圆吊坠。左手腕一条细金链。\n\n背景与光线：\n海边步道，左侧棕榈树和绿植，右侧海浪和礁石，远处有山。主光从上方打来，硬，色温暖，地面有短影。\n\n构图与镜头：\n从头到大腿，自然正面略侧机位，焦点在脸和叉腰的手。中等景深，近处衣服清楚，远处海略柔。\n\n质感与风格：\n商业时尚生活摄影，轻薄面料、系带和帽檐必须清楚，空间真实，8K 清晰，白天海边。\n\n负面提示：\n畸形手指、多余肢体、面部崩坏、穿成另一套衣服", "提示词位置": "正文", "点赞数": 55, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@sdjn_wgc", "帖子链接": "https://x.com/sdjn_wgc/status/2110739331623084405", "发布时间(UTC+8)": "2026-10-15 22:27", "发布时间ISO(UTC)": "2026-10-15T14:27:26Z", "距今": "21小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、泳装比基尼、写真、户外", "NSFW程度": 38, "参考图兼容": "可用参考图", "判断理由": "海边步道低头近景", "步骤1类型": "生图", "步骤1提示词": "主题：\n海边步道上更近的低头走着\n\n主体：\n竖幅，绝美23岁东亚美女走在海边石板路上，约占画面八成。身体更侧，腰向一侧送，髋部后送更明显，重心落在髋部。低头看向一侧，机位更近。\n绝美23岁东亚美女，时尚生活摄影，商业写真质感。\n\n人物与表情：\n绝美23岁东亚美女，气质时尚、自信、温柔；身材匀称丰满，胸部明显自然丰满，视觉约 D 至 E 杯，具有自然重量感与柔和圆润轮廓，胸腰差明显。\n棕色头发高盘成髻，有颊侧碎发。脸型偏窄，眉眼柔和，鼻梁细，唇色淡，表情安静，视线低向一侧。健康肤色，阳光在肩颈和面部留下自然高光。髋部圆，下肢修长。\n\n服装与道具：\n上装是米色宽松短袖短上衣，圆领，下摆收到腰上更高，面料更贴合。下装是同色侧腰系带短裤式下装，带尾更长，停在髋侧。头戴米色棒球帽，帽前有小字，不写具体品牌。脖子上两层细金链，其中一条有小圆吊坠。左手腕一条细金链。不要改成连衣裙或长裤。\n\n背景与光线：\n海边步道，左侧棕榈树和绿植，右侧海浪和礁石，远处有山。主光从上方打来，硬，色温暖，地面有短影。\n\n构图与镜头：\n从头到大腿，更近的正面略侧机位，焦点在腰髋和短上衣下摆。中等景深，近处衣服清楚。不要改成室内。\n\n质感与风格：\n商业时尚生活摄影，棉质褶皱、系带和帽檐必须清楚，空间真实，8K 清晰，白天海边，不要插画感。\n\n负面提示：\n畸形手指、多余肢体、面部崩坏、儿童外观、文字水印、logo、换成连衣裙或长裤、去掉帽子、站直身体、改成看镜头、换成室内或影棚", "步骤1中文翻译": "主题：\n海边步道上更近的低头走着\n\n主体：\n竖幅，绝美23岁东亚美女走在海边石板路上，约占画面八成。身体更侧，腰向一侧送，髋部后送更明显，重心落在髋部。低头看向一侧，机位更近。\n绝美23岁东亚美女，时尚生活摄影，商业写真质感。\n\n人物与表情：\n绝美23岁东亚美女，气质时尚、自信、温柔；身材匀称丰满，胸部明显自然丰满，视觉约 D 至 E 杯，具有自然重量感与柔和圆润轮廓，胸腰差明显。\n棕色头发高盘成髻，有颊侧碎发。脸型偏窄，眉眼柔和，鼻梁细，唇色淡，表情安静，视线低向一侧。健康肤色，阳光在肩颈和面部留下自然高光。髋部圆，下肢修长。\n\n服装与道具：\n上装是米色宽松短袖短上衣，圆领，下摆收到腰上更高，面料更贴合。下装是同色侧腰系带短裤式下装，带尾更长，停在髋侧。头戴米色棒球帽，帽前有小字，不写具体品牌。脖子上两层细金链，其中一条有小圆吊坠。左手腕一条细金链。不要改成连衣裙或长裤。\n\n背景与光线：\n海边步道，左侧棕榈树和绿植，右侧海浪和礁石，远处有山。主光从上方打来，硬，色温暖，地面有短影。\n\n构图与镜头：\n从头到大腿，更近的正面略侧机位，焦点在腰髋和短上衣下摆。中等景深，近处衣服清楚。不要改成室内。\n\n质感与风格：\n商业时尚生活摄影，棉质褶皱、系带和帽檐必须清楚，空间真实，8K 清晰，白天海边，不要插画感。\n\n负面提示：\n畸形手指、多余肢体、面部崩坏、儿童外观、文字水印、logo、换成连衣裙或长裤、去掉帽子、站直身体、改成看镜头、换成室内或影棚", "提示词位置": "正文", "点赞数": 46, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@sdjn_wgc", "帖子链接": "https://x.com/sdjn_wgc/status/2110952836418687062", "发布时间(UTC+8)": "2026-10-16 12:35", "发布时间ISO(UTC)": "2026-10-16T04:35:50Z", "距今": "6小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、泳装比基尼、写真", "NSFW程度": 40, "参考图兼容": "可用参考图", "判断理由": "酒红比基尼酒窖", "步骤1类型": "生图", "步骤1提示词": "绝美23岁东亚美女，身材匀称丰满，胸部明显自然丰满，视觉约 F 杯，具有自然重量感与柔和圆润轮廓，胸腰差明显，但不夸张、不假体感；纤细腰部，与丰满胸部形成清晰但自然的比例对比；气质时尚、自信、温柔。雍容华贵，深酒红宽底围固定三角杯比基尼，细肩带与清晰下围线托住自然丰满的圆润胸线，低腰侧系带三角泳裤，两侧细带打成小结，克制缎光弹力面料，同色系下围线干净利落。\n\n柔雾酒红唇，低盘发露出颈线，一对小金耳钉。\n\n她坐在矮橡木凳上，双脚稳踏石地，右手刚把水晶杯放稳在桶面上并收回膝侧，正面抬眸看向镜头。石灰岩拱廊两侧是安静的橡木桶架，高窗落下的一束暖光停在她锁骨与杯沿之间，私人品鉴被这一眼轻轻打断。\n\n85mm人像摄影，正面半身构图，面部清晰，大光圈浅景深，奶油散景，真实皮肤质感，酒窖壁灯暖光与高窗斜射光，高级生活方式写真，电影感。", "步骤1中文翻译": "绝美23岁东亚美女，身材匀称丰满，胸部明显自然丰满，视觉约 F 杯，具有自然重量感与柔和圆润轮廓，胸腰差明显，但不夸张、不假体感；纤细腰部，与丰满胸部形成清晰但自然的比例对比；气质时尚、自信、温柔。雍容华贵，深酒红宽底围固定三角杯比基尼，细肩带与清晰下围线托住自然丰满的圆润胸线，低腰侧系带三角泳裤，两侧细带打成小结，克制缎光弹力面料，同色系下围线干净利落。\n\n柔雾酒红唇，低盘发露出颈线，一对小金耳钉。\n\n她坐在矮橡木凳上，双脚稳踏石地，右手刚把水晶杯放稳在桶面上并收回膝侧，正面抬眸看向镜头。石灰岩拱廊两侧是安静的橡木桶架，高窗落下的一束暖光停在她锁骨与杯沿之间，私人品鉴被这一眼轻轻打断。\n\n85mm人像摄影，正面半身构图，面部清晰，大光圈浅景深，奶油散景，真实皮肤质感，酒窖壁灯暖光与高窗斜射光，高级生活方式写真，电影感。", "提示词位置": "正文", "点赞数": 46, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@sdjn_wgc", "帖子链接": "https://x.com/sdjn_wgc/status/2110738056017789064", "发布时间(UTC+8)": "2026-10-15 22:22", "发布时间ISO(UTC)": "2026-10-15T14:22:22Z", "距今": "21小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、丝袜美腿、写真、户外", "NSFW程度": 45, "参考图兼容": "可用参考图", "判断理由": "公交站台等末班车", "步骤1类型": "生图", "步骤1提示词": "主题：\n晚风里等末班车，裙角轻扬\n\n拍摄方式：\n超写实中国城市公交站台手机纪实抓拍，竖版 3:4。摄影者在马路对面斜前方约四米，50mm 眼高，隔着一辆驶过的电动车后视镜，拍到侧身、胸型、细腰和臀腿线条。\n\n人物：\n23岁成年绝美东亚女性，高挑长腿，匀称丰满，视觉约F杯，自然重量感，胸腰差明显。\n\n姿态与神情：\n单肩轻靠站牌立柱，重心落在一条腿上，另一只脚尖点地，髋微向侧送；一手压着被风吹起的裙摆，侧脸望向来车方向，嘴角带一点不经意的笑。\n\n穿搭：\n奶白雪纺吊带裙轻薄贴身，领口下缘在胸骨中段，裙摆位于大腿上三分之一处，被风贴向腿侧勾出臀腿弧线；外搭雾蓝薄针织开衫滑落到手肘；白色低帮帆布鞋。\n\n发妆与配饰：\n黑棕长发被风吹乱几缕贴在颊边，淡妆水润唇，细金锁骨链。\n\n场景环境：\n普通城市公交站，玻璃站棚有划痕与贴纸残胶，不锈钢候车椅，线路表与电子到站屏，旁边等车大爷的半截身影，地砖起壳，共享单车一角入画。\n\n光线：\n傍晚 LED 暖白站棚灯加街边车灯流光，雪纺边缘透出一层薄光。\n\n画面质感：\n真实手机抓拍质感，中等景深，背景可读，皮肤纹理真实，不要时尚大片。", "步骤1中文翻译": "主题：\n晚风里等末班车，裙角轻扬\n\n拍摄方式：\n超写实中国城市公交站台手机纪实抓拍，竖版 3:4。摄影者在马路对面斜前方约四米，50mm 眼高，隔着一辆驶过的电动车后视镜，拍到侧身、胸型、细腰和臀腿线条。\n\n人物：\n23岁成年绝美东亚女性，高挑长腿，匀称丰满，视觉约F杯，自然重量感，胸腰差明显。\n\n姿态与神情：\n单肩轻靠站牌立柱，重心落在一条腿上，另一只脚尖点地，髋微向侧送；一手压着被风吹起的裙摆，侧脸望向来车方向，嘴角带一点不经意的笑。\n\n穿搭：\n奶白雪纺吊带裙轻薄贴身，领口下缘在胸骨中段，裙摆位于大腿上三分之一处，被风贴向腿侧勾出臀腿弧线；外搭雾蓝薄针织开衫滑落到手肘；白色低帮帆布鞋。\n\n发妆与配饰：\n黑棕长发被风吹乱几缕贴在颊边，淡妆水润唇，细金锁骨链。\n\n场景环境：\n普通城市公交站，玻璃站棚有划痕与贴纸残胶，不锈钢候车椅，线路表与电子到站屏，旁边等车大爷的半截身影，地砖起壳，共享单车一角入画。\n\n光线：\n傍晚 LED 暖白站棚灯加街边车灯流光，雪纺边缘透出一层薄光。\n\n画面质感：\n真实手机抓拍质感，中等景深，背景可读，皮肤纹理真实，不要时尚大片。", "提示词位置": "正文", "点赞数": 38, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@VIBEQUIRKLABS", "帖子链接": "https://x.com/VIBEQUIRKLABS/status/2110925728850321846", "发布时间(UTC+8)": "2026-10-16 10:48", "发布时间ISO(UTC)": "2026-10-16T02:48:07Z", "距今": "8小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、写真、室内居家", "NSFW程度": 35, "参考图兼容": "可用参考图", "判断理由": "高楼公寓近景肖像", "步骤1类型": "生图", "步骤1提示词": "Grok Imagine 2.0 :\nPhotorealistic editorial portrait.\n\nThe setting is modern high-rise apartment living room, large window wall, sofa edge.\nShe presents a casual, relaxed, and natural natural posture.\nIndoor late-afternoon ambience with bright softened illumination and warm-neutral daylight, mellow exterior brightness where visible, high-key subject light, bright even exposure across face and clothing.\nShe is photographed within the scene's ambient light.\nHead-dominant close portrait, close camera distance, head from hair crown to chin occupying 50–60% of frame height, full face and chin within the crop, little headroom, shoulders, upper torso and arms visible below, recognizable scene around the head and body.\n\nA 20-year-old seductive stunning adult woman, I–K cup bust, slim arms, narrow waist, wide hips, fuller upper thighs, slim calves, balanced proportions, pronounced hourglass silhouette, curves stretching fitted fabric with soft flesh bulges at snug garment edges; height 163–168 cm, bust–waist–hip 103–60–98 cm, young beautiful Korean idol face, refined small face, clear bright eyes, long straight hair with full Japanese bangs, smooth clean silhouette, natural black hair, playful mock-angry expression, lightly furrowed brows, small pout, subtly puffed cheeks, restrained smile.\n\nShe wears oversized upper-body proportion with roomy shoulders and body, black silk camisole top, delicate straps, fluid sheen.", "步骤1中文翻译": "Grok Imagine 2.0：\n写实编辑肖像。\n场景：现代高层公寓客厅，落地窗墙，沙发边缘。自然随意姿势。室内午后偏晚、柔亮暖中性日光……以头为主的近景肖像……\n\nGrok Imagine 2.0 :\nPhotorealistic editorial portrait.\n\nThe setting is modern high-rise apartment living room, large window wall, sofa edge.\nShe presents a casual, relaxed, and natural natural posture.\nIndoor late-afternoon ambience with bright softened illumination and warm-neutral daylight, mellow exterior brightness where visible, high-key subject light, bright even exposure across face and clothing.\nShe is photographed within the scene's ambient light.\nHead-dominant close portrait, close camera distance, head from hair crown to chin occupying 50–60% of frame height, full face and chin within the crop, little headroom, shoulders, upper torso and arms visible below, recognizable scene around the head and body.\n\nA 20-year-old seductive stunning adult woman, I–K cup bust, slim arms, narrow waist, wide hips, fuller upper thighs, slim calves, balanced proportions, pronounced hourglass silhouette, curves stretching fitted fabric with soft flesh bulges at snug garment edges; height 163–168 cm, bust–waist–hip 103–60–98 cm, young beautiful Korean idol face, refined small face, clear bright eyes, long straight hair with full Japanese bangs, smooth clean silhouette, natural black hair, playful mock-angry expression, lightly furrowed brows, small pout, subtly puffed cheeks, restrained smile.\n\nShe wears oversized upper-body proportion with roomy shoulders and body, black silk camisole top, delicate straps, fluid sheen.", "提示词位置": "正文", "点赞数": 37, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@sdjn_wgc", "帖子链接": "https://x.com/sdjn_wgc/status/2110894918390485249", "发布时间(UTC+8)": "2026-10-16 08:45", "发布时间ISO(UTC)": "2026-10-16T00:45:41Z", "距今": "10小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、泳装比基尼、写真", "NSFW程度": 40, "参考图兼容": "可用参考图", "判断理由": "珊瑚橙比基尼火车包厢", "步骤1类型": "生图", "步骤1提示词": "绝美23岁东亚美女，身材匀称丰满，胸部明显自然丰满，视觉约 F 杯，具有自然重量感与柔和圆润轮廓，胸腰差明显，但不夸张、不假体感；纤细腰部，与丰满胸部形成清晰但自然的比例对比；气质时尚、自信、温柔。雍容华贵，珊瑚橙半罩杯比基尼，圆润杯缘与清晰下围线托住自然胸线，杯缘细窄金色包边，低腰侧系带三角泳裤，两侧同色细带系成整齐小结，细罗纹弹力面料，暖果色在木色车厢里明艳而端雅。\n\n珊瑚唇妆，侧分松卷披肩，一条贴颈的细金项链。\n\n她侧坐在丝绒长座上，双脚落在车厢地板，右手刚把折好的信纸放上黄铜小桌并收回身侧，脸转回正面看向镜头。桃花心木壁板把包厢收得很安静，晨光贴着弧形车窗进来，窗外田野开始向后移。\n\n50mm人像摄影，接近正面的半身构图，面部清晰，大光圈浅景深，奶油散景，真实皮肤质感，车窗晨光与黄铜壁灯暖光交织，高级生活方式写真，电影感。", "步骤1中文翻译": "绝美23岁东亚美女，身材匀称丰满，胸部明显自然丰满，视觉约 F 杯，具有自然重量感与柔和圆润轮廓，胸腰差明显，但不夸张、不假体感；纤细腰部，与丰满胸部形成清晰但自然的比例对比；气质时尚、自信、温柔。雍容华贵，珊瑚橙半罩杯比基尼，圆润杯缘与清晰下围线托住自然胸线，杯缘细窄金色包边，低腰侧系带三角泳裤，两侧同色细带系成整齐小结，细罗纹弹力面料，暖果色在木色车厢里明艳而端雅。\n\n珊瑚唇妆，侧分松卷披肩，一条贴颈的细金项链。\n\n她侧坐在丝绒长座上，双脚落在车厢地板，右手刚把折好的信纸放上黄铜小桌并收回身侧，脸转回正面看向镜头。桃花心木壁板把包厢收得很安静，晨光贴着弧形车窗进来，窗外田野开始向后移。\n\n50mm人像摄影，接近正面的半身构图，面部清晰，大光圈浅景深，奶油散景，真实皮肤质感，车窗晨光与黄铜壁灯暖光交织，高级生活方式写真，电影感。", "提示词位置": "正文", "点赞数": 35, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@sdjn_wgc", "帖子链接": "https://x.com/sdjn_wgc/status/2110883088083440002", "发布时间(UTC+8)": "2026-10-16 07:58", "发布时间ISO(UTC)": "2026-10-15T23:58:41Z", "距今": "11小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、丝袜美腿、写真、室内居家", "NSFW程度": 45, "参考图兼容": "可用参考图", "判断理由": "雨夜书店踮脚", "步骤1类型": "生图", "步骤1提示词": "主题：\n雨夜书店，踮脚够顶层\n\n拍摄方式：\n超写实街角独立书店手机纪实抓拍，竖版 3:4。摄影者在相邻书架通道口约三米，50mm 眼高略低，人物偏画面左侧，右前景一摞平放新书虚入画，鞋跟被下缘裁掉；拍到侧身、胸型、细腰和腿部线条。\n\n人物：\n23岁成年绝美东亚女性，高挑长腿，匀称丰满，视觉约F杯，自然重量感，胸腰差明显。\n\n姿态与神情：\n踮脚伸长手臂，躯干朝书架，脸微侧向通道；右手指尖勾住一本书的书脊上沿，左手按着垂到胸前的长发；眼神专注带一点不服气的笑。\n\n穿搭：\n酒红薄缎不对称单肩上衣，领口斜开到胸骨下段，下摆停在肋骨下缘并带一条细金属链；黑色网纱拼层迷你裙，裙摆在大腿上四分之一处，侧边细系带收紧；焦糖色短靴。\n\n发妆与配饰：\n深棕长卷发被雨打湿几缕，淡妆水润唇，细金耳圈。\n\n场景环境：\n前景平台新书堆，中景深木书架与旧木地板拼缝磨损，远景玻璃门外雨夜街灯；书架另一头一名店员抱书的手臂入画。\n\n光线：\n书架顶暖黄小射灯为主，门外雨夜冷光只落在发缘与缎面肩线，脸保持中性肤色。\n\n画面质感：\n真实手机抓拍质感，中等景深，背景可读，皮肤与缎面纹理真实，不要时尚大片。", "步骤1中文翻译": "主题：\n雨夜书店，踮脚够顶层\n\n拍摄方式：\n超写实街角独立书店手机纪实抓拍，竖版 3:4。摄影者在相邻书架通道口约三米，50mm 眼高略低，人物偏画面左侧，右前景一摞平放新书虚入画，鞋跟被下缘裁掉；拍到侧身、胸型、细腰和腿部线条。\n\n人物：\n23岁成年绝美东亚女性，高挑长腿，匀称丰满，视觉约F杯，自然重量感，胸腰差明显。\n\n姿态与神情：\n踮脚伸长手臂，躯干朝书架，脸微侧向通道；右手指尖勾住一本书的书脊上沿，左手按着垂到胸前的长发；眼神专注带一点不服气的笑。\n\n穿搭：\n酒红薄缎不对称单肩上衣，领口斜开到胸骨下段，下摆停在肋骨下缘并带一条细金属链；黑色网纱拼层迷你裙，裙摆在大腿上四分之一处，侧边细系带收紧；焦糖色短靴。\n\n发妆与配饰：\n深棕长卷发被雨打湿几缕，淡妆水润唇，细金耳圈。\n\n场景环境：\n前景平台新书堆，中景深木书架与旧木地板拼缝磨损，远景玻璃门外雨夜街灯；书架另一头一名店员抱书的手臂入画。\n\n光线：\n书架顶暖黄小射灯为主，门外雨夜冷光只落在发缘与缎面肩线，脸保持中性肤色。\n\n画面质感：\n真实手机抓拍质感，中等景深，背景可读，皮肤与缎面纹理真实，不要时尚大片。", "提示词位置": "正文", "点赞数": 33, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@sdjn_wgc", "帖子链接": "https://x.com/sdjn_wgc/status/2110925642392916168", "发布时间(UTC+8)": "2026-10-16 10:47", "发布时间ISO(UTC)": "2026-10-16T02:47:46Z", "距今": "8小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、泳装比基尼、写真", "NSFW程度": 40, "参考图兼容": "可用参考图", "判断理由": "孔雀蓝比基尼", "步骤1类型": "生图", "步骤1提示词": "绝美23岁东亚美女，身材匀称丰满，胸部明显自然丰满，视觉约 F 杯，具有自然重量感与柔和圆润轮廓，胸腰差明显，但不夸张、不假体感；纤细腰部，与丰满胸部形成清晰但自然的比例对比；气质时尚、自信、温柔。雍容华贵，孔雀蓝固定三角杯比基尼，细肩带与宽底围稳住丰满胸线，金线单层包边，低腰侧系带三角泳裤，两侧细带在髋侧打结，光滑细腻弹力面料，冷宝石色在晚光里沉静发亮。\n\n柔和蜜桃唇，利落低马尾，一对细金耳坠。\n\n她坐在白柱凉亭的软垫藤椅上，双脚并放石地，双手刚把小巧观剧镜放上膝头松开，正面抬眸。柱廊外草坪修剪整齐，远处白马放慢脚步，晚风穿过柱廊，先碰到她的锁骨。\n\n85mm人像摄影，正面半身构图，面部清晰，大光圈浅景深，奶油散景，真实皮肤质感，草坪方向的黄昏金光，高级生活方式写真，电影感。", "步骤1中文翻译": "绝美23岁东亚美女，身材匀称丰满，胸部明显自然丰满，视觉约 F 杯，具有自然重量感与柔和圆润轮廓，胸腰差明显，但不夸张、不假体感；纤细腰部，与丰满胸部形成清晰但自然的比例对比；气质时尚、自信、温柔。雍容华贵，孔雀蓝固定三角杯比基尼，细肩带与宽底围稳住丰满胸线，金线单层包边，低腰侧系带三角泳裤，两侧细带在髋侧打结，光滑细腻弹力面料，冷宝石色在晚光里沉静发亮。\n\n柔和蜜桃唇，利落低马尾，一对细金耳坠。\n\n她坐在白柱凉亭的软垫藤椅上，双脚并放石地，双手刚把小巧观剧镜放上膝头松开，正面抬眸。柱廊外草坪修剪整齐，远处白马放慢脚步，晚风穿过柱廊，先碰到她的锁骨。\n\n85mm人像摄影，正面半身构图，面部清晰，大光圈浅景深，奶油散景，真实皮肤质感，草坪方向的黄昏金光，高级生活方式写真，电影感。", "提示词位置": "正文", "点赞数": 29, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@sdjn_wgc", "帖子链接": "https://x.com/sdjn_wgc/status/2110992592552787977", "发布时间(UTC+8)": "2026-10-16 15:13", "发布时间ISO(UTC)": "2026-10-16T07:13:49Z", "距今": "4小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、写真、室内居家", "NSFW程度": 42, "参考图兼容": "可用参考图", "判断理由": "茶水间低胸针织超短裤", "步骤1类型": "生图", "步骤1提示词": "超写实茶水间手机纪实抓拍，竖版约 3:4。明确成年的 23 岁东亚女性，女同事午休，站在微波炉前等便当热好。摄影者站在门口斜侧约 3 米，约 50mm 眼高，拍到侧脸、低胸针织、细腰和短裤。微波炉上贴着「请清洁」。\n\n高挑，约 170cm，肩窄腿长。胸约 E 杯，腰细，髋圆，大腿修长。\n\n她一只手扶着微波炉门，重心在一条腿上。视线看向转盘，神情有点无聊。\n\n乌黑长发随意丸子头，碎发贴颈。淡妆。\n\n上身是橄榄绿亨利领罗纹背心，扣子解开两颗，低领贴胸，下摆收到腰上。下身是浅牛仔侧镂空超短裤，腰头偏低，裤管极短。脚上是米色乐福，不是穆勒。旁边只露出同事倒水的杯子。茶水间日光灯。\n\n避免\n\n未成年、矮、短腿、粗腰、高领、长裤、黑色漆皮穆勒、看向镜头、棚拍、水印", "步骤1中文翻译": "超写实茶水间手机纪实抓拍，竖版约 3:4。明确成年的 23 岁东亚女性，女同事午休，站在微波炉前等便当热好。摄影者站在门口斜侧约 3 米，约 50mm 眼高，拍到侧脸、低胸针织、细腰和短裤。微波炉上贴着「请清洁」。\n\n高挑，约 170cm，肩窄腿长。胸约 E 杯，腰细，髋圆，大腿修长。\n\n她一只手扶着微波炉门，重心在一条腿上。视线看向转盘，神情有点无聊。\n\n乌黑长发随意丸子头，碎发贴颈。淡妆。\n\n上身是橄榄绿亨利领罗纹背心，扣子解开两颗，低领贴胸，下摆收到腰上。下身是浅牛仔侧镂空超短裤，腰头偏低，裤管极短。脚上是米色乐福，不是穆勒。旁边只露出同事倒水的杯子。茶水间日光灯。\n\n避免\n\n未成年、矮、短腿、粗腰、高领、长裤、黑色漆皮穆勒、看向镜头、棚拍、水印", "提示词位置": "正文", "点赞数": 23, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@AaronAILab", "帖子链接": "https://x.com/AaronAILab/status/2110859512580083894", "发布时间(UTC+8)": "2026-10-16 06:25", "发布时间ISO(UTC)": "2026-10-15T22:25:00Z", "距今": "13小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、泳装比基尼、写真、户外", "NSFW程度": 38, "参考图兼容": "可用参考图", "判断理由": "机场黑绑带比基尼拉箱", "步骤1类型": "生图", "步骤1提示词": "🖤 リゾート空港｜黒い紐ビキニとキャリーケース\n\n縦9:16、フォトリアルな写真。南国リゾートの空港ターミナルで、明確に成人した20代の韓国系女性がキャリーケースを引きながら歩いている。明るく自然な肌、背中まで伸びる黒髪。こちらに気づいて足を少し緩め、旅先に着いたばかりの明るい表情で微笑む。\n\n衣装は装飾の少ない黒い紐ビキニ。首元と両腰の結び目が分かり、透けない水着生地が身体に自然にフィットする。右手だけでキャリーケースの伸縮ハンドルを握り、左腕は身体の横へ下ろす。 腕と手は左右一つずつ、ケースの車輪は床に接している。\n\n背景には広いガラス窓、空港の椅子、窓の外の滑走路とヤシの木。頭から足先、キャリーケース全体まで写し、明るい自然光で肌、髪、水着、ケースの質感を実写らしく描く。余分な手足、歪んだケース、衣装の透け、読める案内表示・ロゴ・透かしはなし。\n（原帖标签 #chatgpt #grok）", "步骤1中文翻译": "🖤 度假机场｜黑色绑带比基尼与登机箱\n\n竖9:16，写实照片。南国度假机场航站楼里，明确成年的20代韩系女性拉着登机箱行走。明亮自然的皮肤，黑发垂到背上。注意到这边后稍稍放慢脚步，带着刚抵达旅途的开朗表情微笑。\n\n服装是装饰很少的黑色绑带比基尼。颈后与双髋的结清晰可见，不透的泳装面料自然贴合身体。仅右手握登机箱伸缩杆，左臂垂在身侧。手臂与手左右各一只，箱轮触地。\n\n背景有大玻璃窗、机场座椅、窗外跑道与椰子树。从头到脚尖与登机箱整体都入画，明亮自然光如实描绘皮肤、头发、泳装、箱子质感。不要多余手脚、变形箱子、衣装透视、可读的指示牌/标志/水印。\n（原帖标签 #chatgpt #grok）", "提示词位置": "正文", "点赞数": 22, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@sdjn_wgc", "帖子链接": "https://x.com/sdjn_wgc/status/2110953325822665158", "发布时间(UTC+8)": "2026-10-16 12:37", "发布时间ISO(UTC)": "2026-10-16T04:37:47Z", "距今": "6小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、写真、室内居家", "NSFW程度": 42, "参考图兼容": "可用参考图", "判断理由": "工位吃便当低领超短裙", "步骤1类型": "生图", "步骤1提示词": "超写实开放办公区午休手机纪实抓拍，竖版约 3:4。明确成年的 23 岁东亚女性，女同事，独自靠在工位边吃便当。摄影者站在过道斜侧约 3 米，约 50mm 眼高，拍到侧脸、低领胸型、细腰和短裙。隔断上写着「设计部」。\n\n高挑，约 170cm，肩窄腿长。胸约 E 杯，胸位正常，腰细，髋圆，大腿修长。\n\n她一条腿交叉靠着桌沿，一手拿筷子。视线看向便当，神情放松。\n\n乌黑长发低马尾，几缕贴脸。淡妆。\n\n上身是焦糖色罗纹短上衣，交叉领开到锁骨下，贴胸，下摆收到腰上。西装外套搭在椅背。下身是黑色微型包臀超短裙，裙摆极短刚及臀下。黑色漆皮穆勒。桌上是打开的便当盒和一杯奶茶。邻座只露出一双在键盘上的手。午后窗光，顶灯没全开。\n\n避免\n\n未成年、矮、短腿、粗腰、高领、及膝裙、看向镜头、棚拍、水印", "步骤1中文翻译": "超写实开放办公区午休手机纪实抓拍，竖版约 3:4。明确成年的 23 岁东亚女性，女同事，独自靠在工位边吃便当。摄影者站在过道斜侧约 3 米，约 50mm 眼高，拍到侧脸、低领胸型、细腰和短裙。隔断上写着「设计部」。\n\n高挑，约 170cm，肩窄腿长。胸约 E 杯，胸位正常，腰细，髋圆，大腿修长。\n\n她一条腿交叉靠着桌沿，一手拿筷子。视线看向便当，神情放松。\n\n乌黑长发低马尾，几缕贴脸。淡妆。\n\n上身是焦糖色罗纹短上衣，交叉领开到锁骨下，贴胸，下摆收到腰上。西装外套搭在椅背。下身是黑色微型包臀超短裙，裙摆极短刚及臀下。黑色漆皮穆勒。桌上是打开的便当盒和一杯奶茶。邻座只露出一双在键盘上的手。午后窗光，顶灯没全开。\n\n避免\n\n未成年、矮、短腿、粗腰、高领、及膝裙、看向镜头、棚拍、水印", "提示词位置": "正文", "点赞数": 18, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@sdjn_wgc", "帖子链接": "https://x.com/sdjn_wgc/status/2111044425350537232", "发布时间(UTC+8)": "2026-10-16 18:39", "发布时间ISO(UTC)": "2026-10-16T10:39:46Z", "距今": "53分钟前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、写真、室内居家", "NSFW程度": 40, "参考图兼容": "可用参考图", "判断理由": "运动康复体态评估室", "步骤1类型": "生图", "步骤1提示词": "单幅写实摄影，专业运动康复体态评估室。绝美23岁东亚美女，身材匀称丰满，胸部明显自然丰满，视觉约F杯，具有自然重量感与柔和圆润轮廓，胸腰差明显，但不夸张、不假体感；纤细腰部，与丰满胸部形成清晰但自然的比例对比，顺滑低马尾，轻透妆，穿香槟粉罗纹短背心式运动文胸（细蕾丝包边）、高腰香槟缎面训练短裙裤、同色小腿袜与米色芭蕾训练鞋。女理疗师穿浅色医护衬衫与长裤，手持评估平板。\n姿态与构图：全身中景，受试者侧立网格墙前做肩部对齐，双臂自然下垂，视线看向前方标记点；理疗师站斜后方观察并记录。\n环境：干净康复室，姿态网格墙、体态镜、淡色器材柜与平衡垫，浅色地胶。明亮均匀顶光带一束侧窗柔光。\n风格：照片级写实，皮肤与罗纹、缎面质感准确，表情专注清爽，时尚运动大片感灯光，8k。", "步骤1中文翻译": "单幅写实摄影，专业运动康复体态评估室。绝美23岁东亚美女，身材匀称丰满，胸部明显自然丰满，视觉约F杯，具有自然重量感与柔和圆润轮廓，胸腰差明显，但不夸张、不假体感；纤细腰部，与丰满胸部形成清晰但自然的比例对比，顺滑低马尾，轻透妆，穿香槟粉罗纹短背心式运动文胸（细蕾丝包边）、高腰香槟缎面训练短裙裤、同色小腿袜与米色芭蕾训练鞋。女理疗师穿浅色医护衬衫与长裤，手持评估平板。\n姿态与构图：全身中景，受试者侧立网格墙前做肩部对齐，双臂自然下垂，视线看向前方标记点；理疗师站斜后方观察并记录。\n环境：干净康复室，姿态网格墙、体态镜、淡色器材柜与平衡垫，浅色地胶。明亮均匀顶光带一束侧窗柔光。\n风格：照片级写实，皮肤与罗纹、缎面质感准确，表情专注清爽，时尚运动大片感灯光，8k。", "提示词位置": "正文", "点赞数": 9, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@her19845", "帖子链接": "https://x.com/her19845/status/2110928466665525360", "发布时间(UTC+8)": "2026-10-16 10:59", "发布时间ISO(UTC)": "2026-10-16T02:59:00Z", "距今": "8小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、写真", "NSFW程度": 25, "参考图兼容": "可用参考图", "判断理由": "城市拼贴侧脸肖像", "步骤1类型": "生图", "步骤1提示词": "Grok Imagine\n\nPrompt:⤵️\nA mixed-media composition and contemporary urban collage. At the center is a black-and-white profile photograph of a woman wearing a black sports top; her torso and hands are bound with thick ropes, and she is arching her back. The image is fragmented and overlaid with geometric shapes featuring an iridescent, holographic finish that catches the light with rainbow-like flashes. The background consists of a textured concrete wall marked by organic stains, splatters of white spray paint, and thick, vertical drips of glossy black paint. The edges incorporate marker strokes, graffiti-style marks, and urban calligraphy. The piece embodies an underground street-art aesthetic with high visual definition.", "步骤1中文翻译": "混合媒介构图与当代都市拼贴。中心是一名女性的黑白侧脸照片……\n\n（完整原文如下，译文不删减露骨内容）\nGrok Imagine\n\nPrompt:⤵️\nA mixed-media composition and contemporary urban collage. At the center is a black-and-white profile photograph of a woman wearing a black sports top; her torso and hands are bound with thick ropes, and she is arching her back. The image is fragmented and overlaid with geometric shapes featuring an iridescent, holographic finish that catches the light with rainbow-like flashes. The background consists of a textured concrete wall marked by organic stains, splatters of white spray paint, and thick, vertical drips of glossy black paint. The edges incorporate marker strokes, graffiti-style marks, and urban calligraphy. The piece embodies an underground street-art aesthetic with high visual definition.", "提示词位置": "正文", "点赞数": 6, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@BubbaArtwork", "帖子链接": "https://x.com/BubbaArtwork/status/2110729880123904291", "发布时间(UTC+8)": "2026-10-15 21:49", "发布时间ISO(UTC)": "2026-10-15T13:49:53Z", "距今": "21小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、卧室床上、写真", "NSFW程度": 40, "参考图兼容": "可用参考图", "判断理由": "俯卧床上撑肘", "步骤1类型": "生图", "步骤1提示词": "A young woman with long, voluminous dark brown wavy hair lies prone on a bed, propped up on her elbows. She rests her chin gently in her right hand, gazing directly at the viewer with a soft, confident smile. Her facial features are defined by arched eyebrows, hazel eyes accentuated with subtle makeup, and glossy pink lips. She wears a sleeveless dusty rose top that blends harmoniously with the background pillows. The composition is a medium close-up, centered on her face and upper body, creating an intimate yet polished portrait. Soft, diffused natural lighting illuminates her skin evenly, highlighting her cheekbones and creating gentle shadows for depth. Behind her, white rumpled sheets contrast with pastel pink pillows adorned with retro-style floral and sun motifs in blue and orange. The overall aesthetic evokes a 1970s nostalgic warmth — cozy, serene, and slightly vintage. Photography style: high-resolution digital portrait with shallow depth of field, emphasizing subject clarity while softly blurring the background. Mood: calm, inviting, and elegantly relaxed. Ideal for lifestyle or editorial use with a retro-modern fusion tone.", "步骤1中文翻译": "年轻女性，浓密深棕波浪长发，俯卧在床上，用肘撑起。下巴搁在手背上……\n\n（完整原文如下，译文不删减露骨内容）\nA young woman with long, voluminous dark brown wavy hair lies prone on a bed, propped up on her elbows. She rests her chin gently in her right hand, gazing directly at the viewer with a soft, confident smile. Her facial features are defined by arched eyebrows, hazel eyes accentuated with subtle makeup, and glossy pink lips. She wears a sleeveless dusty rose top that blends harmoniously with the background pillows. The composition is a medium close-up, centered on her face and upper body, creating an intimate yet polished portrait. Soft, diffused natural lighting illuminates her skin evenly, highlighting her cheekbones and creating gentle shadows for depth. Behind her, white rumpled sheets contrast with pastel pink pillows adorned with retro-style floral and sun motifs in blue and orange. The overall aesthetic evokes a 1970s nostalgic warmth — cozy, serene, and slightly vintage. Photography style: high-resolution digital portrait with shallow depth of field, emphasizing subject clarity while softly blurring the background. Mood: calm, inviting, and elegantly relaxed. Ideal for lifestyle or editorial use with a retro-modern fusion tone.", "提示词位置": "正文", "点赞数": 4, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@BubbaArtwork", "帖子链接": "https://x.com/BubbaArtwork/status/2110743344577954004", "发布时间(UTC+8)": "2026-10-15 22:43", "发布时间ISO(UTC)": "2026-10-15T14:43:23Z", "距今": "20小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、写真、室内居家", "NSFW程度": 35, "参考图兼容": "可用参考图", "判断理由": "侧身害羞微笑女性", "步骤1类型": "生图", "步骤1提示词": "A medium-full shot captures a woman from the side, turned slightly toward the camera with a playful, shy smile, her right hand gently touching her lips. She has long, light brown hair pulled into a high ponytail. Her skin is adorned with prominent tattoos: a black-and-gray lion’s face on her upper back, and a vibrant floral sleeve featuring pink roses, green leaves, and cursive script running down her ribcage and hip. She wears a white string bikini with subtle blue patterned detailing and adjustable ties at the sides and back. The setting is a bright, modern bathroom with marble tile walls, a black-framed glass door to the left, and a cluttered vanity in the background including bags and toiletries. Lighting is soft and natural, likely from overhead fixtures and ambient room light, creating gentle highlights on her skin and minimal shadows. The composition emphasizes her pose and tattoo artistry against the clean, domestic backdrop. Style: candid lifestyle photography with shallow depth of field, sharp focus on subject, realistic color grading, and intimate, unposed charm.", "步骤1中文翻译": "中全景，女性侧身略转向镜头，带着俏皮害羞的笑，右手……\n\n（完整原文如下，译文不删减露骨内容）\nA medium-full shot captures a woman from the side, turned slightly toward the camera with a playful, shy smile, her right hand gently touching her lips. She has long, light brown hair pulled into a high ponytail. Her skin is adorned with prominent tattoos: a black-and-gray lion’s face on her upper back, and a vibrant floral sleeve featuring pink roses, green leaves, and cursive script running down her ribcage and hip. She wears a white string bikini with subtle blue patterned detailing and adjustable ties at the sides and back. The setting is a bright, modern bathroom with marble tile walls, a black-framed glass door to the left, and a cluttered vanity in the background including bags and toiletries. Lighting is soft and natural, likely from overhead fixtures and ambient room light, creating gentle highlights on her skin and minimal shadows. The composition emphasizes her pose and tattoo artistry against the clean, domestic backdrop. Style: candid lifestyle photography with shallow depth of field, sharp focus on subject, realistic color grading, and intimate, unposed charm.", "提示词位置": "正文", "点赞数": 4, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@BubbaArtwork", "帖子链接": "https://x.com/BubbaArtwork/status/2110813310207860745", "发布时间(UTC+8)": "2026-10-16 03:21", "发布时间ISO(UTC)": "2026-10-15T19:21:24Z", "距今": "16小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、泳装比基尼、写真、户外", "NSFW程度": 38, "参考图兼容": "可用参考图", "判断理由": "星条泳装海滩跪姿", "步骤1类型": "生图", "步骤1提示词": "A confident blonde woman kneels on a sunlit beach, centered in a medium-full shot. She wears a daring one-piece swimsuit split vertically: red-and-white stripes on the left, blue with white stars on the right, evoking the American flag. The deep V-neck and side-tie detail accentuate her figure; she holds the loose ties gently in each hand. Her long, straight platinum-blonde hair blows softly in the breeze, framing a radiant smile with defined eyeliner and natural makeup. Delicate layered necklaces rest at her collarbone. A detailed floral tattoo covers her left forearm, while a smaller design is visible on her right hip. Warm golden-hour lighting highlights her skin tone and creates soft shadows beneath her knees. The background features blurred dark rocks and sandy terrain, suggesting a coastal cliffside. Shot with a shallow depth of field using a portrait lens (85mm equivalent), the image emphasizes sharp subject focus against a dreamy bokeh backdrop. Style: high-fashion beach editorial, vibrant color grading, cinematic realism, 4K resolution.", "步骤1中文翻译": "自信金发女性跪在阳光海滩，中全景居中。穿着大胆连体泳装纵向对半：左侧红白条纹，右侧蓝底白星，令人联想到美国国旗。深V领……\n\n（完整原文如下，译文不删减露骨内容）\nA confident blonde woman kneels on a sunlit beach, centered in a medium-full shot. She wears a daring one-piece swimsuit split vertically: red-and-white stripes on the left, blue with white stars on the right, evoking the American flag. The deep V-neck and side-tie detail accentuate her figure; she holds the loose ties gently in each hand. Her long, straight platinum-blonde hair blows softly in the breeze, framing a radiant smile with defined eyeliner and natural makeup. Delicate layered necklaces rest at her collarbone. A detailed floral tattoo covers her left forearm, while a smaller design is visible on her right hip. Warm golden-hour lighting highlights her skin tone and creates soft shadows beneath her knees. The background features blurred dark rocks and sandy terrain, suggesting a coastal cliffside. Shot with a shallow depth of field using a portrait lens (85mm equivalent), the image emphasizes sharp subject focus against a dreamy bokeh backdrop. Style: high-fashion beach editorial, vibrant color grading, cinematic realism, 4K resolution.", "提示词位置": "正文", "点赞数": 3, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@Hipline_Japan", "帖子链接": "https://x.com/Hipline_Japan/status/2110752600127914349", "发布时间(UTC+8)": "2026-10-15 23:20", "发布时间ISO(UTC)": "2026-10-15T15:20:10Z", "距今": "20小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、内衣、写真", "NSFW程度": 48, "参考图兼容": "可用参考图", "判断理由": "试衣间白吊带抓下摆害羞笑", "步骤1类型": "生图", "步骤1提示词": "縦長画像\n試着室の鏡を背に立つ\n白のパンティキャミソールへそ出し\n金髪前髪ありポニーテール日本人\n両手でキャミソールの裾を掴む\n恥ずかしそうに笑う\n（原帖对比ChatGPT/Grok/Gemini）", "步骤1中文翻译": "纵长画面\n背对试衣间镜子站立\n白色内裤式吊带（露脐）\n金发有刘海马尾的日本人\n双手抓住吊带下摆\n害羞地笑\n（原帖对比ChatGPT/Grok/Gemini）", "提示词位置": "评论", "点赞数": 3, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@BubbaArtwork", "帖子链接": "https://x.com/BubbaArtwork/status/2110721829782339599", "发布时间(UTC+8)": "2026-10-15 21:17", "发布时间ISO(UTC)": "2026-10-15T13:17:54Z", "距今": "22小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、写真", "NSFW程度": 28, "参考图兼容": "可用参考图", "判断理由": "姜红卷发雀斑肖像", "步骤1类型": "生图", "步骤1提示词": "A medium shot portrait of a young woman with voluminous, wavy ginger hair and prominent freckles across her face, neck, and chest. She has striking blue-green eyes, soft natural makeup, and a neutral, direct gaze. She wears a fitted white long-sleeve crop top with a deep V-neckline and high-waisted blue denim jeans. Her pose is seated, leaning slightly forward with arms resting loosely on her thighs, emphasizing her curvaceous figure. Soft, diffused natural light streams from a window to the right, casting gentle shadows and highlighting her skin texture and hair volume. The background features a minimalist interior: a white paneled wall to the left and a dark wood window frame to the right, creating contrast and depth. The image exhibits high-resolution photorealism with sharp focus on the subject, shallow depth of field blurring the background slightly, and cinematic color grading that enhances warm tones in her hair against cool neutrals. Ideal for fashion or lifestyle imagery — clean, intimate, and visually balanced with professional studio lighting aesthetics.", "步骤1中文翻译": "中景肖像：浓密波浪姜红色头发、脸上颈上明显雀斑的年轻女性……\n\n（完整原文如下，译文不删减露骨内容）\nA medium shot portrait of a young woman with voluminous, wavy ginger hair and prominent freckles across her face, neck, and chest. She has striking blue-green eyes, soft natural makeup, and a neutral, direct gaze. She wears a fitted white long-sleeve crop top with a deep V-neckline and high-waisted blue denim jeans. Her pose is seated, leaning slightly forward with arms resting loosely on her thighs, emphasizing her curvaceous figure. Soft, diffused natural light streams from a window to the right, casting gentle shadows and highlighting her skin texture and hair volume. The background features a minimalist interior: a white paneled wall to the left and a dark wood window frame to the right, creating contrast and depth. The image exhibits high-resolution photorealism with sharp focus on the subject, shallow depth of field blurring the background slightly, and cinematic color grading that enhances warm tones in her hair against cool neutrals. Ideal for fashion or lifestyle imagery — clean, intimate, and visually balanced with professional studio lighting aesthetics.", "提示词位置": "正文", "点赞数": 1, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@BubbaArtwork", "帖子链接": "https://x.com/BubbaArtwork/status/2110745221319270633", "发布时间(UTC+8)": "2026-10-15 22:50", "发布时间ISO(UTC)": "2026-10-15T14:50:51Z", "距今": "20小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、内衣、写真、室内居家", "NSFW程度": 48, "参考图兼容": "可用参考图", "判断理由": "壁炉边开襟黑袍", "步骤1类型": "生图", "步骤1提示词": "A woman sits on a white brick fireplace hearth, centered in a medium-full shot. She wears an open black robe with large white polka dots, revealing her torso, and holds a small white ceramic mug. Her legs are crossed at the knee, barefoot, resting on a dark floor. Her reddish-brown hair is loosely styled, face turned slightly left with a contemplative gaze. The mantel above is adorned with numerous lit taper candles in black holders, draped lace garland, and autumnal decor including plaid pumpkins, ceramic jars, and wire baskets. A fire glows faintly within the hearth. Lighting is warm and dim, dominated by candlelight casting soft shadows and creating a cozy, intimate atmosphere. The image has a vintage film aesthetic: grainy texture, muted tones, slight vignetting, and scattered dust specks suggesting aged analog photography. Composition balances symmetry of the mantel with the organic pose of the subject. Background features rustic farmhouse elements—brickwork, wooden accents, decorative birds—enhancing the seasonal, nostalgic mood. Technical style mimics 35mm film with high ISO noise, low contrast, and warm color grading. No flash; ambient light only. Mood is serene, sensual,nostalgic).", "步骤1中文翻译": "女性坐在白色砖壁炉台沿，中全景居中。穿着敞开的黑色大翻领袍……\n\n（完整原文如下，译文不删减露骨内容）\nA woman sits on a white brick fireplace hearth, centered in a medium-full shot. She wears an open black robe with large white polka dots, revealing her torso, and holds a small white ceramic mug. Her legs are crossed at the knee, barefoot, resting on a dark floor. Her reddish-brown hair is loosely styled, face turned slightly left with a contemplative gaze. The mantel above is adorned with numerous lit taper candles in black holders, draped lace garland, and autumnal decor including plaid pumpkins, ceramic jars, and wire baskets. A fire glows faintly within the hearth. Lighting is warm and dim, dominated by candlelight casting soft shadows and creating a cozy, intimate atmosphere. The image has a vintage film aesthetic: grainy texture, muted tones, slight vignetting, and scattered dust specks suggesting aged analog photography. Composition balances symmetry of the mantel with the organic pose of the subject. Background features rustic farmhouse elements—brickwork, wooden accents, decorative birds—enhancing the seasonal, nostalgic mood. Technical style mimics 35mm film with high ISO noise, low contrast, and warm color grading. No flash; ambient light only. Mood is serene, sensual,nostalgic).", "提示词位置": "正文", "点赞数": 1, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@mumeno_shosai", "帖子链接": "https://x.com/mumeno_shosai/status/2110887951874032046", "发布时间(UTC+8)": "2026-10-16 08:18", "发布时间ISO(UTC)": "2026-10-16T00:18:00Z", "距今": "11小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、居家便装、写真、室内居家", "NSFW程度": 30, "参考图兼容": "可用参考图", "判断理由": "窗边夜酒居家", "步骤1类型": "生图", "步骤1提示词": "A mid-20s Japanese woman with long straight black hair leans against a window ledge at night in a tidy modern apartment, looking back over her shoulder toward the camera with a calm expression. She wears a wine-red satin slip dress with thin spaghetti straps and holds a glass of red wine in her right hand at waist level. Soft warm lamp light and out-of-focus city lights through a large window, grey sofa and tidy living room behind her. Candid amateur smartphone snapshot, matte skin with fine grain, 2:3 vertical photo.\n（ChatGPT、Grok两用）", "步骤1中文翻译": "一名二十岁中段的日本女性，黑色长直发，夜晚靠在整洁现代公寓的窗台上，手里拿着一杯红酒，柔和微笑看向镜头。穿着宽松米色针织衫，领口略宽露出锁骨。窗玻璃映出室内暖光与城市夜景。自然肤质，轻松居家氛围，写实手机快照感。\n（ChatGPT、Grok两用）", "提示词位置": "alt", "点赞数": 0, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@Hipline_Japan", "帖子链接": "https://x.com/Hipline_Japan/status/2110996359474274327", "发布时间(UTC+8)": "2026-10-16 15:28", "发布时间ISO(UTC)": "2026-10-16T07:28:47Z", "距今": "4小时前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、内衣、姿势、臀部特写", "NSFW程度": 58, "参考图兼容": "可用参考图", "判断理由": "床上跪姿后视白吊带内裤", "步骤1类型": "生图", "步骤1提示词": "↓プロンプト\nベッドに両膝と胸部と両手を付き腰を浮かせる\n両手を前に向かって伸ばす\n20歳色白日本人女性\n明るい金髪\n白いキャミとパンティ\n真後ろからの縦長構図\n（原帖对比ChatGPT/Grok/Gemini）", "步骤1中文翻译": "↓提示词\n床上双膝与胸部与双手着床、腰抬起。双手向前伸出。20岁白肤日本女性。明亮金发。白色吊带与内裤。正后方纵长构图。\n（原帖对比ChatGPT/Grok/Gemini）", "提示词位置": "评论", "点赞数": 0, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@WMJ8888", "帖子链接": "https://x.com/WMJ8888/status/2111051435693822407", "发布时间(UTC+8)": "2026-10-16 19:07", "发布时间ISO(UTC)": "2026-10-16T11:07:38Z", "距今": "25分钟前", "类型分组": "生图", "类型": "生图", "步骤数": 1, "题材标签": "真人风、写真、胶片风", "NSFW程度": 42, "参考图兼容": "可用参考图", "判断理由": "直闪胶片辣妹自拍", "步骤1类型": "生图", "步骤1提示词": "写实超广角自拍风格肖像，带有动态运动模糊，直闪胶片摄影风格，胶片颗粒，高对比度闪光照明，抖音辣妹日记美学，随性日常随拍氛围，非刻意摆拍，非影棚光效，自然且略带瑕疵的构图。中近景构图，略带仰角的低机位，动态手持自拍视角，强烈的运动感以及与镜头的互动感。一位美丽的东亚年轻女性，留着及腰的深褐色波浪长发，玩偶般精致可爱的五官，冷白皮，精致的鹅蛋脸配微笑的下巴，清透的自然底妆，迷人的上扬眼线，温柔的烟熏妆，水润红唇，散发着隐约的迷人气质。她身材苗条，小巧的胸部，皮肤白皙透亮，流露出自然流露的诱人而又害羞的态度。她的表情更加性感妩媚：半眯的眼眸，微启的双唇，一丝若有若无的挑逗微笑，慵懒放松的眼神，直视镜头，仿佛意识到有人在注视着她。她微微歪头，身体向后舒展呈现出柔和的曲线，一只肩膀微微耸起，头发被夜风吹散在脸上。她的姿势显得随意却极具吸引力，带着一种娇羞、优雅又略带危险的魅力——倔皮、自信，充满女人味，又不会显得过于刻意。她穿着深灰色超短无袖背心，露出纤细的腰身，搭配黑色短裤，背着一只黑色多口袋腋下包。配饰包括圆形耳环和黑色大表盘手表。她的穿搭显得随性、前卫、带点中二感，极具街头时尚风格。背景是夜晚极具艺术感的都市街头，温暖的街灯与强烈的相机直闪交织，伴有红砖墙、路边大树、斑驳的树叶阴影，远处是模糊的城市灯光。暖色调的棕灰黑配色，带有戏剧性的闪光高光和深邃的阴影，浅景深，背景柔和虚化，真实的皮肤肌理，微乱的头发，带有可见胶片颗粒的真实手机镜头质感，日常随拍的写实感，随性的夜生活氛围，动态运动模糊，不完美的构图，8K超高画质细节。", "步骤1中文翻译": "写实超广角自拍风格肖像，带有动态运动模糊，直闪胶片摄影风格，胶片颗粒，高对比度闪光照明，抖音辣妹日记美学，随性日常随拍氛围，非刻意摆拍，非影棚光效，自然且略带瑕疵的构图。中近景构图，略带仰角的低机位，动态手持自拍视角，强烈的运动感以及与镜头的互动感。一位美丽的东亚年轻女性，留着及腰的深褐色波浪长发，玩偶般精致可爱的五官，冷白皮，精致的鹅蛋脸配微笑的下巴，清透的自然底妆，迷人的上扬眼线，温柔的烟熏妆，水润红唇，散发着隐约的迷人气质。她身材苗条，小巧的胸部，皮肤白皙透亮，流露出自然流露的诱人而又害羞的态度。她的表情更加性感妩媚：半眯的眼眸，微启的双唇，一丝若有若无的挑逗微笑，慵懒放松的眼神，直视镜头，仿佛意识到有人在注视着她。她微微歪头，身体向后舒展呈现出柔和的曲线，一只肩膀微微耸起，头发被夜风吹散在脸上。她的姿势显得随意却极具吸引力，带着一种娇羞、优雅又略带危险的魅力——倔皮、自信，充满女人味，又不会显得过于刻意。她穿着深灰色超短无袖背心，露出纤细的腰身，搭配黑色短裤，背着一只黑色多口袋腋下包。配饰包括圆形耳环和黑色大表盘手表。她的穿搭显得随性、前卫、带点中二感，极具街头时尚风格。背景是夜晚极具艺术感的都市街头，温暖的街灯与强烈的相机直闪交织，伴有红砖墙、路边大树、斑驳的树叶阴影，远处是模糊的城市灯光。暖色调的棕灰黑配色，带有戏剧性的闪光高光和深邃的阴影，浅景深，背景柔和虚化，真实的皮肤肌理，微乱的头发，带有可见胶片颗粒的真实手机镜头质感，日常随拍的写实感，随性的夜生活氛围，动态运动模糊，不完美的构图，8K超高画质细节。", "提示词位置": "正文", "点赞数": 0, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@MattWilson8178", "帖子链接": "https://x.com/MattWilson8178/status/2110861409399480549", "发布时间(UTC+8)": "2026-10-16 06:32", "发布时间ISO(UTC)": "2026-10-15T22:32:32Z", "距今": "13小时前", "类型分组": "生视频", "类型": "生视频", "步骤数": 1, "题材标签": "真人风、情侣互动、表情动作", "NSFW程度": 50, "参考图兼容": "可用参考图", "判断理由": "激情接吻视频", "步骤1类型": "生视频", "步骤1提示词": "Imagine it; song stops, while the most passionate kiss ever is happening. So crazy sensual the crowd leans in to look ( a few silhouettes leans in and out of image peripheral and crowd starts clapping).", "步骤1中文翻译": "想象一下：歌曲停下，却正发生有史以来最激情的吻。性感得让人群探身围观。\n\n（完整原文如下，译文不删减露骨内容）\nImagine it; song stops, while the most passionate kiss ever is happening. So crazy sensual the crowd leans in to look ( a few silhouettes leans in and out of image peripheral and crowd starts clapping).", "提示词位置": "正文", "点赞数": 17, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@DeaglePc", "帖子链接": "https://x.com/DeaglePc/status/2110753120481690097", "发布时间(UTC+8)": "2026-10-15 23:22", "发布时间ISO(UTC)": "2026-10-15T15:22:14Z", "距今": "20小时前", "类型分组": "生视频", "类型": "生视频", "步骤数": 1, "题材标签": "真人风、写真、表情动作", "NSFW程度": 30, "参考图兼容": "可用参考图", "判断理由": "日系女性近景肖像视频", "步骤1类型": "生视频", "步骤1提示词": "A realistic close-up portrait of a young Japanese woman in her early 20s, long straight dark brown hair with straight-cut bangs, wearing thin gold metal rectangular glasses, light makeup with glossy pink lips, soft smile, looking at the camera. She is wearing a light blue satin bikini top with ruffled edges and white pearl decorations, holding the left shoulder strap with her right hand. Large breasts, fair smooth skin, natural lighting. Background is an indoor event booth: black curtain, red Japanese paper umbrella (wagasa) with white floral patterns on the left, white display table with photo cards, Japanese event signs with orange and black text. High detail, photorealistic, sharp focus on face and upper body, shallow depth of field, natural skin texture, 85mm lens feel.", "步骤1中文翻译": "写实特写肖像：二十岁出头的年轻日本女性，深棕长直发齐刘海……（见英文原文完整保留并对照）\n\n（完整原文如下，译文不删减露骨内容）\nA realistic close-up portrait of a young Japanese woman in her early 20s, long straight dark brown hair with straight-cut bangs, wearing thin gold metal rectangular glasses, light makeup with glossy pink lips, soft smile, looking at the camera. She is wearing a light blue satin bikini top with ruffled edges and white pearl decorations, holding the left shoulder strap with her right hand. Large breasts, fair smooth skin, natural lighting. Background is an indoor event booth: black curtain, red Japanese paper umbrella (wagasa) with white floral patterns on the left, white display table with photo cards, Japanese event signs with orange and black text. High detail, photorealistic, sharp focus on face and upper body, shallow depth of field, natural skin texture, 85mm lens feel.", "提示词位置": "评论", "点赞数": 6, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@KURARA13520706", "帖子链接": "https://x.com/KURARA13520706/status/2110867773375271191", "发布时间(UTC+8)": "2026-10-16 06:57", "发布时间ISO(UTC)": "2026-10-15T22:57:49Z", "距今": "12小时前", "类型分组": "生视频", "类型": "生视频", "步骤数": 1, "题材标签": "真人风、内衣、露骨18+、运镜", "NSFW程度": 75, "参考图兼容": "仅无图生成", "判断理由": "白内衣捆绑延续镜头", "步骤1类型": "生视频", "步骤1提示词": "Continuation from the last frame: the woman in white lingerie leans over the bound woman on the bed holding the ropes. She gently pulls the rope, whispers teasingly in Japanese close to her ear, and smiles as her hand slowly strokes the bound woman's...", "步骤1中文翻译": "从上一帧继续：穿白色内衣的女性俯身在床上被绑的女性上方，抓着绳子……\n\n（完整原文如下，译文不删减露骨内容）\nContinuation from the last frame: the woman in white lingerie leans over the bound woman on the bed holding the ropes. She gently pulls the rope, whispers teasingly in Japanese close to her ear, and smiles as her hand slowly strokes the bound woman's...", "提示词位置": "正文", "点赞数": 0, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@LalaBFox", "帖子链接": "https://x.com/LalaBFox/status/2110889657382932549", "发布时间(UTC+8)": "2026-10-16 08:24", "发布时间ISO(UTC)": "2026-10-16T00:24:47Z", "距今": "11小时前", "类型分组": "生视频", "类型": "生视频", "步骤数": 1, "题材标签": "真人风、写真", "NSFW程度": 35, "参考图兼容": "可用参考图", "判断理由": "性感向提示词", "步骤1类型": "生视频", "步骤1提示词": "Here’s one you can paste. “A woman in her early fifties with blonde hair pulled back, wearing a patterned short-sleeve top, standing on a gravel patio in the Arizona desert, stretching a large dark mesh shade cloth across a wooden frame around a fire... this bitch stapled nothing haha crazy B!", "步骤1中文翻译": "（中文翻译）\nHere’s one you can paste. “A woman in her early fifties with blonde hair pulled back, wearing a patterned short-sleeve top, standing on a gravel patio in the Arizona desert, stretching a large dark mesh shade cloth across a wooden frame around a fire... this bitch stapled nothing haha crazy B!", "提示词位置": "正文", "点赞数": 0, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@aaoomaxi", "帖子链接": "https://x.com/aaoomaxi/status/2110982290876793236", "发布时间(UTC+8)": "2026-10-16 14:32", "发布时间ISO(UTC)": "2026-10-16T06:32:52Z", "距今": "5小时前", "类型分组": "生视频", "类型": "生视频", "步骤数": 1, "题材标签": "真人风、湿身、运镜", "NSFW程度": 45, "参考图兼容": "可用参考图", "判断理由": "湿发模特黑白特写视频", "步骤1类型": "生视频", "步骤1提示词": "**20-SECOND CLIP: “THE MODEL”**\n\n**[0:00–0:04]**  \nBlack-and-white close-up of her face, wet hair, eyes half-closed, the white stick at her lips. Soft static. The overlay “GOGICHASHVILI” fades in, then out.\n\n**YOU (quiet, off-camera):** “She wants to...", "步骤1中文翻译": "**20秒片段：“模特”** [0:00–0:04] 她脸的黑白特写，湿发，眼睛半闭……\n\n（完整原文如下，译文不删减露骨内容）\n**20-SECOND CLIP: “THE MODEL”**\n\n**[0:00–0:04]**  \nBlack-and-white close-up of her face, wet hair, eyes half-closed, the white stick at her lips. Soft static. The overlay “GOGICHASHVILI” fades in, then out.\n\n**YOU (quiet, off-camera):** “She wants to...", "提示词位置": "正文", "点赞数": 0, "参考图": null, "分区": "新发现博主"}, {"来源": "新发现", "博主": "@xiaoxue2211", "帖子链接": "https://x.com/xiaoxue2211/status/2111050659348836828", "发布时间(UTC+8)": "2026-10-16 19:04", "发布时间ISO(UTC)": "2026-10-16T11:04:33Z", "距今": "28分钟前", "类型分组": "生视频", "类型": "生视频", "步骤数": 1, "题材标签": "真人风、写真", "NSFW程度": 30, "参考图兼容": "可用参考图", "判断理由": "东亚女性写实肖像", "步骤1类型": "生视频", "步骤1提示词": "masterpiece, best quality, ultra-detailed, 8k, photorealistic, beautiful young East Asian woman, elegant face, fair skin, soft delicate features, blue eyes, full lips with light red lipstick, long black hair in high elegant updo with loose strands, o...", "步骤1中文翻译": "杰作，最佳质量，超细腻，8k，写实，美丽年轻东亚女性，优雅面孔，白皙皮肤……\n\n（完整原文如下，译文不删减露骨内容）\nmasterpiece, best quality, ultra-detailed, 8k, photorealistic, beautiful young East Asian woman, elegant face, fair skin, soft delicate features, blue eyes, full lips with light red lipstick, long black hair in high elegant updo with loose strands, o...", "提示词位置": "正文", "点赞数": 0, "参考图": null, "分区": "新发现博主"}], "excluded_creators": []}; window.DAY_DATE = "2026-10-16";</script>
+  <script>(function () {
+  // Storage adapter for hidden rows. Async API: get(id) / set(id, rec|null) / list().
+  // Record shape: { id, handle, date, hidden_at (ISO), reason }
+  // localStorage = offline cache; when signed in to Supabase, hidden_items is the source of truth.
+  const PREFIX = 'grok-hidden:';
+  const SB_URL = 'https://zvfyxgtxwwpcvrwakkzq.supabase.co';
+  const SB_KEY = 'sb_publishable_h8c4KdaD1mNrRl2b5HEn3A_MWUgUbC8';
+  const local = {
+    async get(id) { try { const v = localStorage.getItem(PREFIX + id); return v ? JSON.parse(v) : null; } catch (e) { return null; } },
+    async set(id, rec) { try { rec == null ? localStorage.removeItem(PREFIX + id) : localStorage.setItem(PREFIX + id, JSON.stringify(rec)); } catch (e) {} },
+    async list() {
+      const out = [];
+      try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.startsWith(PREFIX)) out.push(JSON.parse(localStorage.getItem(k))); } } catch (e) {}
+      return out;
+    },
+    clear() { try { Object.keys(localStorage).filter(k => k.startsWith(PREFIX)).forEach(k => localStorage.removeItem(k)); } catch (e) {} }
+  };
+  let sb = null, user = null;
+  const toRow = r => ({ post_id: r.id, handle: r.handle || null, day: r.date || null, reason: r.reason || null, hidden_at: r.hidden_at || new Date().toISOString() });
+  const fromRow = x => ({ id: x.post_id, handle: x.handle || '', date: x.day || '', reason: x.reason || '', hidden_at: x.hidden_at });
+  const emit = () => window.dispatchEvent(new Event('grok-hidden-sync'));
+
+  async function sync() {
+    if (!sb || !user) return;
+    const flag = 'grok-sync-merged:' + user.id;
+    if (!localStorage.getItem(flag)) {  // first sign-in on this device: push local hides up
+      const mine = await local.list();
+      if (mine.length) {
+        const { error } = await sb.from('hidden_items').upsert(mine.map(toRow), { onConflict: 'user_id,post_id' });
+        if (error) { console.warn(error); return; }
+      }
+      localStorage.setItem(flag, '1');
+    }
+    const all = []; let from = 0;
+    for (;;) {
+      const { data, error } = await sb.from('hidden_items').select('post_id,handle,day,reason,hidden_at').range(from, from + 999);
+      if (error) { console.warn(error); return; }
+      all.push(...data); if (data.length < 1000) break; from += 1000;
+    }
+    local.clear();
+    for (const x of all) await local.set(x.post_id, fromRow(x));
+    emit();
+  }
+
+  window.HiddenStore = {
+    get: local.get,
+    list: local.list,
+    async set(id, rec) {
+      await local.set(id, rec);
+      if (!sb || !user) return;
+      const q = rec == null ? sb.from('hidden_items').delete().eq('post_id', id)
+                            : sb.from('hidden_items').upsert(toRow(rec), { onConflict: 'user_id,post_id' });
+      const { error } = await q; if (error) console.warn(error);
+    }
+  };
+  window.Prefs = {
+    get(k, d) { try { const v = localStorage.getItem('grok-pref:' + k); return v == null ? d : v; } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem('grok-pref:' + k, v); } catch (e) {} }
+  };
+
+  function ui() {
+    const box = document.createElement('div'); box.id = 'sync-box';
+    document.body.appendChild(box);
+    function draw() {
+      if (user) {
+        box.innerHTML = `<span>${(user.email || '').replace(/[<>&]/g, '')}</span> <button type="button" id="sync-out">退出</button>`;
+        box.querySelector('#sync-out').onclick = async () => { await sb.auth.signOut(); };
+      } else {
+        box.innerHTML = `<button type="button" id="sync-open">登录同步</button><form id="sync-form" hidden>
+          <input type="email" id="sync-email" placeholder="email" autocomplete="username" required/>
+          <input type="password" id="sync-pw" placeholder="password" autocomplete="current-password" required/>
+          <button type="submit">登录</button><span id="sync-err"></span></form>`;
+        const f = box.querySelector('#sync-form');
+        box.querySelector('#sync-open').onclick = () => { f.hidden = !f.hidden; };
+        f.onsubmit = async e => {
+          e.preventDefault();
+          if (!sb) { box.querySelector('#sync-err').textContent = '×'; return; }
+          const { error } = await sb.auth.signInWithPassword({ email: f.querySelector('#sync-email').value, password: f.querySelector('#sync-pw').value });
+          box.querySelector('#sync-err').textContent = error ? '× ' + error.message : '';
+        };
+      }
+    }
+    draw();
+    return draw;
+  }
+
+  async function init() {
+    const draw = ui();
+    try {
+      const mod = await import('https://esm.sh/@supabase/supabase-js@2');
+      sb = mod.createClient(SB_URL, SB_KEY);
+      const { data } = await sb.auth.getSession();
+      user = data.session ? data.session.user : null; draw();
+      if (user) sync();
+      sb.auth.onAuthStateChange((ev, session) => {
+        const was = user && user.id; user = session ? session.user : null; draw();
+        if (user && user.id !== was) sync();
+      });
+    } catch (e) { console.warn('supabase unavailable', e); }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+
+(function () {
+  // v3 viewer (2026-10-10): 已关注/新发现 分区 + 类型分组 + 题材/参考图/NSFW 筛选 + 实时相对时间
+  const C = {
+    source: '来源', part: '分区', handle: '博主', link: '帖子链接', time: '发布时间(UTC+8)', iso: '发布时间ISO(UTC)',
+    tcat: '类型分组', type: '类型', steps: '步骤数', tags: '题材标签', nsfw: 'NSFW程度', ref: '参考图兼容',
+    reason: '判断理由', loc: '提示词位置', likes: '点赞数', refimg: '参考图'
+  };
+  const SECTIONS = [['已关注', '已关注博主'], ['新发现', '新发现博主']];
+  const TYPES = ['生图', '生视频', '多步'];
+  const BUCKETS = [[0, 20, '0-20 日常/轻微性感'], [21, 40, '21-40 泳装内衣擦边'], [41, 60, '41-60 半裸/强暗示'],
+                   [61, 80, '61-80 裸露/性暗示'], [81, 100, '81-100 露骨性行为']];
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function tagsOf(r) { return String(r[C.tags] || '').split(/[、,，|]/).map(s => s.trim()).filter(Boolean); }
+  function tcat(r) {
+    if (r[C.tcat]) return r[C.tcat];
+    return (Number(r[C.steps]) > 1 || String(r[C.type] || '').includes('→')) ? '多步' : (r[C.type] || '');
+  }
+  function srcOf(r) { const s = r[C.source] || r[C.part] || ''; return s.startsWith('已关注') ? '已关注' : '新发现'; }
+  function isoOf(r) {
+    if (r[C.iso]) return r[C.iso];
+    const t = r[C.time]; if (!t) return null;
+    return String(t).replace(' ', 'T') + ':00+08:00';
+  }
+  function rel(iso) {
+    const t = Date.parse(iso); if (isNaN(t)) return '';
+    const s = Math.max(0, (Date.now() - t) / 1000);
+    if (s < 60) return '刚刚';
+    if (s < 3600) return Math.floor(s / 60) + '分钟前';
+    if (s < 86400) return Math.floor(s / 3600) + '小时前';
+    if (s < 86400 * 30) return Math.floor(s / 86400) + '天前';
+    return Math.floor(s / 86400 / 30) + '个月前';
+  }
+  function abs8(iso) {
+    const t = Date.parse(iso); if (isNaN(t)) return '';
+    const d = new Date(t + 8 * 3600e3);
+    const p = n => String(n).padStart(2, '0');
+    return `${d.getUTCFullYear()}-${p(d.getUTCMonth() + 1)}-${p(d.getUTCDate())} ${p(d.getUTCHours())}:${p(d.getUTCMinutes())} (UTC+8)`;
+  }
+  function stepFields(row) {
+    const out = [];
+    for (let i = 1; i <= 8; i++) {
+      const t = row[`步骤${i}类型`], p = row[`步骤${i}提示词`], z = row[`步骤${i}中文翻译`];
+      if (!p && !z) continue;
+      out.push({ i, type: t || '', prompt: p || '', zh: z || '' });
+    }
+    return out;
+  }
+  function promptHtml(label, text) {
+    if (!text) return '';
+    const collapsed = text.length > 120 || text.split('\n').length > 3;
+    return `<div class="prompt-block"><div class="prompt-label">${esc(label)}</div>
+      <div class="prompt-text${collapsed ? ' collapsed' : ''}">${esc(text)}</div>
+      ${collapsed ? '<button type="button" class="toggle">展开 / 收起</button>' : ''}</div>`;
+  }
+  function nsfwClass(n) { return n > 80 ? 'n5' : n > 60 ? 'n4' : n > 40 ? 'n3' : n > 20 ? 'n2' : 'n1'; }
+
+  function renderRow(r) {
+    const steps = stepFields(r);
+    const iso = isoOf(r);
+    const n = Number(r[C.nsfw]);
+    const ref = r[C.ref] || '';
+    const prompts = steps.map(s => {
+      const head = `步骤${s.i}${s.type ? ' · ' + s.type : ''}`;
+      return promptHtml(head + ' · 原文', s.prompt) + promptHtml(head + ' · 中文', s.zh);
+    }).join('');
+    const id = String(r[C.link] || '').split('/').pop();
+    return `<tr data-id="${esc(id)}" data-handle="${esc(r[C.handle] || '')}" data-tags="${esc(tagsOf(r).join('|'))}" data-ref="${esc(ref)}" data-nsfw="${isNaN(n) ? '' : n}">
+      <td class="handle">${esc(r[C.handle] || '')}<br/><a href="${esc(r[C.link] || '#')}" target="_blank" rel="noopener">打开帖子</a></td>
+      <td class="meta"><span class="reltime" data-iso="${esc(iso || '')}" title="${esc(iso ? abs8(iso) : '')}">${esc(iso ? rel(iso) : '')}</span></td>
+      <td><span class="chip">${esc(r[C.type] || '')}</span></td>
+      <td><span class="chip nsfw ${isNaN(n) ? '' : nsfwClass(n)}">${isNaN(n) ? '—' : n}</span></td>
+      <td><span class="chip ${ref === '仅无图生成' ? 'noref' : 'okref'}">${esc(ref || '—')}</span><div class="meta">${esc(r[C.reason] || '')}</div>${String(r[C.refimg] || '').split('\n').filter(Boolean).map(p => { const u = (window.DAY_DATA ? '../' : '') + p; return `<a href="${esc(u)}" target="_blank" rel="noopener"><img class="refthumb" src="${esc(u)}" alt="参考图" loading="lazy"/></a>`; }).join('')}</td>
+      <td class="tags">${tagsOf(r).map(t => `<span class="chip">${esc(t)}</span>`).join('')}</td>
+      <td class="prompt-cell">${prompts || '<span class="meta">—</span>'}</td>
+      <td class="meta">${esc(r[C.loc] || '')}</td>
+      <td class="meta">${esc(r[C.likes] ?? '')}<br/><button type="button" class="del" title="隐藏">✕</button></td>
+    </tr>`;
+  }
+  const THEAD = '<thead><tr><th>博主</th><th>发布</th><th>类型</th><th>NSFW</th><th>参考图兼容</th><th>题材</th><th>各步骤提示词 + 中文翻译</th><th>位置</th><th>点赞</th></tr></thead>';
+
+  const SORTS = [['default', '默认(类型→点赞)'], ['nsfw', 'NSFW评分(高→低)'], ['likes', '点赞(高→低)'], ['time', '发布时间(新→旧)']];
+  const num = x => Number(x) || 0;
+  const SORTFN = {
+    nsfw: (a, b) => num(b[C.nsfw]) - num(a[C.nsfw]) || num(b[C.likes]) - num(a[C.likes]),
+    likes: (a, b) => num(b[C.likes]) - num(a[C.likes]),
+    time: (a, b) => (Date.parse(isoOf(b)) || 0) - (Date.parse(isoOf(a)) || 0)
+  };
+  const idOf = r => String(r[C.link] || '').split('/').pop();
+
+  async function mount(root, data, dateLabel) {
+    const rows = Array.isArray(data) ? data : ((data && data.rows) || []);
+    const excludedCreators = Array.isArray(data) ? [] : [...new Set(((data && data.excluded_creators) || []).map(h => '@' + String(h).replace(/^@+/, '')))];
+    const fused = Array.isArray(data) ? [] : ((data && data.fused) || []);
+    if (fused.length) {
+      const fs = document.createElement('div'); fs.className = 'fused';
+      const groups = [...new Set(fused.map(f => f.group))];
+      fs.innerHTML = '<h2>融合提示词</h2>' + groups.map(g => `<div class="fused-group"><h3>${esc(g)}</h3><div class="fused-cards">` +
+        fused.filter(f => f.group === g).map(f => `<div class="fused-card"><div class="fused-meta"><span class="fused-type">${esc(f.type || '')}</span> <b>NSFW ${esc(String(f.nsfw ?? ''))}</b> <span class="fused-test">测试结果 ${esc(f.test_result || '未测')}</span></div>
+          <pre class="fused-en">${esc(f.prompt || '')}</pre><button type="button" class="fused-copy">复制</button>
+          <pre class="fused-zh">${esc(f.zh || '')}</pre>
+          <ul class="fused-src">${(f.sources || []).map(x => `<li>${esc(x.post)}：${esc(x.element)}</li>`).join('')}</ul></div>`).join('') + '</div></div>').join('');
+      fs.addEventListener('click', e => { const b = e.target.closest('.fused-copy'); if (!b) return;
+        const t = b.previousElementSibling.textContent; (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => { b.textContent = '已复制'; setTimeout(() => b.textContent = '复制', 1200); }).catch(() => {}); });
+      const vv = root.querySelector('#viewer'); root.insertBefore(fs, vv);
+    }
+    if (excludedCreators.length) {
+      const sec = document.createElement('div'); sec.className = 'excluded-creators';
+      sec.innerHTML = '<h2>已排除</h2><ul>' + excludedCreators.map(h => `<li>${esc(h)}</li>`).join('') + '</ul>';
+      root.appendChild(sec);
+    }
+    const dl = root.querySelector('#date-label'); if (dl && dateLabel) dl.textContent = dateLabel;
+    const v = root.querySelector('#viewer');
+    const store = window.HiddenStore;
+    const hidden = new Set((await store.list()).map(x => x && x.id).filter(Boolean));
+    const allTags = [...new Set(rows.flatMap(tagsOf))].sort();
+    const refs = [...new Set(rows.map(r => r[C.ref]).filter(Boolean))].sort();
+    let sort = Prefs.get('sort', 'default'); if (!SORTFN[sort] && sort !== 'default') sort = 'default';
+    let current = Prefs.get('section', SECTIONS[0][0]);
+    v.innerHTML = `<div class="toolbar">
+      <div><label>排序</label><select id="f-sort">${SORTS.map(([k, l]) => `<option value="${k}"${k === sort ? ' selected' : ''}>${l}</option>`).join('')}</select></div>
+      <div><label>题材标签</label><select id="f-tag"><option value="">全部</option>${allTags.map(t => `<option>${esc(t)}</option>`).join('')}</select></div>
+      <div><label>参考图兼容</label><select id="f-ref"><option value="">全部</option>${refs.map(t => `<option>${esc(t)}</option>`).join('')}</select></div>
+      <div><label>NSFW档</label><select id="f-bucket"><option value="">全部</option>${BUCKETS.map((b, i) => `<option value="${i}">${b[2]}</option>`).join('')}</select></div>
+      <div><label>NSFW</label><input type="range" id="f-min" min="0" max="100" value="0"/><input type="range" id="f-max" min="0" max="100" value="100"/><span id="f-range">0–100</span></div>
+      <div class="stat" id="stat"></div>
+      <div class="hidden-ctl"><span id="hid-n"></span> <button type="button" id="hid-restore">恢复</button> <button type="button" id="hid-export">导出隐藏列表</button></div></div>
+      <div class="tabs">${SECTIONS.map(([k, l]) => `<button type="button" class="tab" data-sec="${k}">${l} <b data-count="${k}"></b></button>`).join('')}
+      <button type="button" class="tab" data-sec="*">全部</button></div><div id="secs"></div>`;
+    const $ = s => v.querySelector(s);
+    function render() {
+      let html = '';
+      for (const [k, label] of SECTIONS) {
+        const part = rows.filter(r => srcOf(r) === k);
+        html += `<section class="sec" data-sec="${k}"><h2>${label} <span class="meta" data-count2="${k}"></span></h2>`;
+        const groups = sort === 'default'
+          ? TYPES.map(t => [t, part.filter(r => tcat(r) === t).sort(SORTFN.likes)])
+          : [['', part.slice().sort(SORTFN[sort])]];
+        for (const [t, g] of groups) {
+          if (!g.length) continue;
+          html += `<div class="grp">${t ? `<h3>${t} <span class="meta grp-count"></span></h3>` : '<span class="grp-count" hidden></span>'}<div class="table-wrap"><table>${THEAD}<tbody>${g.map(renderRow).join('')}</tbody></table></div></div>`;
+        }
+        html += '</section>';
+      }
+      $('#secs').innerHTML = html;
+      apply();
+    }
+    function apply() {
+      const tag = $('#f-tag').value, ref = $('#f-ref').value, b = $('#f-bucket').value;
+      let lo = +$('#f-min').value, hi = +$('#f-max').value; if (lo > hi) [lo, hi] = [hi, lo];
+      if (b !== '') { lo = Math.max(lo, BUCKETS[b][0]); hi = Math.min(hi, BUCKETS[b][1]); }
+      $('#f-range').textContent = `${lo}–${hi}`;
+      let shown = 0;
+      v.querySelectorAll('section.sec').forEach(sec => {
+        const k = sec.getAttribute('data-sec'); let ss = 0, st = 0;
+        sec.querySelectorAll('.grp').forEach(g => {
+          let gs = 0, gt = 0;
+          g.querySelectorAll('tbody tr').forEach(tr => {
+            if (hidden.has(tr.dataset.id)) { tr.style.display = 'none'; return; }
+            gt++;
+            const n = tr.dataset.nsfw === '' ? -1 : +tr.dataset.nsfw;
+            const ok = (!tag || tr.dataset.tags.split('|').includes(tag)) && (!ref || tr.dataset.ref === ref) &&
+              (n < 0 ? (lo === 0 && hi === 100) : (n >= lo && n <= hi));
+            tr.style.display = ok ? '' : 'none'; if (ok) gs++;
+          });
+          g.querySelector('.grp-count').textContent = `${gs} / ${gt}`;
+          g.style.display = gs ? '' : 'none'; ss += gs; st += gt;
+        });
+        v.querySelector(`[data-count="${k}"]`).textContent = `(${ss}/${st})`;
+        v.querySelector(`[data-count2="${k}"]`).textContent = `${ss} / ${st}`;
+        const vis = current === '*' || current === k;
+        sec.style.display = vis ? '' : 'none'; if (vis) shown += ss;
+      });
+      v.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.sec === current));
+      $('#stat').textContent = `${shown} / ${rows.length}`;
+      const hn = rows.filter(r => hidden.has(idOf(r))).length;
+      $('#hid-n').textContent = `已隐藏 ${hn} 条`;
+      v.querySelector('.hidden-ctl').style.display = hidden.size ? '' : 'none';
+    }
+    ['#f-tag', '#f-ref', '#f-bucket'].forEach(s => $(s).onchange = apply);
+    ['#f-min', '#f-max'].forEach(s => $(s).oninput = apply);
+    $('#f-sort').onchange = () => { sort = $('#f-sort').value; Prefs.set('sort', sort); render(); };
+    v.querySelectorAll('.tab').forEach(btn => btn.onclick = () => { current = btn.dataset.sec; Prefs.set('section', current); apply(); });
+    $('#hid-restore').onclick = async () => {
+      const here = rows.map(idOf).filter(id => hidden.has(id));
+      for (const id of here) { await store.set(id, null); hidden.delete(id); }
+      apply();
+    };
+    $('#hid-export').onclick = async () => {
+      const list = await store.list();
+      const blob = new Blob([JSON.stringify({ exported_at: new Date().toISOString(), version: 1, hidden: list }, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = `grok-hidden-${new Date().toISOString().slice(0, 10)}.json`; a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    };
+    v.addEventListener('click', async e => {
+      const del = e.target.closest('.del');
+      if (del) {
+        const tr = del.closest('tr'); const id = tr.dataset.id;
+        await store.set(id, { id, handle: tr.dataset.handle, date: dateLabel || '', hidden_at: new Date().toISOString(), reason: '' });
+        hidden.add(id); apply(); return;
+      }
+      const btn = e.target.closest('.toggle'); if (!btn) return;
+      const box = btn.previousElementSibling; box.classList.toggle('expanded'); box.classList.toggle('collapsed');
+    });
+    setInterval(() => v.querySelectorAll('.reltime').forEach(el => { if (el.dataset.iso) el.textContent = rel(el.dataset.iso); }), 60000);
+    window.addEventListener('grok-hidden-sync', async () => {
+      hidden.clear(); (await store.list()).forEach(x => x && x.id && hidden.add(x.id)); apply();
+    });
+    render();
+  }
+
+  async function loadRows() {
+    if (window.DAY_DATA && typeof window.DAY_DATA === 'object') return window.DAY_DATA;
+    const date = new URLSearchParams(location.search).get('date') || window.DAY_DATE;
+    let lastErr;
+    for (const url of [`data/${date}.json`, `../data/${date}.json`]) {
+      try { const r = await fetch(url); if (!r.ok) throw new Error(`${url} ${r.status}`); return await r.json(); } catch (e) { lastErr = e; }
+    }
+    throw lastErr;
+  }
+  window.GrokPromptViewer = { mount, loadRows, COLS: C };
+})();
+</script>
+  <script>
+    GrokPromptViewer.mount(document.getElementById('app'), window.DAY_DATA, window.DAY_DATE);
+  </script>
+  <script>(function () {
+  var STORAGE_KEY = 'grok-prompts-gate-ok';
+  // SHA-256("soke2026") — soft client-side lock only; hash is visible in source.
+  var PASS_HASH = 'c343c00a5ef5753909541010ef9e44ac11d1c42140053c0b93ef2b6c1e3822c1';
+
+  function unlock() {
+    document.documentElement.classList.add('unlocked');
+    try { sessionStorage.setItem(STORAGE_KEY, '1'); } catch (e) {}
+  }
+
+  function alreadyOk() {
+    try { return sessionStorage.getItem(STORAGE_KEY) === '1'; } catch (e) { return false; }
+  }
+
+  async function sha256Hex(text) {
+    var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+    return Array.from(new Uint8Array(buf)).map(function (b) {
+      return b.toString(16).padStart(2, '0');
+    }).join('');
+  }
+
+  function buildOverlay() {
+    var el = document.createElement('div');
+    el.id = 'pw-gate';
+    el.innerHTML =
+      '<div class="pw-card">' +
+        '<form id="pw-form" autocomplete="current-password">' +
+          '<input type="password" id="pw-input" placeholder="密码" autofocus />' +
+        '</form>' +
+        '<p class="pw-err" id="pw-err" hidden>×</p>' +
+      '</div>';
+    document.body.appendChild(el);
+    return el;
+  }
+
+  function init() {
+    if (alreadyOk()) {
+      unlock();
+      return;
+    }
+    var overlay = buildOverlay();
+    var form = document.getElementById('pw-form');
+    var input = document.getElementById('pw-input');
+    var err = document.getElementById('pw-err');
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      err.hidden = true;
+      var ok = false;
+      try {
+        ok = (await sha256Hex(input.value)) === PASS_HASH;
+      } catch (ex) {
+        // Fallback if SubtleCrypto unavailable (e.g. file:// in some browsers)
+        ok = input.value === 'soke2026';
+      }
+      if (ok) {
+        unlock();
+        overlay.remove();
+      } else {
+        err.hidden = false;
+        input.select();
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+</body>
+</html>
