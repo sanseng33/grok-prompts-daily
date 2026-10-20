@@ -3,7 +3,7 @@
   const C = {
     source: '来源', part: '分区', handle: '博主', link: '帖子链接', time: '发布时间(UTC+8)', iso: '发布时间ISO(UTC)',
     tcat: '类型分组', type: '类型', steps: '步骤数', tags: '题材标签', nsfw: 'NSFW程度', ref: '参考图兼容',
-    reason: '判断理由', loc: '提示词位置', likes: '点赞数', refimg: '参考图'
+    reason: '判断理由', loc: '提示词位置', likes: '点赞数', refimg: '参考图', test: '测试结果'
   };
   const SECTIONS = [['已关注', '已关注博主'], ['新发现', '新发现博主']];
   const TYPES = ['生图', '生视频', '多步'];
@@ -55,6 +55,15 @@
       <div class="prompt-text${collapsed ? ' collapsed' : ''}">${esc(text)}</div>
       ${collapsed ? '<button type="button" class="toggle">展开 / 收起</button>' : ''}</div>`;
   }
+  function testClass(t) {
+    t = String(t || '').trim();
+    const m = t.match(/^(\d+)\s*\/\s*\d+/);
+    if (m) return +m[1] > 0 ? 'ok' : 'bad';
+    if (t.startsWith('成功')) return 'ok';
+    if (t.startsWith('失败')) return 'bad';
+    return 'na';
+  }
+  function testBadge(t) { return t ? `<div><span class="tbadge ${testClass(t)}" title="测试结果">${esc(t)}</span></div>` : ''; }
   function nsfwClass(n) { return n > 80 ? 'n5' : n > 60 ? 'n4' : n > 40 ? 'n3' : n > 20 ? 'n2' : 'n1'; }
 
   function renderRow(r) {
@@ -70,7 +79,7 @@
     return `<tr data-id="${esc(id)}" data-handle="${esc(r[C.handle] || '')}" data-tags="${esc(tagsOf(r).join('|'))}" data-ref="${esc(ref)}" data-nsfw="${isNaN(n) ? '' : n}">
       <td class="handle">${esc(r[C.handle] || '')}<br/><a href="${esc(r[C.link] || '#')}" target="_blank" rel="noopener">打开帖子</a></td>
       <td class="meta"><span class="reltime" data-iso="${esc(iso || '')}" title="${esc(iso ? abs8(iso) : '')}">${esc(iso ? rel(iso) : '')}</span></td>
-      <td><span class="chip">${esc(r[C.type] || '')}</span></td>
+      <td><span class="chip">${esc(r[C.type] || '')}</span>${testBadge(r[C.test])}</td>
       <td><span class="chip nsfw ${isNaN(n) ? '' : nsfwClass(n)}">${isNaN(n) ? '—' : n}</span></td>
       <td><span class="chip ${ref === '仅无图生成' ? 'noref' : 'okref'}">${esc(ref || '—')}</span><div class="meta">${esc(r[C.reason] || '')}</div>${String(r[C.refimg] || '').split('\n').filter(Boolean).map(p => { const u = (window.DAY_DATA ? '../' : '') + p; return `<a href="${esc(u)}" target="_blank" rel="noopener"><img class="refthumb" src="${esc(u)}" alt="参考图" loading="lazy"/></a>`; }).join('')}</td>
       <td class="tags">${tagsOf(r).map(t => `<span class="chip">${esc(t)}</span>`).join('')}</td>
